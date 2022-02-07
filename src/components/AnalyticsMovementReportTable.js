@@ -1,0 +1,181 @@
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
+import Box from '@material-ui/core/Box';
+import Collapse from '@material-ui/core/Collapse';
+import IconButton from '@material-ui/core/IconButton';
+import { Link } from 'react-router-dom'
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import TablePagination from '@material-ui/core/TablePagination';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import _ from 'lodash'
+import { Button } from '@material-ui/core';
+import moment from 'moment';
+const useRowStyles = makeStyles({
+    root: {
+        backgroundColor: 'rgba(92, 92, 92, 1)',
+        '& > *': {
+            borderBottom: 'unset',
+        },
+    },
+    backgroundColorfix: {
+        backgroundColor: "#263238",
+    },
+});
+function Row(props) {
+    const [open, setOpen] = React.useState(false);
+    const classes = useRowStyles();
+    const { row } = props
+    return (
+        <React.Fragment>
+            <TableRow className={classes.root}>
+                <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">
+                    {row.createdAt ? moment(row.createdAt).format("YYYY/MM/DD/HH:MM:A") : '---'}
+                </TableCell>
+
+                <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">
+                    {row.siteId ? row.siteId.site_name : '----'}
+                </TableCell>
+                <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">
+                    {row.operation ? row.operation : '----'}
+                </TableCell>
+                <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">
+                    <Link to={{
+                        pathname: "/EPCDetailMovement", state: {
+                            row: { row },
+                            data: { zone: row.zoneId ? row.zoneId.zone_name : null }
+                        }
+                    }}
+                    >{row.epc ? row.epc.length : '----'}</Link>
+                </TableCell>
+            </TableRow>
+        </React.Fragment>
+    );
+}
+export default function AnalyticsMovementReportTable({ data, epcEPC }) {
+    let [epcData, setepcData] = useState([])
+
+    useEffect(() => {
+        if (data) {
+
+            let epc = data.reduce((acc, item) => Array.from(new Set(acc.concat(item.epc))), [])
+            let epcData = epc.map(epc => ({
+
+                epc,
+                data: data.filter(i => i.epc.includes(epc))
+
+            }))
+
+            console.log(epcData, "----epc data")
+            setepcData(epcData)
+        }
+
+
+    }, [data])
+
+    const useStyles = makeStyles({
+        root: {
+            width: '100%',
+        },
+        container: {
+            maxHeight: 440,
+        },
+        backgroundColorfix: {
+            backgroundColor: "#263238",
+        },
+    });
+    const classes = useStyles();
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(+event.target.value);
+        setPage(0);
+    };
+    // const groups = _.groupBy(data, 'division');
+    var results = data.reduce(function (results, org) {
+        (results[org?.asn?.asn] = results[org?.asn?.asn] || []).push(org);
+        return results;
+    }, {})
+
+    // console.log('asdfasf', results);
+    let newRes = Object.entries(results).map(([asn, data]) => ({ asn, data }))
+    return (
+        <Paper className={classes.root}  >
+            {
+                epcData
+                    .filter(({ epc, data }) => epc?.toLowerCase().includes(epcEPC.toLowerCase()))
+                    .map(({ epc, data }) =>
+
+                        <TableContainer key={epc} >
+                            {/* <h1 style={{ color: "white", margin: 10, fontSize: 15 }}>ASN: {asn}</h1> */}
+                            <Button variant="contained" color="primary" style={{ padding: 10, margin: 10 }} >Epc: {epc}</Button>
+                            <Table size="small" aria-label="collapsible table">
+                                <TableHead   >
+                                    <TableRow >
+                                        <TableCell
+                                            style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center"
+                                        >
+                                            Date
+                                        </TableCell>
+                                        {/* <TableCell
+                                            style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12,}} align="center"
+                                        >
+                                            Zone Name
+                                        </TableCell> */}
+                                        <TableCell
+                                            style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center"
+                                        >
+                                            Site Name
+                                        </TableCell>
+                                        {/* <TableCell
+                                            style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12,}} align="center"
+                                        >
+                                            Input Note
+                                        </TableCell> */}
+                                        <TableCell
+                                            style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center"
+                                        >
+                                            Operation
+                                        </TableCell>
+                                        <TableCell
+                                            style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center"
+                                        >
+                                            Total Epc
+                                        </TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {data
+                                        .map((row) => (
+                                            <Row key={row} asn={epc} row={row} />
+                                        ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    )
+            }
+            <TablePagination
+                rowsPerPageOptions={[10, 25, 100]}
+                component="div"
+                count={epcData.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                className={classes.backgroundColorfix}
+                style={{ backgroundColor: "#263238", color: 'white' }}
+            />
+        </Paper>
+    );
+}

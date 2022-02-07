@@ -1,0 +1,134 @@
+.main-dashboard {
+    display: flex;
+    width: '100%';
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.dashboard {
+    width: 98%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    min-height: 80vh;
+    border-radius: 10px;
+    /* box-shadow: 0px 0px 11px 2px rgba(255, 255, 255, 0.55);
+    -webkit-box-shadow: 0px 0px 11px 2px rgba(255, 255, 255, 0.55);
+    -moz-box-shadow: 0px 0px 11px 2px rgba(255, 255, 255, 0.55); */
+    border: 1px solid black;
+}
+
+.dashboard-heading {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: rgb(37, 37, 37);
+}
+
+.dashboard-first-col {
+    width: 100%;
+    padding: 1em;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.dashboard-header {
+    width: 100%;
+    height: 60px;
+    background-color: #D3D8DB;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+body, body * {
+ 
+    /* font-weight: lighter; */
+}
+
+.dashboard-first-col-box {
+    /* width: ; */
+    flex: 1;
+    min-width: 200px;
+    min-height: 50px;
+    border-radius: 10px;
+    background-color: rgb(17, 17, 17);
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    margin: 1em;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.scaning-store-heading {
+    font-size: 15px;
+    margin-top: 1em;
+
+    font-weight: 600;
+    color: whitesmoke;
+    letter-spacing: 1px;
+}
+
+.dashboard-first-col-box-main-heading {
+    color: whitesmoke;
+ 
+    letter-spacing: 2px;
+}
+
+.dashboard-first-col-box-main-number {
+    font-size: 5em;
+    color: whitesmoke;
+}
+
+.activity-input {
+ 
+    width: 100%;
+    background-color: transparent;
+    border-radius: 10px;
+    border: 1px solid whitesmoke;
+    padding: 10px;
+    color: whitesmoke;
+    letter-spacing: 2px;
+    font-size: 15px;
+}
+
+.last-scan-select-2 {
+    width: 100%;
+    /* background-color: black!important; */
+}
+
+@media(max-width:1400px) {
+    .last-scan-select-2 {
+        width: 100%!important;
+        /* background-color: black!important; */
+    }
+    .input-mat {
+        width: 100%!important;
+    }
+    .input-mat-1 {
+        width: 100%!important;
+    }
+}
+
+.text-field-label {
+    color: whitesmoke!important;
+    border-color: white!important;
+}
+
+.activity-input:disabled {
+    border: 1px solid whitesmoke;
+}
+
+.last-scan-select {
+    width: 100%
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@200&display=swap');

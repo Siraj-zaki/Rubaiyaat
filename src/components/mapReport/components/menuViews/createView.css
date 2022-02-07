@@ -1,0 +1,53 @@
+.create-view-wrapper{
+    /* display: flex; */
+    /* justify-content: left; */
+}
+
+.create-view-wrapper .row{
+    /* flex:0 1 100%; */
+}
+
+.color-picker-wrapper{
+    padding: 8px 10px;
+    display: flex;
+    gap: 4px;
+}
+
+.color-picker-wrapper span{
+    width: 20px;
+    height: 20px;
+    opacity: .6;
+    cursor: pointer;
+    transition: all 1s;
+    border-radius: 4px;
+}
+
+.color-picker-wrapper span:hover{
+    box-shadow:2px 2px 5px white;
+}
+
+.color-picker-wrapper span.selected{
+    border: 2px solid white;
+}
+
+.zones-creation-view {
+    width: 100%;
+    display: flex;
+    padding: 5px 0px;
+}
+
+.zones-creation-view span{
+    width: 20px;
+    height: 20px;
+    opacity: .6;
+    transition: all 1s;
+    border-radius: 4px;
+    margin-left: 5px;
+    border: 1px solid black;
+}
+.zone-to-add{
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid white;
+    width: 73%;
+}
