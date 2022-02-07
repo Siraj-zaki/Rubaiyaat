@@ -45,7 +45,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "start": "serve -s build",
-    "build": "react-scripts --openssl-legacy-provider build",
+    "build": "react-scripts  build",
     "heroku-postbuild": "npm run build",
     "dev": "react-scripts   start",
     "lint:fix": "eslint — ext --fix --ext .js,.jsx .",
