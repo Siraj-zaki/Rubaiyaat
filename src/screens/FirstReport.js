@@ -100,8 +100,8 @@ export class FirstReport extends Component {
     this.setState({ loading: true });
     const assetsDetails = await api.getAssetsBySoh();
     await this.setState({
-      assetsDetails: assetsDetails,
-      assetsDetailsNew: assetsDetails,
+      assetsDetails: assetsDetails.reverse(),
+      assetsDetailsNew: assetsDetails.reverse(),
     });
     console.log(assetsDetails, "assetsDetails");
     if (assetsDetails) {

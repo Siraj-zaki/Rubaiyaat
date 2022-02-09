@@ -83,7 +83,7 @@ export class SupplyChainIBTDataPacking extends Component {
     this.setState({ loading: true });
     const ASN = await api.getASN();
     let filtering = ASN.filter((item) => item.operation_name === "packing");
-    this.setState({ ASN: filtering, allData: filtering });
+    this.setState({ ASN: filtering.reverse(), allData: filtering.reverse() });
     console.log(this.state.ASN);
     if (ASN) {
       this.setState({ loading: false });

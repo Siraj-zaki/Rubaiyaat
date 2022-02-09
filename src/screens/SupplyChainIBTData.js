@@ -79,7 +79,7 @@ export class SupplyChainIBTData extends Component {
         this.setState({ loading: true })
         const ASN = await api.getASN()
         let filtering = ASN.filter((item => item.operation_name === "receiving"))
-        this.setState({ ASN: filtering, allData: filtering })
+        this.setState({ ASN: filtering.reverse(), allData: filtering.reverse() })
         console.log(ASN);
         if (ASN) {
             this.setState({ loading: false })
