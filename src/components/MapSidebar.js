@@ -391,166 +391,6 @@ function MapSidebar({
                   flexDirection: "column",
                 }}
               >
-                {/* <div
-                  className="map-table-1"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "flex-start",
-                    flexDirection: "column",
-                    width: "100%",
-                    padding: 5,
-                  }}
-                >
-                  <h2
-                    style={{
-                      fontSize: 14,
-                      color: "white",
-                      fontWeight: "lighter",
-                      fontFamily: "inherit",
-                    }}
-                  >
-                    RFID TAGS
-                  </h2>
-                  <h2
-                    style={{
-                      fontSize: 13,
-                      color: "white",
-                      fontFamily: "inherit",
-                    }}
-                  >
-                    {properties?.RFID_Tag}
-                  </h2>
-                </div> */}
-                {/* <div
-                  className="map-table-1"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "flex-start",
-                    flexDirection: "column",
-                    width: "100%",
-                    padding: 5,
-                  }}
-                >
-                  <h2
-                    style={{
-                      fontSize: 14,
-                      color: "white",
-                      fontWeight: "lighter",
-                      fontFamily: "inherit",
-                    }}
-                  >
-                    Operation
-                  </h2>
-                  <h2
-                    style={{
-                      fontSize: 13,
-                      color: "white",
-                      fontFamily: "inherit",
-                    }}
-                  >
-                    {properties?.operation}
-                  </h2>
-                </div> */}
-
-                {/* <div
-                  className="map-table-1"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "flex-start",
-                    flexDirection: "column",
-                    width: "100%",
-                    padding: 5,
-                  }}
-                >
-                  <h2
-                    style={{
-                      fontSize: 14,
-                      color: "white",
-                      fontWeight: "lighter",
-                      fontFamily: "inherit",
-                    }}
-                  >
-                    Facility
-                  </h2>
-                  <h2
-                    style={{
-                      fontSize: 13,
-                      color: "white",
-                      fontFamily: "inherit",
-                    }}
-                  >
-                    {properties?.mConData?.facility
-                      ? properties?.mConData?.facility
-                      : "EMPTY"}
-                  </h2>
-                </div> */}
-                {/* <div
-                  className="map-table-1"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "flex-start",
-                    flexDirection: "column",
-                    width: "100%",
-                    padding: 5,
-                  }}
-                >
-                  <h2
-                    style={{
-                      fontSize: 14,
-                      color: "white",
-                      fontWeight: "lighter",
-                      fontFamily: "inherit",
-                    }}
-                  >
-                    lat
-                  </h2>
-                  <h2
-                    style={{
-                      fontSize: 13,
-                      color: "white",
-                      fontFamily: "inherit",
-                    }}
-                  >
-                    {properties?.mConData?.lat ? properties?.mConData?.lat : "EMPTY"}
-                  </h2>
-                </div> */}
-                {/* <div
-                  className="map-table-1"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "flex-start",
-                    flexDirection: "column",
-                    width: "100%",
-                    padding: 5,
-                  }}
-                >
-                  <h2
-                    style={{
-                      fontSize: 14,
-                      color: "white",
-                      fontWeight: "lighter",
-                      fontFamily: "inherit",
-                    }}
-                  >
-                    long
-                  </h2>
-                  <h2
-                    style={{
-                      fontSize: 13,
-                      color: "white",
-                      fontFamily: "inherit",
-                    }}
-                  >
-                    {properties?.mConData?.long
-                      ? properties?.mConData?.long
-                      : "EMPTY"}
-                  </h2>
-                </div> */}
                 <div
                   className="map-table-1"
                   style={{
@@ -582,37 +422,6 @@ function MapSidebar({
                     {properties?.RFID_Tag}
                   </h2>
                 </div>
-                {/* <div
-                  className="map-table-1"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "flex-start",
-                    flexDirection: "column",
-                    width: "100%",
-                    padding: 5,
-                  }}
-                >
-                  <h2
-                    style={{
-                      fontSize: 14,
-                      color: "white",
-                      fontWeight: "lighter",
-                      fontFamily: "inherit",
-                    }}
-                  >
-                    Odoo ID
-                  </h2>
-                  <h2
-                    style={{
-                      fontSize: 13,
-                      color: "white",
-                      fontFamily: "inherit",
-                    }}
-                  >
-                    {properties?.RFID_Tag}
-                  </h2>
-                </div> */}
                 <div
                   className="map-table-1"
                   style={{
@@ -631,7 +440,7 @@ function MapSidebar({
                       fontFamily: "inherit",
                     }}
                   >
-                    Brand
+                    Asset Name
                   </h2>
                   <h2
                     style={{
@@ -641,7 +450,7 @@ function MapSidebar({
                       fontFamily: "inherit",
                     }}
                   >
-                    {properties?.Brand}
+                    {properties?.assetName}
                   </h2>
                 </div>
                 <div
@@ -672,7 +481,7 @@ function MapSidebar({
                       fontFamily: "inherit",
                     }}
                   >
-                    {properties?.Description}
+                    {properties?.description}
                   </h2>
                 </div>
 
@@ -694,7 +503,7 @@ function MapSidebar({
                       fontFamily: "inherit",
                     }}
                   >
-                    Odoo Id
+                    department
                   </h2>
                   <h2
                     style={{
@@ -704,7 +513,7 @@ function MapSidebar({
                       fontFamily: "inherit",
                     }}
                   >
-                    {properties?.["Thing Serial"]}
+                    {properties?.department}
                   </h2>
                 </div>
 
@@ -736,7 +545,7 @@ function MapSidebar({
                       fontFamily: "inherit",
                     }}
                   >
-                    {new Date(properties?.last_cycle_date).toLocaleString('en-Us', "Asia/Muscat")}
+                    {new Date(properties?.updatedAt).toLocaleString('en-Us', "Asia/Muscat")}
                   </h2>
                 </div>
                 <div
@@ -758,7 +567,7 @@ function MapSidebar({
                       fontFamily: "inherit",
                     }}
                   >
-                    Warranty Expiry date
+                    inventory Date
                   </h2>
                   <h2
                     style={{
@@ -767,7 +576,7 @@ function MapSidebar({
                       fontFamily: "inherit",
                     }}
                   >
-                    {properties?.Warranty_Expiry_date}
+                    {properties?.inventoryDate}
                   </h2>
                 </div>
                 <div
@@ -789,7 +598,7 @@ function MapSidebar({
                       fontFamily: "inherit",
                     }}
                   >
-                    Warranty Period
+                    Owner Name
                   </h2>
                   <h2
                     style={{
@@ -798,7 +607,7 @@ function MapSidebar({
                       fontFamily: "inherit",
                     }}
                   >
-                    {properties?.Warranty_Period}
+                    {properties?.ownerName}
                   </h2>
                 </div>
               </div>
