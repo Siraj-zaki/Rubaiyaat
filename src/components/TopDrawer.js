@@ -465,7 +465,7 @@ function ScrollableTabsButtonForce(props) {
             ) : (
               ""
             )}
-            {permissions.includes("Supply Chain") ? (
+            {/* {permissions.includes("Supply Chain") ? (
               <NavLink
                 exact
                 to="/SupplyChain/SupplyChainIBTDataPacking"
@@ -477,7 +477,7 @@ function ScrollableTabsButtonForce(props) {
               </NavLink>
             ) : (
               ""
-            )}
+            )} */}
             {/* {permissions.includes("GI Summary") ? (
               <NavLink
                 exact
@@ -683,7 +683,7 @@ function ScrollableTabsButtonForce(props) {
               ""
             )} */}
 
-            {/* {permissions.includes("AnalyticsMovementHistory") ? (
+            {permissions.includes("AnalyticsMovementHistory") ? (
               <NavLink
                 exact
                 to="/Analytics/AnalyticsMovementHistory"
@@ -695,7 +695,7 @@ function ScrollableTabsButtonForce(props) {
               </NavLink>
             ) : (
               ""
-            )} */}
+            )}
           </div>
         ) : (
           ""

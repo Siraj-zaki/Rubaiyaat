@@ -55,8 +55,8 @@ export class AnalyticsMovementHistory extends Component {
         // alert(this.state.device.label)
     }
     dateFilter = () => {
-        return this.state.allData.filter(x => x.asn && x.asn.asn.toLowerCase().includes(this.state.asnName.toLowerCase())
-            && x.operation && x.operation.toLowerCase().includes(this.state.device.value.toLowerCase())
+        return this.state.allData.filter(x => x.asn && x.asn.toLowerCase().includes(this.state.asnName.toLowerCase())
+            // && x.operation && x.operation.toLowerCase().includes(this.state.device.value.toLowerCase())
         )
     }
     render() {
@@ -110,7 +110,7 @@ export class AnalyticsMovementHistory extends Component {
                             <Collapse in={this.state.open} timeout="auto" unmountOnExit style={{ width: '100%' }}>
                                 <div style={{ width: '100%', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', backgroundColor: 'transparent' }}>
                                     <form style={{ width: '80%', margin: 20, marginBottom: 0, display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', flexWrap: 'wrap' }} onSubmit={this.onSubmitEvent} noValidate={false} autoComplete="off">
-                                        <Select
+                                        {/* <Select
                                             value={this.state.device}
                                             onChange={(e) => this.handleChangeDevice(e)}
                                             options={devices}
@@ -118,7 +118,7 @@ export class AnalyticsMovementHistory extends Component {
                                             placeholder={"All Site"}
                                             className="last-scan-select-2 black"
                                             styles={customStyles}
-                                        />
+                                        /> */}
                                         <BasicTextFields name="Asn" value={this.state.asnName} onChangeEvent={(e) => this.setState({ asnName: e.target.value })} />
                                         {/* <BasicTextFields name="Ending Date" value={this.state.endingDate} onChangeEvent={(e) => this.setState({ endingDate: e.target.value })} /> */}
 

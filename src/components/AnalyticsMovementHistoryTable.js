@@ -89,7 +89,7 @@ export default function AnalyticsMovementHistoryTable({ data }) {
     };
     // const groups = _.groupBy(data, 'division');
     var results = data.reduce(function (results, org) {
-        (results[org?.asn?.asn] = results[org?.asn?.asn] || []).push(org);
+        (results[org?.asn] = results[org?.asn] || []).push(org);
         return results;
     }, {})
 

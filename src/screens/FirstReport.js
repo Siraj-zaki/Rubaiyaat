@@ -85,15 +85,15 @@ export class FirstReport extends Component {
   dateFilter = () => {
     return this.state.assetsDetailsNew.filter(
       (x) =>
-        x?.assetDetail[0]?.assetName?.toLowerCase().includes(this.state?.asset_name?.toLowerCase())
+        x?.assetDetails[0]?.assetName?.toLowerCase().includes(this.state?.asset_name?.toLowerCase())
         &&
-        x?.assetDetail[0].assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
+        x?.asset_EPC?.toLowerCase().includes(this.state?.epc?.toLowerCase())
         &&
-        x?.epcID.toLowerCase().includes(this.state.epc.toLowerCase())
+        x?.assetDetails[0].assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
         &&
-        this.dateCompareCreation(x?.assetDetail[0].createdAt, x?.assetDetail[0].createdAt)
+        this.dateCompareCreation(x?.assetDetails[0].createdAt, x?.assetDetails[0].createdAt)
         &&
-        this.dateCompareUpdated(x?.assetDetail[0].updatedAt, x?.assetDetail[0].updatedAt)
+        this.dateCompareUpdated(x?.assetDetails[0].updatedAt, x?.assetDetails[0].updatedAt)
     );
   };
   runFunction = async () => {
@@ -106,7 +106,7 @@ export class FirstReport extends Component {
     console.log(assetsDetails, "assetsDetails");
     if (assetsDetails) {
       await this.setState({ loading: false });
-      // await this.searchFunction()
+      await this.searchFunction()
     }
   };
   async componentDidMount() {
