@@ -62,6 +62,7 @@ import FourthReport from './screens/FourthReport';
 import FifthReport from './screens/FifthReport';
 import userImage from './assets/user.jpg';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
+import itemMasterUpload from './screens/ItemMasterUpload';
 class App extends React.Component {
   state = {
     open: true,
@@ -181,6 +182,10 @@ class App extends React.Component {
               }
               {permissions?.includes("Table_Report") ?
                 <PrivateRoute path={"/Reports/FourthReport"} exact component={FourthReport} />
+                : null
+              }
+              {permissions?.includes("Table_Report") ?
+                <PrivateRoute path={"/Reports/ItemMasterUpload"} exact component={itemMasterUpload} />
                 : null
               }
               {permissions?.includes("Table_Report") ?

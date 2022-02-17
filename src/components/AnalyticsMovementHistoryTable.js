@@ -89,7 +89,7 @@ export default function AnalyticsMovementHistoryTable({ data }) {
     };
     // const groups = _.groupBy(data, 'division');
     var results = data.reduce(function (results, org) {
-        (results[org?.asn] = results[org?.asn] || []).push(org);
+        (results[org?.asn?.asn] = results[org?.asn?.asn] || []).push(org);
         return results;
     }, {})
 
@@ -100,7 +100,7 @@ export default function AnalyticsMovementHistoryTable({ data }) {
             {
                 newRes.map(({ asn, data }) =>
 
-                    <TableContainer key={asn} >
+                    <TableContainer key={asn?.asn} >
                         {/* <h1 style={{ color: "white", margin: 10, fontSize: 15 }}>ASN: {asn}</h1> */}
                         <Button variant="contained" color="primary" style={{ padding: 10, margin: 10 }} >ASN: {asn}</Button>
                         <Table size="small" aria-label="collapsible table">

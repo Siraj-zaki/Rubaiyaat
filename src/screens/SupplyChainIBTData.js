@@ -34,7 +34,8 @@ export class SupplyChainIBTData extends Component {
         startingDate: "",
         endingDate: "",
         ibt: "",
-        allData: []
+        allData: [],
+        remarks: '',
     }
 
     onSubmitEvent = () => {
@@ -57,9 +58,12 @@ export class SupplyChainIBTData extends Component {
         return false
     }
     dateFilter = () => {
-        return this.state.allData.filter(x => this.dateCompare(x?.received_items?.date,  x?.transfer_items?.date)
+        return this.state.allData.filter(x => this.dateCompare(
+            x?.received_items?.date, x?.transfer_items?.date)
             &&
-            x.asn.toLowerCase().includes(this.state.ibt.toLowerCase()))
+            x.asn.toLowerCase().includes(this.state.ibt.toLowerCase())
+            &&
+            x?.received_items?.remarks.toLowerCase().includes(this.state.remarks.toLowerCase()))
     }
     handleChangeLocation = (e) => {
         this.setState({ location: e })
@@ -124,16 +128,16 @@ export class SupplyChainIBTData extends Component {
                                 <Button onClick={() => this.runFunction()} type="submit" color={'secondary'} variant="contained" style={{ position: 'absolute', right: '10px' }}>Run</Button>
                             </div>
                             <Collapse in={this.state.open} timeout="auto" unmountOnExit style={{ width: '100%' }}>
-                                
-                                <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', backgroundColor: 'transparent',minHeight:50,marginTop:10,position:'relative' }}>
-                                    <form style={{ width: '50%', margin: 20, marginBottom: 0, display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 0,flexDirection:'column' }}  >
-                                    <BasicTextFields margin={10} name="IBT" value={this.state.ibt} onChangeEvent={(e) => this.setState({ ibt: e.target.value })} />
-                                     <BasicTextFields margin={10} name="Remarks" value={this.state.remarks} onChangeEvent={(e) => this.setState({ remarks: e.target.value })} />
+
+                                <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', backgroundColor: 'transparent', minHeight: 50, marginTop: 10, position: 'relative' }}>
+                                    <form style={{ width: '50%', margin: 20, marginBottom: 0, display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 0, flexDirection: 'column' }}  >
+                                        <BasicTextFields margin={10} name="IBT" value={this.state.ibt} onChangeEvent={(e) => this.setState({ ibt: e.target.value })} />
+                                        <BasicTextFields margin={10} name="Remarks" value={this.state.remarks} onChangeEvent={(e) => this.setState({ remarks: e.target.value })} />
                                     </form>
-                                    <div style={{width:'1px',height:'100%',backgroundColor:'white',position:'absolute'}}></div>
-                                    <form style={{ width: '50%', margin: 20, marginBottom: 0, display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 0,flexDirection:'column' }}  >
-                                     <DatePicker value={this.state.startingDate} placeholder={"starting-date"} className="input-mat-1" style={{ border: '1px solid white', borderRadius: 5, height: 37, marginTop: 10, fontWeight: 'lighter' }} size={'large'} format={"YYYY-MM-DD"} onChange={(e) => this.setState({ startingDate: e })} />
-                                    <DatePicker value={this.state.endingDate} placeholder={"ending-date"} className="input-mat-1" style={{ border: '1px solid white', borderRadius: 5, height: 37, marginTop: 10, fontWeight: 'lighter' }} size={'large'} format={"YYYY-MM-DD"} onChange={(e) => this.setState({ endingDate: e })} />
+                                    <div style={{ width: '1px', height: '100%', backgroundColor: 'white', position: 'absolute' }}></div>
+                                    <form style={{ width: '50%', margin: 20, marginBottom: 0, display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 0, flexDirection: 'column' }}  >
+                                        <DatePicker value={this.state.startingDate} placeholder={"starting-date"} className="input-mat-1" style={{ border: '1px solid white', borderRadius: 5, height: 37, marginTop: 10, fontWeight: 'lighter' }} size={'large'} format={"YYYY-MM-DD"} onChange={(e) => this.setState({ startingDate: e })} />
+                                        <DatePicker value={this.state.endingDate} placeholder={"ending-date"} className="input-mat-1" style={{ border: '1px solid white', borderRadius: 5, height: 37, marginTop: 10, fontWeight: 'lighter' }} size={'large'} format={"YYYY-MM-DD"} onChange={(e) => this.setState({ endingDate: e })} />
                                     </form>
                                 </div>
                             </Collapse>

@@ -617,71 +617,19 @@ function ScrollableTabsButtonForce(props) {
             ) : (
               ""
             )}
-            {/* {permissions.includes("Counted_Assets") ? (
+            {permissions.includes("Associated_Items") ? (
               <NavLink
                 exact
-                to="/Reports/SecondReport"
+                to="/Reports/ItemMasterUpload"
                 className={`top-drawer-btn top-drawer-btn-${ActiveBtn6}`}
                 activeClassName="top-drawer-btn top-drawer-btn-active"
               >
                 <DashboardIcon htmlColor="white" />
-                Counted Assets
+                Item Master Upload
               </NavLink>
             ) : (
               ""
-            )} */}
-            {/* {permissions.includes("Table_Report") ? (
-              <NavLink
-                exact
-                to="/Reports/ThirdReport"
-                className={`top-drawer-btn top-drawer-btn-${ActiveBtn6}`}
-                activeClassName="top-drawer-btn top-drawer-btn-active"
-              >
-                <DashboardIcon htmlColor="white" />
-                Table Report
-              </NavLink>
-            ) : (
-              ""
-            )} */}
-            {/* {permissions.includes("Table_Report") ? (
-              <NavLink
-                exact
-                to="/Reports/FourthReport"
-                className={`top-drawer-btn top-drawer-btn-${ActiveBtn6}`}
-                activeClassName="top-drawer-btn top-drawer-btn-active"
-              >
-                <DashboardIcon htmlColor="white" />
-                GF Exit Report
-              </NavLink>
-            ) : (
-              ""
-            )} */}
-            {/* {permissions.includes("Table_Report") ? (
-              <NavLink
-                exact
-                to="/Reports/FifthReport"
-                className={`top-drawer-btn top-drawer-btn-${ActiveBtn6}`}
-                activeClassName="top-drawer-btn top-drawer-btn-active"
-              >
-                <DashboardIcon htmlColor="white" />
-                Item Master Report
-              </NavLink>
-            ) : (
-              ""
-            )} */}
-            {/* {permissions.includes("AnalyticsAssetList") ? (
-              <NavLink
-                exact
-                to="/Analytics/AnalyticsAssetList"
-                className={`top-drawer-btn top-drawer-btn-${ActiveBtn6}`}
-                activeClassName="top-drawer-btn top-drawer-btn-active"
-              >
-                <DashboardIcon htmlColor="white" />
-                Asset List
-              </NavLink>
-            ) : (
-              ""
-            )} */}
+            )}
 
             {permissions.includes("AnalyticsMovementHistory") ? (
               <NavLink

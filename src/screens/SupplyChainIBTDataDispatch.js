@@ -28,6 +28,7 @@ export class SupplyChainIBTDataDispatch extends Component {
     loading: false,
     startingDate: "",
     endingDate: "",
+    remarks: '',
     ibt: "",
     allData: [],
   };
@@ -75,7 +76,11 @@ export class SupplyChainIBTDataDispatch extends Component {
         this.dateCompare(
           x.packed_items.date,
           !x.transfer_items ? null : x.transfer_items.date
-        ) && x.asn.toLowerCase().includes(this.state.ibt.toLowerCase())
+        )
+        &&
+        x.asn.toLowerCase().includes(this.state.ibt.toLowerCase())
+        &&
+        x.transfer_items?.remarks?.toLowerCase().includes(this.state.remarks.toLowerCase())
     );
   };
   runFunction = async () => {
@@ -240,7 +245,7 @@ export class SupplyChainIBTDataDispatch extends Component {
                   margin: "10px",
                 }}
               >
-              
+
               </div>
               <SupplyChainASNDispatchTable asn={this.state.ASN} />
             </div>

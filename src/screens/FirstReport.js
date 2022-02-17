@@ -21,10 +21,14 @@ import Collapse from "@material-ui/core/Collapse";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import ClipLoader from "react-spinners/ClipLoader";
 import moment from "moment";
+import Papa from "papaparse";
 import FirstReportTable from "../components/FirstReportTable";
 import { CSVLink } from "react-csv";
 import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
 import { DatePicker, Radio, Space } from 'antd';
+import { toast } from "react-toastify";
+import CSVReader from "../components/CsvUploader";
+import Barcode from 'react-barcode'
 const { RangePicker } = DatePicker;
 export class FirstReport extends Component {
   state = {
@@ -155,6 +159,22 @@ export class FirstReport extends Component {
   handleClose = () => {
     this.setState({ openModal: false })
   }
+  csvUploader = (e) => {
+    console.log(e.target.files[0]);
+    const files = e.target.files;
+    console.log(files);
+    if (files) {
+
+      Papa.parse(files[0], {
+        header: true,
+        complete: results => {
+          console.log(results.data)
+        },
+      })
+    } else {
+      return toast.error("Please Upload Csv")
+    }
+  }
 
 
   render() {
@@ -248,7 +268,7 @@ export class FirstReport extends Component {
     console.log(data, "asdfasdf");
     return (
       <React.Fragment>
-        <CustomModal data={this.state.QrCode} image={true} open={this.state.openModal} handleClose={() => this.handleClose()} handleClickOpen={() => this.handleClickOpen} />
+        <CustomModal data={this.state.QrCode} brcode={true} image={true} open={this.state.openModal} handleClose={() => this.handleClose()} handleClickOpen={() => this.handleClickOpen} />
         <div>
           <div className="main-dashboard">
             {this.state.loading ? (
@@ -303,6 +323,7 @@ export class FirstReport extends Component {
                 >
                   Run
                 </Button>
+                {/* <CSVReader /> */}
                 <IconButton style={{ position: "absolute", right: "90px", cursor: 'pointer' }}>
                   <CSVLink filename="Asset_Report" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: 60 }} data={data} headers={headers}>
                     <SystemUpdateAltIcon fontSize="large" htmlColor="black" />
@@ -372,7 +393,7 @@ export class FirstReport extends Component {
             </div>
           </div>
         </div>
-      </React.Fragment>
+      </React.Fragment >
     );
   }
 }
