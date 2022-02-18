@@ -196,57 +196,57 @@ export class FirstReport extends Component {
     };
     const headers = [
       {
-        label: "Creation_Date",
+        label: "createdAt",
         key: "Creation_Date",
       },
       {
-        label: "Asset_Name",
+        label: "assetName",
         key: "Asset_Name",
       },
       {
-        label: "Asset_Type",
+        label: "assetType",
         key: "Asset_Type",
       },
       {
-        label: "EPC",
+        label: "RFID_Tag",
         key: "asset_EPC",
       },
       {
-        label: "Department",
+        label: "department",
         key: "Department",
       },
       {
-        label: "Asset_Location",
+        label: "location",
         key: "Asset_Location",
       },
       {
-        label: "Inventory_Date",
+        label: "inventoryDate",
         key: "Inventory_Date",
       },
       {
-        label: "Modification_Date",
+        label: "updatedAt",
         key: "Modification_Date",
       },
       {
-        label: "Asset_Status",
+        label: "assetStatus",
         key: "Asset_Status",
       },
       {
-        label: "Asset_Value",
+        label: "assetValue",
         key: "Asset_Value",
       },
       {
-        label: "Site",
+        label: "site",
         key: "Site",
       },
       {
-        label: "Description",
+        label: "description",
         key: "Description",
       },
-      {
-        label: "Asset_Image",
-        key: "Asset_Image",
-      },
+      // {
+      //   label: "Asset_Image",
+      //   key: "Asset_Image",
+      // },
     ];
     const data = this.state.assetsDetails.map((item) => {
       return {
@@ -262,7 +262,7 @@ export class FirstReport extends Component {
         Asset_Value: item?.assetDetails[0].assetValue || "----",
         Site: item?.assetDetails[0].site?.site_name || "----",
         Description: item?.assetDetails[0].description || "----",
-        Asset_Image: item?.assetDetails[0].image,
+        // Asset_Image: item?.assetDetails[0].image,
       }
     });
     console.log(data, "asdfasdf");

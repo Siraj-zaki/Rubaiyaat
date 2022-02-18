@@ -580,6 +580,19 @@ function ScrollableTabsButtonForce(props) {
             ) : (
               ""
             )}
+            {permissions.includes("Dashboard_Count") ? (
+              <NavLink
+                exact
+                to="/Count/CountDashboard"
+                className={`top-drawer-btn top-drawer-btn-${ActiveBtn5}`}
+                activeClassName="top-drawer-btn top-drawer-btn-active"
+              >
+                <DashboardIcon htmlColor="white" />
+                Count Dashboard
+              </NavLink>
+            ) : (
+              ""
+            )}
             {/* {permissions.includes("Dashboard_Admin") ? (
               <NavLink
                 exact
@@ -626,6 +639,32 @@ function ScrollableTabsButtonForce(props) {
               >
                 <DashboardIcon htmlColor="white" />
                 Item Master Upload
+              </NavLink>
+            ) : (
+              ""
+            )}
+            {permissions.includes("Associated_Items") ? (
+              <NavLink
+                exact
+                to="/Reports/CountedItemReport"
+                className={`top-drawer-btn top-drawer-btn-${ActiveBtn6}`}
+                activeClassName="top-drawer-btn top-drawer-btn-active"
+              >
+                <DashboardIcon htmlColor="white" />
+                Counted Report
+              </NavLink>
+            ) : (
+              ""
+            )}
+            {permissions.includes("Associated_Items") ? (
+              <NavLink
+                exact
+                to="/Reports/ItemMasterReport"
+                className={`top-drawer-btn top-drawer-btn-${ActiveBtn6}`}
+                activeClassName="top-drawer-btn top-drawer-btn-active"
+              >
+                <DashboardIcon htmlColor="white" />
+                Item Master Report
               </NavLink>
             ) : (
               ""

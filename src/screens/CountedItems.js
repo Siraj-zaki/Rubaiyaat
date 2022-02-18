@@ -28,9 +28,9 @@ import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
 import { DatePicker, Radio, Space } from 'antd';
 import { toast } from "react-toastify";
 import CSVReader from "../components/CsvUploader";
-import ItemMasterUploadTable from "../components/ItemMasterUploadTable";
+import Barcode from 'react-barcode'
 const { RangePicker } = DatePicker;
-export class itemMasterUpload extends Component {
+export class CountedItems extends Component {
     state = {
         location: "",
         ASN: [],
@@ -101,22 +101,33 @@ export class itemMasterUpload extends Component {
         );
     };
     runFunction = async () => {
-        if (this.state.assetsDetails.length !== 0) {
-            const uploading = await api.uploadingData(this.state.assetsDetails)
-                .then(res => {
-                    return toast.success("Uploaded")
-                }).catch(err => {
-                    return toast.error("Something went wrong")
-                })
-        } else {
-            return toast.error("Please enter csv file first")
+        this.setState({ loading: true });
+        const assetsDetails = await api.getCountedItems();
+        const assetRoutes = await api.getAssetsByAll();
+        console.log(assetsDetails, "counted");
+        console.log(assetRoutes, "assetsDetails");
+        
+        let newArray = []
+        
+        newArray = assetRoutes.filter(f => assetsDetails.find(item => item?.asset_EPC === f.RFID_Tag));
+        await this.setState({
+            assetsDetails: newArray.reverse(),
+            assetsDetailsNew: newArray.reverse(),
+        });
+        console.log(newArray, "newArray");
+        if (assetsDetails) {
+            await this.setState({ loading: false });
+            // await this.searchFunction()
         }
-
-
     };
+
     async componentDidMount() {
-        let data = await this.getBase64FromUrl('https://images.unsplash.com/photo-1600857062241-98e5dba7f214?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=498&q=80').then((res) => res)
-        await this.setState({ image: data })
+        // let data = this.imagetoBase64()
+
+        // setTimeout(() => {
+        //   console.log(data,'data');
+        //   console.log(this.state.image);
+        // }, 3000);
     }
     imagetoBase64 = () => {
         var xhr = new XMLHttpRequest();
@@ -164,20 +175,6 @@ export class itemMasterUpload extends Component {
                 header: true,
                 complete: results => {
                     console.log(results.data)
-                    this.setState({
-                        assetsDetails: results.data.map((item => {
-                            return {
-                                assetName: item.assetName,
-                                assetType: item.assetType,
-                                RFID_Tag: item.RFID_Tag,
-                                department: item.department,
-                                assetStatus: item.assetStatus,
-                                assetValue: item.assetValue,
-                                site: item.site,
-                                description: item.description,
-                            }
-                        }))
-                    })
                 },
             })
         } else {
@@ -257,9 +254,27 @@ export class itemMasterUpload extends Component {
                 key: "Asset_Image",
             },
         ];
+        // const data = this.state.assetsDetails.map((item) => {
+        //     return {
+        //         Creation_Date: new Date(item?.assetDetails[0].createdAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
+        //         Asset_Name: item?.assetDetails[0].assetName || "----",
+        //         Asset_Type: item?.assetDetails[0].assetType || "----",
+        //         asset_EPC: item?.assetDetails[0].RFID_Tag || "----",
+        //         Department: item?.assetDetails[0].department || "----",
+        //         Asset_Location: item?.assetDetails[0].location || "----",
+        //         Inventory_Date: new Date(item?.assetDetails[0].inventoryDate).toLocaleString('en-Us', "Asia/Muscat") || "----",
+        //         Modification_Date: new Date(item?.assetDetails[0].updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
+        //         Asset_Status: item?.assetDetails[0].assetStatus || "----",
+        //         Asset_Value: item?.assetDetails[0].assetValue || "----",
+        //         Site: item?.assetDetails[0].site?.site_name || "----",
+        //         Description: item?.assetDetails[0].description || "----",
+        //         Asset_Image: item?.assetDetails[0].image,
+        //     }
+        // });
+        // console.log(data, "asdfasdf");
         return (
             <React.Fragment>
-                <CustomModal data={this.state.QrCode} image={true} open={this.state.openModal} handleClose={() => this.handleClose()} handleClickOpen={() => this.handleClickOpen} />
+                <CustomModal data={this.state.QrCode} brcode={true} image={true} open={this.state.openModal} handleClose={() => this.handleClose()} handleClickOpen={() => this.handleClickOpen} />
                 <div>
                     <div className="main-dashboard">
                         {this.state.loading ? (
@@ -304,7 +319,7 @@ export class itemMasterUpload extends Component {
                                     )}
                                 </IconButton>
                                 <PeopleIcon htmlColor="black" className="ml-4 mr-4" />
-                                <h1 className="dashboard-heading">Asset (Report)</h1>
+                                <h1 className="dashboard-heading">Counted Item (Report)</h1>
                                 <Button
                                     onClick={() => this.runFunction()}
                                     type="submit"
@@ -312,14 +327,15 @@ export class itemMasterUpload extends Component {
                                     variant="contained"
                                     style={{ position: "absolute", right: "10px" }}
                                 >
-                                    Push Csv to Server
+                                    Run
                                 </Button>
                                 {/* <CSVReader /> */}
-                                <IconButton style={{ position: "absolute", right: "190px", cursor: 'pointer' }}>
-                                    <input onChange={(e) => this.csvUploader(e)} style={{ display: 'none' }} id="fileSelect" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
-                                    <SystemUpdateAltIcon fontSize="large" htmlColor="black" />
-                                    <label htmlFor="fileSelect" className="dashboard-heading" style={{ fontSize: '15px' }} >UPLOAD CSV</label>
-                                </IconButton>
+                                {/* <IconButton style={{ position: "absolute", right: "90px", cursor: 'pointer' }}>
+                                    <CSVLink filename="Asset_Report" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: 60 }} data={data} headers={headers}>
+                                        <SystemUpdateAltIcon fontSize="large" htmlColor="black" />
+                                        <h1 className="dashboard-heading" style={{ fontSize: '15px' }} >CSV</h1>
+                                    </CSVLink>
+                                </IconButton> */}
                             </div>
                             <Collapse
                                 in={this.state.open}
@@ -328,6 +344,40 @@ export class itemMasterUpload extends Component {
                                 style={{ width: "100%" }}
                             >
                                 <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', backgroundColor: 'transparent', minHeight: 50, marginTop: 10, position: 'relative' }}>
+                                    <form style={{ width: '50%', margin: 20, marginBottom: 0, display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 0, flexDirection: 'column' }}  >
+                                        <BasicTextFields
+                                            margin={10}
+                                            placeholder="EPC"
+                                            name="EPC"
+                                            value={this.state.epc}
+                                            onChangeEvent={(e) =>
+                                                this.setState({ epc: e.target.value })
+                                            }
+                                        />
+                                        <BasicTextFields
+                                            margin={10}
+                                            placeholder="Asset Name"
+                                            name="Asset Name"
+                                            value={this.state.asset_name}
+                                            onChangeEvent={(e) =>
+                                                this.setState({ asset_name: e.target.value })
+                                            }
+                                        />
+                                        <BasicTextFields
+                                            margin={10}
+                                            placeholder="Asset Status"
+                                            name="Asset Status"
+                                            value={this.state.asset_status}
+                                            onChangeEvent={(e) =>
+                                                this.setState({ asset_status: e.target.value })
+                                            }
+                                        />
+                                    </form>
+                                    <div style={{ width: '1px', height: '100%', backgroundColor: 'white', position: 'absolute' }}></div>
+                                    <form style={{ width: '50%', margin: 20, marginBottom: 0, display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 0, flexDirection: 'column' }}  >
+                                        <DatePicker value={this.state.creation_date} placeholder={"Creation Date"} className="input-mat-1" style={{ border: '1px solid white', borderRadius: 5, height: 37, marginTop: 10, fontWeight: 'lighter' }} size={'large'} format={"YYYY-MM-DD"} onChange={(e) => this.setState({ creation_date: e })} />
+                                        <DatePicker value={this.state.modification_date} placeholder={"Modification Date"} className="input-mat-1" style={{ border: '1px solid white', borderRadius: 5, height: 37, marginTop: 10, fontWeight: 'lighter' }} size={'large'} format={"YYYY-MM-DD"} onChange={(e) => this.setState({ modification_date: e })} />
+                                    </form>
                                 </div>
                             </Collapse>
                             <div
@@ -339,8 +389,13 @@ export class itemMasterUpload extends Component {
                                     margin: "10px",
                                 }}
                             >
+                                {/* <CSVLink data={data} headers={headers}>
+                  <Button color="primary" variant="contained">
+                    CSV
+                  </Button>
+                </CSVLink> */}
                             </div>
-                            <ItemMasterUploadTable openModal={(device) => this.handleClickOpen(device)} asn={this.state.assetsDetails} />
+                            {/* <FirstReportTable openModal={(device) => this.handleClickOpen(device)} asn={this.state.assetsDetails} /> */}
                         </div>
                     </div>
                 </div>
@@ -349,4 +404,4 @@ export class itemMasterUpload extends Component {
     }
 }
 
-export default itemMasterUpload;
+export default CountedItems;

@@ -9,6 +9,7 @@ import BasicTextFields from "./Input";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import LogoImg from '../assets/logo.png'
 
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
@@ -110,6 +111,7 @@ function MapSidebar({
         left: drawer ? 0 : -300,
         top: 0,
         zIndex: 4000,
+        overflowY:'scroll',
         backgroundColor: "#373E43",
         width: 300,
         transition: "all .4s",
@@ -310,6 +312,7 @@ function MapSidebar({
           style={{
             display: "flex",
             justifyContent: "flex-start",
+            
             alignItems: "flex-start",
             flexDirection: "column",
             width: "100%",
@@ -386,11 +389,43 @@ function MapSidebar({
                 style={{
                   width: "100%",
                   display: "flex",
+                  minHeight:'100%',
                   justifyContent: "space-between",
                   alignItems: "center",
                   flexDirection: "column",
                 }}
               >
+                <div
+                  className="map-table-1"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "flex-start",
+                    flexDirection: "column",
+                    width: "100%",
+                    padding: 5,
+                  }}
+                >
+                  <h2
+                    style={{
+                      fontSize: 14,
+                      color: "white",
+                      fontWeight: "lighter",
+                      fontFamily: "inherit",
+                    }}
+                  >
+                    Image
+                  </h2>
+                  <h2
+                    style={{
+                      fontSize: 13,
+                      color: "white",
+                      fontFamily: "inherit",
+                    }}
+                  >
+                    <img src={LogoImg}  style={{ objectFit: "contain" }} width="100%" height="150px" alt="" />
+                  </h2>
+                </div>
                 <div
                   className="map-table-1"
                   style={{

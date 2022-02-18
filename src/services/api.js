@@ -108,6 +108,10 @@ const getAssetsDetails = async (payLoad) => {
     const { data } = await axios.get(`${Path.GET_ASSETS_DETAILS}`);
     return data;
 };
+const uploadingData = async (payLoad) => {
+    const { data } = await axios.put(`${Path.UPLOAD_DATA}`, payLoad);
+    return data;
+};
 export default {
     getAllUsers,
     getAllSite,
@@ -135,5 +139,6 @@ export default {
     getAssetsDetails,
     getAssetsByEPC,
     getAssetsBySite,
-    getAssetsByAll
+    getAssetsByAll,
+    uploadingData
 };

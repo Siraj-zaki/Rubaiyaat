@@ -28,9 +28,10 @@ import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
 import { DatePicker, Radio, Space } from 'antd';
 import { toast } from "react-toastify";
 import CSVReader from "../components/CsvUploader";
-import ItemMasterUploadTable from "../components/ItemMasterUploadTable";
+import Barcode from 'react-barcode'
+import ItemMasterTable from "../components/ItemMasterTable";
 const { RangePicker } = DatePicker;
-export class itemMasterUpload extends Component {
+export class ItemMasterReport extends Component {
     state = {
         location: "",
         ASN: [],
@@ -89,34 +90,41 @@ export class itemMasterUpload extends Component {
     dateFilter = () => {
         return this.state.assetsDetailsNew.filter(
             (x) =>
-                x?.assetDetails[0]?.assetName?.toLowerCase().includes(this.state?.asset_name?.toLowerCase())
+                x?.assetName?.toLowerCase().includes(this.state?.asset_name?.toLowerCase())
                 &&
-                x?.asset_EPC?.toLowerCase().includes(this.state?.epc?.toLowerCase())
+                x?.RFID_Tag?.toLowerCase().includes(this.state?.epc?.toLowerCase())
                 &&
-                x?.assetDetails[0].assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
+                x?.assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
                 &&
-                this.dateCompareCreation(x?.assetDetails[0].createdAt, x?.assetDetails[0].createdAt)
+                this.dateCompareCreation(x?.createdAt, x?.createdAt)
                 &&
-                this.dateCompareUpdated(x?.assetDetails[0].updatedAt, x?.assetDetails[0].updatedAt)
+                this.dateCompareUpdated(x?.updatedAt, x?.updatedAt)
         );
     };
     runFunction = async () => {
-        if (this.state.assetsDetails.length !== 0) {
-            const uploading = await api.uploadingData(this.state.assetsDetails)
-                .then(res => {
-                    return toast.success("Uploaded")
-                }).catch(err => {
-                    return toast.error("Something went wrong")
-                })
-        } else {
-            return toast.error("Please enter csv file first")
+        this.setState({ loading: true });
+
+        const assetRoutes = await api.getAssetsByAll();
+
+        console.log(assetRoutes, "assetsDetails");
+        await this.setState({
+            assetsDetails: assetRoutes.reverse(),
+            assetsDetailsNew: assetRoutes.reverse(),
+        });
+
+        if (assetRoutes) {
+            await this.setState({ loading: false });
+            await this.searchFunction()
         }
-
-
     };
+
     async componentDidMount() {
-        let data = await this.getBase64FromUrl('https://images.unsplash.com/photo-1600857062241-98e5dba7f214?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=498&q=80').then((res) => res)
-        await this.setState({ image: data })
+        // let data = this.imagetoBase64()
+
+        // setTimeout(() => {
+        //   console.log(data,'data');
+        //   console.log(this.state.image);
+        // }, 3000);
     }
     imagetoBase64 = () => {
         var xhr = new XMLHttpRequest();
@@ -164,20 +172,6 @@ export class itemMasterUpload extends Component {
                 header: true,
                 complete: results => {
                     console.log(results.data)
-                    this.setState({
-                        assetsDetails: results.data.map((item => {
-                            return {
-                                assetName: item.assetName,
-                                assetType: item.assetType,
-                                RFID_Tag: item.RFID_Tag,
-                                department: item.department,
-                                assetStatus: item.assetStatus,
-                                assetValue: item.assetValue,
-                                site: item.site,
-                                description: item.description,
-                            }
-                        }))
-                    })
                 },
             })
         } else {
@@ -205,61 +199,75 @@ export class itemMasterUpload extends Component {
         };
         const headers = [
             {
-                label: "Creation_Date",
-                key: "Creation_Date",
+                label: "createdAt",
+                key: "createdAt",
             },
             {
-                label: "Asset_Name",
-                key: "Asset_Name",
+                label: "assetName",
+                key: "assetName",
             },
             {
-                label: "Asset_Type",
-                key: "Asset_Type",
+                label: "assetType",
+                key: "assetType",
             },
             {
-                label: "EPC",
-                key: "asset_EPC",
+                label: "RFID_Tag",
+                key: "RFID_Tag",
             },
             {
-                label: "Department",
-                key: "Department",
+                label: "department",
+                key: "department",
             },
             {
-                label: "Asset_Location",
-                key: "Asset_Location",
+                label: "location",
+                key: "location",
             },
             {
-                label: "Inventory_Date",
-                key: "Inventory_Date",
+                label: "inventoryDate",
+                key: "inventoryDate",
             },
             {
-                label: "Modification_Date",
-                key: "Modification_Date",
+                label: "updatedAt",
+                key: "updatedAt",
             },
             {
-                label: "Asset_Status",
-                key: "Asset_Status",
+                label: "assetStatus",
+                key: "assetStatus",
             },
             {
-                label: "Asset_Value",
-                key: "Asset_Value",
+                label: "assetValue",
+                key: "assetValue",
             },
             {
-                label: "Site",
-                key: "Site",
+                label: "site",
+                key: "site",
             },
             {
-                label: "Description",
-                key: "Description",
-            },
-            {
-                label: "Asset_Image",
-                key: "Asset_Image",
+                label: "description",
+                key: "description",
             },
         ];
+        const data = this.state.assetsDetails.slice(0, 5).map((item) => {
+            return {
+                createdAt: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
+                assetName: item?.assetName || "----",
+                assetType: item?.assetType || "----",
+                RFID_Tag: item?.RFID_Tag || "----",
+                department: item?.department || "----",
+                location: item?.location || "----",
+                inventoryDate: new Date(item?.inventoryDate).toLocaleString('en-Us', "Asia/Muscat") || "----",
+                updatedAt: new Date(item?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
+                assetStatus: item?.assetStatus || "----",
+                assetValue: item?.assetValue || "----",
+                site: item?.site?.site_name || "----",
+                description: item?.description || "----",
+                // Asset_Image: item?.image,
+            }
+        });
+        console.log(data, "asdfasdf");
         return (
             <React.Fragment>
-                <CustomModal data={this.state.QrCode} image={true} open={this.state.openModal} handleClose={() => this.handleClose()} handleClickOpen={() => this.handleClickOpen} />
+                <CustomModal data={this.state.QrCode} brcode={true} image={true} open={this.state.openModal} handleClose={() => this.handleClose()} handleClickOpen={() => this.handleClickOpen} />
                 <div>
                     <div className="main-dashboard">
                         {this.state.loading ? (
@@ -304,7 +312,7 @@ export class itemMasterUpload extends Component {
                                     )}
                                 </IconButton>
                                 <PeopleIcon htmlColor="black" className="ml-4 mr-4" />
-                                <h1 className="dashboard-heading">Asset (Report)</h1>
+                                <h1 className="dashboard-heading">Item Master (Report)</h1>
                                 <Button
                                     onClick={() => this.runFunction()}
                                     type="submit"
@@ -312,13 +320,14 @@ export class itemMasterUpload extends Component {
                                     variant="contained"
                                     style={{ position: "absolute", right: "10px" }}
                                 >
-                                    Push Csv to Server
+                                    Run
                                 </Button>
                                 {/* <CSVReader /> */}
-                                <IconButton style={{ position: "absolute", right: "190px", cursor: 'pointer' }}>
-                                    <input onChange={(e) => this.csvUploader(e)} style={{ display: 'none' }} id="fileSelect" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
-                                    <SystemUpdateAltIcon fontSize="large" htmlColor="black" />
-                                    <label htmlFor="fileSelect" className="dashboard-heading" style={{ fontSize: '15px' }} >UPLOAD CSV</label>
+                                <IconButton style={{ position: "absolute", right: "90px", cursor: 'pointer' }}>
+                                    <CSVLink filename="Asset_Report" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: 60 }} data={data} headers={headers}>
+                                        <SystemUpdateAltIcon fontSize="large" htmlColor="black" />
+                                        <h1 className="dashboard-heading" style={{ fontSize: '15px' }} >CSV</h1>
+                                    </CSVLink>
                                 </IconButton>
                             </div>
                             <Collapse
@@ -328,6 +337,40 @@ export class itemMasterUpload extends Component {
                                 style={{ width: "100%" }}
                             >
                                 <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', backgroundColor: 'transparent', minHeight: 50, marginTop: 10, position: 'relative' }}>
+                                    <form style={{ width: '50%', margin: 20, marginBottom: 0, display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 0, flexDirection: 'column' }}  >
+                                        <BasicTextFields
+                                            margin={10}
+                                            placeholder="EPC"
+                                            name="EPC"
+                                            value={this.state.epc}
+                                            onChangeEvent={(e) =>
+                                                this.setState({ epc: e.target.value })
+                                            }
+                                        />
+                                        <BasicTextFields
+                                            margin={10}
+                                            placeholder="Asset Name"
+                                            name="Asset Name"
+                                            value={this.state.asset_name}
+                                            onChangeEvent={(e) =>
+                                                this.setState({ asset_name: e.target.value })
+                                            }
+                                        />
+                                        <BasicTextFields
+                                            margin={10}
+                                            placeholder="Asset Status"
+                                            name="Asset Status"
+                                            value={this.state.asset_status}
+                                            onChangeEvent={(e) =>
+                                                this.setState({ asset_status: e.target.value })
+                                            }
+                                        />
+                                    </form>
+                                    <div style={{ width: '1px', height: '100%', backgroundColor: 'white', position: 'absolute' }}></div>
+                                    <form style={{ width: '50%', margin: 20, marginBottom: 0, display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 0, flexDirection: 'column' }}  >
+                                        <DatePicker value={this.state.creation_date} placeholder={"Creation Date"} className="input-mat-1" style={{ border: '1px solid white', borderRadius: 5, height: 37, marginTop: 10, fontWeight: 'lighter' }} size={'large'} format={"YYYY-MM-DD"} onChange={(e) => this.setState({ creation_date: e })} />
+                                        <DatePicker value={this.state.modification_date} placeholder={"Modification Date"} className="input-mat-1" style={{ border: '1px solid white', borderRadius: 5, height: 37, marginTop: 10, fontWeight: 'lighter' }} size={'large'} format={"YYYY-MM-DD"} onChange={(e) => this.setState({ modification_date: e })} />
+                                    </form>
                                 </div>
                             </Collapse>
                             <div
@@ -339,8 +382,13 @@ export class itemMasterUpload extends Component {
                                     margin: "10px",
                                 }}
                             >
+                                {/* <CSVLink data={data} headers={headers}>
+                  <Button color="primary" variant="contained">
+                    CSV
+                  </Button>
+                </CSVLink> */}
                             </div>
-                            <ItemMasterUploadTable openModal={(device) => this.handleClickOpen(device)} asn={this.state.assetsDetails} />
+                            <ItemMasterTable openModal={(device) => this.handleClickOpen(device)} asn={this.state.assetsDetails} />
                         </div>
                     </div>
                 </div>
@@ -349,4 +397,4 @@ export class itemMasterUpload extends Component {
     }
 }
 
-export default itemMasterUpload;
+export default ItemMasterReport;
