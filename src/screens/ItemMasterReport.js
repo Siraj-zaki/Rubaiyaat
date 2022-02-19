@@ -92,7 +92,7 @@ export class ItemMasterReport extends Component {
             (x) =>
                 x?.assetName?.toLowerCase().includes(this.state?.asset_name?.toLowerCase())
                 &&
-                x?.RFID_Tag?.toLowerCase().includes(this.state?.epc?.toLowerCase())
+                x?.RFID_Tag?.includes(this.state?.epc)
                 &&
                 x?.assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
                 &&
@@ -247,7 +247,7 @@ export class ItemMasterReport extends Component {
                 key: "description",
             },
         ];
-        const data = this.state.assetsDetails.slice(0, 5).map((item) => {
+        const data = this.state.assetsDetails.map((item) => {
             return {
                 createdAt: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
                 assetName: item?.assetName || "----",

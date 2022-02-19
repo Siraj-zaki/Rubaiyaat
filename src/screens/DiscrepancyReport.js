@@ -90,11 +90,11 @@ export class DiscrepancyReport extends Component {
     dateFilter = () => {
         return this.state.assetsDetailsNew.filter(
             (x) =>
-                x?.assetName?.toLowerCase().includes(this.state?.asset_name?.toLowerCase())
+                x?.assetName?.includes(this.state?.asset_name)
                 &&
-                x?.asset_EPC?.toLowerCase().includes(this.state?.epc?.toLowerCase())
+                x?.RFID_Tag?.includes(this.state?.epc)
                 &&
-                x?.assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
+                x?.assetStatus.includes(this.state.asset_status)
                 &&
                 this.dateCompareCreation(x?.createdAt, x?.createdAt)
                 &&
@@ -121,7 +121,7 @@ export class DiscrepancyReport extends Component {
         console.log(newArray, "newArray");
         if (assetsDetails) {
             await this.setState({ loading: false });
-            // await this.searchFunction()
+            await this.searchFunction()
         }
     };
 

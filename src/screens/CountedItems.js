@@ -90,15 +90,15 @@ export class CountedItems extends Component {
     dateFilter = () => {
         return this.state.assetsDetailsNew.filter(
             (x) =>
-                x?.assetDetails[0]?.assetName?.toLowerCase().includes(this.state?.asset_name?.toLowerCase())
+                x?.assetName?.toLowerCase().includes(this.state?.asset_name?.toLowerCase())
                 &&
-                x?.asset_EPC?.toLowerCase().includes(this.state?.epc?.toLowerCase())
+                x?.RFID_Tag?.toLowerCase().includes(this.state?.epc?.toLowerCase())
                 &&
-                x?.assetDetails[0].assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
+                x?.assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
                 &&
-                this.dateCompareCreation(x?.assetDetails[0].createdAt, x?.assetDetails[0].createdAt)
+                this.dateCompareCreation(x?.createdAt, x?.createdAt)
                 &&
-                this.dateCompareUpdated(x?.assetDetails[0].updatedAt, x?.assetDetails[0].updatedAt)
+                this.dateCompareUpdated(x?.updatedAt, x?.updatedAt)
         );
     };
     runFunction = async () => {
@@ -118,7 +118,7 @@ export class CountedItems extends Component {
         console.log(newArray, "newArray");
         if (assetsDetails) {
             await this.setState({ loading: false });
-            // await this.searchFunction()
+            await this.searchFunction()
         }
     };
 

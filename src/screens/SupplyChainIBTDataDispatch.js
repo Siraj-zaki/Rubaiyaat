@@ -78,7 +78,7 @@ export class SupplyChainIBTDataDispatch extends Component {
           !x.transfer_items ? null : x.transfer_items.date
         )
         &&
-        x.asn.toLowerCase().includes(this.state.ibt.toLowerCase())
+        x.asn.includes(this.state.ibt)
         &&
         x.transfer_items?.remarks?.toLowerCase().includes(this.state.remarks.toLowerCase())
     );
@@ -93,6 +93,7 @@ export class SupplyChainIBTDataDispatch extends Component {
     console.log(this.state.ASN);
     if (ASN) {
       this.setState({ loading: false });
+      this.searchFunction()
     }
   };
   render() {
