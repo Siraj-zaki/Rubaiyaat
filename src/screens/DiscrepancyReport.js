@@ -31,7 +31,7 @@ import CSVReader from "../components/CsvUploader";
 import Barcode from 'react-barcode'
 import CountedTable from "../components/CountedTable";
 const { RangePicker } = DatePicker;
-export class CountedItems extends Component {
+export class DiscrepancyReport extends Component {
     state = {
         location: "",
         ASN: [],
@@ -90,27 +90,30 @@ export class CountedItems extends Component {
     dateFilter = () => {
         return this.state.assetsDetailsNew.filter(
             (x) =>
-                x?.assetDetails[0]?.assetName?.toLowerCase().includes(this.state?.asset_name?.toLowerCase())
+                x?.assetName?.toLowerCase().includes(this.state?.asset_name?.toLowerCase())
                 &&
                 x?.asset_EPC?.toLowerCase().includes(this.state?.epc?.toLowerCase())
                 &&
-                x?.assetDetails[0].assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
+                x?.assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
                 &&
-                this.dateCompareCreation(x?.assetDetails[0].createdAt, x?.assetDetails[0].createdAt)
+                this.dateCompareCreation(x?.createdAt, x?.createdAt)
                 &&
-                this.dateCompareUpdated(x?.assetDetails[0].updatedAt, x?.assetDetails[0].updatedAt)
+                this.dateCompareUpdated(x?.updatedAt, x?.updatedAt)
         );
     };
     runFunction = async () => {
         this.setState({ loading: true });
         const assetsDetails = await api.getCountedItems();
         const assetRoutes = await api.getAssetsByAll();
+        const assetBySOH = await api.getAssetsBySoh();
         console.log(assetsDetails, "counted");
         console.log(assetRoutes, "assetsDetails");
-        
+        console.log(assetBySOH, "assetBySOH");
+
         let newArray = []
-        
+
         newArray = assetRoutes.filter(f => assetsDetails.find(item => item?.asset_EPC === f.RFID_Tag));
+        newArray = newArray.filter(f => assetBySOH.find(item => item?.asset_EPC !== f.RFID_Tag))
         await this.setState({
             assetsDetails: newArray.reverse(),
             assetsDetailsNew: newArray.reverse(),
@@ -250,10 +253,7 @@ export class CountedItems extends Component {
                 label: "Description",
                 key: "Description",
             },
-            // {
-            //     label: "Asset_Image",
-            //     key: "Asset_Image",
-            // },
+
         ];
         const data = this.state.assetsDetails.map((item) => {
             return {
@@ -269,7 +269,7 @@ export class CountedItems extends Component {
                 Asset_Value: item?.assetValue || "----",
                 Site: item?.site?.site_name || "----",
                 Description: item?.description || "----",
-                // Asset_Image: item?.image,
+                Asset_Image: item?.image,
             }
         });
         console.log(data, "asdfasdf");
@@ -320,7 +320,7 @@ export class CountedItems extends Component {
                                     )}
                                 </IconButton>
                                 <PeopleIcon htmlColor="black" className="ml-4 mr-4" />
-                                <h1 className="dashboard-heading">Counted Item (Report)</h1>
+                                <h1 className="dashboard-heading">Discrepancy Item (Report)</h1>
                                 <Button
                                     onClick={() => this.runFunction()}
                                     type="submit"
@@ -332,7 +332,7 @@ export class CountedItems extends Component {
                                 </Button>
                                 {/* <CSVReader /> */}
                                 <IconButton style={{ position: "absolute", right: "90px", cursor: 'pointer' }}>
-                                    <CSVLink filename="Counted Report" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: 60 }} data={data} headers={headers}>
+                                    <CSVLink filename="Discrepancy Report" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: 60 }} data={data} headers={headers}>
                                         <SystemUpdateAltIcon fontSize="large" htmlColor="black" />
                                         <h1 className="dashboard-heading" style={{ fontSize: '15px' }} >CSV</h1>
                                     </CSVLink>
@@ -405,4 +405,4 @@ export class CountedItems extends Component {
     }
 }
 
-export default CountedItems;
+export default DiscrepancyReport;

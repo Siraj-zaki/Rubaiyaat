@@ -324,7 +324,7 @@ export class ItemMasterReport extends Component {
                                 </Button>
                                 {/* <CSVReader /> */}
                                 <IconButton style={{ position: "absolute", right: "90px", cursor: 'pointer' }}>
-                                    <CSVLink filename="Asset_Report" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: 60 }} data={data} headers={headers}>
+                                    <CSVLink filename="Item Master Report" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: 60 }} data={data} headers={headers}>
                                         <SystemUpdateAltIcon fontSize="large" htmlColor="black" />
                                         <h1 className="dashboard-heading" style={{ fontSize: '15px' }} >CSV</h1>
                                     </CSVLink>

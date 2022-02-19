@@ -65,6 +65,7 @@ import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import itemMasterUpload from './screens/ItemMasterUpload';
 import CountedItems from './screens/CountedItems';
 import ItemMasterReport from './screens/ItemMasterReport';
+import DiscrepancyReport from './screens/DiscrepancyReport';
 class App extends React.Component {
   state = {
     open: true,
@@ -85,7 +86,7 @@ class App extends React.Component {
 
   }
 
-   logout = () => {
+  logout = () => {
     localStorage.clear();
     this.props.userLogin({ user: {}, login: false });
     setTimeout(() => {
@@ -195,6 +196,10 @@ class App extends React.Component {
                 : null
               }
               {permissions?.includes("Table_Report") ?
+                <PrivateRoute path={"/Reports/DiscrepancyReport"} exact component={DiscrepancyReport} />
+                : null
+              }
+              {permissions?.includes("Table_Report") ?
                 <PrivateRoute path={"/Reports/ItemMasterReport"} exact component={ItemMasterReport} />
                 : null
               }
@@ -202,14 +207,14 @@ class App extends React.Component {
                 <PrivateRoute path={"/Reports/FifthReport"} exact component={FifthReport} />
                 : null
               }
-              <div style={{ position: 'fixed', bottom: 0, left: 0, width: '100%', background: 'black', height: 60,display:'flex',alignItems:'center' }}>
-                <div style={{ width: 300, justifyContent: 'flex-start', alignItems: 'center',display:'flex' }}>
-                  <img src={userImage} alt="userImage" style={{ objectFit: 'contain',marginLeft:10 }} width='35px' height='35px' />
-                  <div style={{display:'flex',flexDirection:'column',alignItems:'flex-start',justifyContent:'center',marginLeft:10}}>
-                    <h1 style={{fontSize:14}}>root user :</h1>
-                    <h1 style={{fontSize:14}}>{this.props?.user?.userName}</h1>
+              <div style={{ position: 'fixed', bottom: 0, left: 0, width: '100%', background: 'black', height: 60, display: 'flex', alignItems: 'center' }}>
+                <div style={{ width: 300, justifyContent: 'flex-start', alignItems: 'center', display: 'flex' }}>
+                  <img src={userImage} alt="userImage" style={{ objectFit: 'contain', marginLeft: 10 }} width='35px' height='35px' />
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', marginLeft: 10 }}>
+                    <h1 style={{ fontSize: 14 }}>root user :</h1>
+                    <h1 style={{ fontSize: 14 }}>{this.props?.user?.userName}</h1>
                   </div>
-                  <PowerSettingsNewIcon onClick={() => this.logout()} htmlColor='white' style={{width:25,height:25,objectFit:'contain',marginLeft:'30%',cursor:'pointer'}} /> 
+                  <PowerSettingsNewIcon onClick={() => this.logout()} htmlColor='white' style={{ width: 25, height: 25, objectFit: 'contain', marginLeft: '30%', cursor: 'pointer' }} />
                 </div>
               </div>
               {/* <Footer /> */}

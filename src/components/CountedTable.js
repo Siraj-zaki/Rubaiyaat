@@ -46,7 +46,7 @@ function Row(props) {
         </React.Fragment >
     );
 }
-export default function FirstReportTable({ asn, openModal }) {
+export default function CountedTable({ asn, openModal }) {
     const useStyles = makeStyles({
         root: {
             width: '100%',
@@ -89,7 +89,6 @@ export default function FirstReportTable({ asn, openModal }) {
                             <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Asset_Value </TableCell>
                             <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Site </TableCell>
                             <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Description </TableCell>
-                            <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Barcode</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -100,24 +99,19 @@ export default function FirstReportTable({ asn, openModal }) {
                             return (
                                 <TableRow style={{ backgroundColor: '#263238' }} hover role="checkbox" tabIndex={-1} key={row?.createdAt}>
                                     <React.Fragment>
-                                        <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{new Date(row?.assetDetails[0].createdAt).toLocaleString('en-Us', "Asia/Muscat")}</TableCell>
-                                        <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.assetDetails[0].assetName || "----"}</TableCell>
-                                        <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.assetDetails[0].assetType || "----"}</TableCell>
-                                        <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.assetDetails[0].RFID_Tag || "----"}</TableCell>
-                                        <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.assetDetails[0].department || "----"}</TableCell>
-                                        <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.assetDetails[0].location || "----"}</TableCell>
-                                        <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.assetDetails[0].inventoryDate || "----"}</TableCell>
-                                        <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{new Date(row?.assetDetails[0].updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----"}</TableCell>
-                                        <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.assetDetails[0].assetStatus || "----"}</TableCell>
-                                        <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.assetDetails[0].assetValue || "----"}</TableCell>
-                                        <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.assetDetails[0].site?.site_name || "----"}</TableCell>
-                                        <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.assetDetails[0].description || "----"}</TableCell>
-                                        {/* <TableCell align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, border: '1px solid white' }}>
-                                            <Button style={{ minWidth: 20, height: 20 }} onClick={() => openModal('https://images.unsplash.com/photo-1600857062241-98e5dba7f214?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=498&q=80')} variant="contained" className="m-1" color="primary"  >Image</Button>
-                                        </TableCell> */}
-                                        <TableCell align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, border: '1px solid white' }}>
-                                            <Button style={{ minWidth: 20, height: 20 }} onClick={() => openModal(row?.assetDetails[0].RFID_Tag)} variant="contained" className="m-1" color="primary"  >Barcode</Button>
-                                        </TableCell>
+                                        <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{new Date(row?.createdAt).toLocaleString('en-Us', "Asia/Muscat")}</TableCell>
+                                        <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.assetName || "----"}</TableCell>
+                                        <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.assetType || "----"}</TableCell>
+                                        <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.RFID_Tag || "----"}</TableCell>
+                                        <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.department || "----"}</TableCell>
+                                        <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.location || "----"}</TableCell>
+                                        <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.inventoryDate || "----"}</TableCell>
+                                        <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{new Date(row?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----"}</TableCell>
+                                        <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.assetStatus || "----"}</TableCell>
+                                        <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.assetValue || "----"}</TableCell>
+                                        <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.site?.site_name || "----"}</TableCell>
+                                        <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.description || "----"}</TableCell>
+
                                     </React.Fragment>
                                 </TableRow>
                             );
