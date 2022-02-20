@@ -44,7 +44,7 @@ export class Users extends Component {
     async deleteUser(id) {
         try {
             const UserDeleted = await api.deleteUser(id)
-            toast.success(JSON.stringify(UserDeleted))
+            toast.success("User Deleted")
             setTimeout(() => {
                 window.location.reload()
             }, 1000);
@@ -78,13 +78,13 @@ export class Users extends Component {
                                 <Button onClick={() => this.runFunction()} type="submit" color={'secondary'} variant="contained" style={{ position: 'absolute', right: '10px' }}>Run</Button>
                             </div>
                             <Collapse in={this.state.open} timeout="auto" unmountOnExit style={{ width: '100%' }}>
-                                <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', backgroundColor: 'transparent',minHeight:50,marginTop:10,position:'relative' }}>
+                                <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', backgroundColor: 'transparent', minHeight: 50, marginTop: 10, position: 'relative' }}>
                                     <form style={{ width: '50%', margin: 20, marginBottom: 0, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexWrap: 'wrap', marginBottom: 0 }}  >
-                                        <BasicTextFields  name="Name" value={this.state.filterName} onChangeEvent={(e) => this.filterNameEvent(e)} />
+                                        <BasicTextFields name="Name" value={this.state.filterName} onChangeEvent={(e) => this.filterNameEvent(e)} />
                                     </form>
-                                    <div style={{width:'1px',height:'100%',backgroundColor:'white',position:'absolute'}}></div>
+                                    <div style={{ width: '1px', height: '100%', backgroundColor: 'white', position: 'absolute' }}></div>
                                     <form style={{ width: '50%', margin: 20, marginBottom: 0, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexWrap: 'wrap', marginBottom: 0 }}  >
-                                    <BasicTextFields name="Username" value={this.state.filterUsername} onChangeEvent={(e) => this.filterUsernameEvent(e)} />
+                                        <BasicTextFields name="Username" value={this.state.filterUsername} onChangeEvent={(e) => this.filterUsernameEvent(e)} />
                                     </form>
                                 </div>
                             </Collapse>

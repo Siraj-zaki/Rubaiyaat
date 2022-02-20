@@ -78,10 +78,13 @@ export class AddUser extends Component {
                 // console.log(User, "userAdded")
                 if (userAdded) {
                     toast.success("User Added")
+                    setTimeout(() => {
+                        window.location.href = '/Users'
+                    }, 500);
                 }
             }
         } catch (err) {
-            return toast.error(JSON.stringify(err))
+            return toast.error('User Already exist')
             // console.log(err);
         }
     }

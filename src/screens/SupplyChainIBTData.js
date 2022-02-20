@@ -59,7 +59,7 @@ export class SupplyChainIBTData extends Component {
     }
     dateFilter = () => {
         return this.state.allData.filter(x => this.dateCompare(
-            x?.received_items?.date, x?.transfer_items?.date)
+            x?.received_items?.date, x?.received_items?.date)
             &&
             x.asn.toLowerCase().includes(this.state.ibt.toLowerCase())
             &&

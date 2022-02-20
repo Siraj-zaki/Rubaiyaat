@@ -12,7 +12,6 @@ import {
   IconButton,
   List,
 } from "@material-ui/core";
-import ClipLoader from "react-spinners/ClipLoader";
 import * as L from "leaflet";
 import "@geoman-io/leaflet-geoman-free";
 import "leaflet.markercluster";
@@ -98,7 +97,6 @@ function MapView(props) {
   const [clicked_zone_asset, set_clicked_zone_asset] = React.useState([]);
   const [openSiteModal, setOpenSiteModal] = React.useState(false);
   const [openZoneModal, setOpenZoneModal] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
   const [openZone, setOpenZone] = React.useState(props.zoneModal);
   const [siteId, setSiteId] = React.useState("61b62968c72421b96dd9281b");
   const [openDrawer, setOpenDrawer] = React.useState(false);
@@ -114,14 +112,6 @@ function MapView(props) {
   const [zoneLabel, setZoneLabel] = React.useState(false);
   const [clustring, setClustring] = React.useState(false);
   const [Sites, setSites] = React.useState(false);
-  const [ownerName, setOwnerName] = React.useState('');
-  const [assetName, setAssetName] = React.useState('');
-  const [assetType, setAssetType] = React.useState('');
-  const [RFID_Tag, setRFID_Tag] = React.useState('');
-  const [createdAt, setCreatedAt] = React.useState('');
-  const [updatedAt, setUpdatedAt] = React.useState('');
-  const [createdAtEnd, setCreatedAtEnd] = React.useState('');
-  const [updatedAtEnd, setUpdatedAtEnd] = React.useState('');
   const [refresh, setRefresh] = React.useState(false);
   const [fitlerToggler, setfitlerToggler] = React.useState(true);
   const [assetID, setAssetID] = React.useState("");
@@ -136,10 +126,9 @@ function MapView(props) {
   const [level, setLevel] = React.useState("");
   const [room, setRoom] = React.useState("");
   const [EPC, setEPC] = React.useState("");
+  const [RFID_TAG, setRFID_TAG] = React.useState("");
   const [filterDate, setfilterDate] = React.useState("");
   const [filterDateEnd, setfilterDateEnd] = React.useState("");
-  const [DetectfilterDate, setDetectfilterDate] = React.useState("");
-  const [DetectfilterDateEnd, setDetectfilterDateEnd] = React.useState("");
   const [zoneSlider, setZoneSlider] = React.useState(100);
   const [pinData, setPinData] = React.useState(false);
   const [mapSlider, setMapSlider] = React.useState(100);
@@ -155,7 +144,6 @@ function MapView(props) {
   const layerZoneLabel = useRef([]);
   const layerCluster = React.useRef();
   const layerImage = useRef();
-  const redMarker = useRef(false);
   const [siteDetails, setSiteDetails] = React.useState({
     miny: "",
     maxx: "",
@@ -382,20 +370,7 @@ function MapView(props) {
     const feature = GeoJSON_Asset.current.features.filter(feature => {
       return feature.properties.asset_EPC == asset_EPC
     })
-    const coordinates = [feature[0].geometry.coordinates[1], feature[0].geometry.coordinates[0]];
-    var redIcon = L.icon({
-      iconUrl: 'marker-icon-red.png',
-      iconSize: [30, 40],
-      iconAnchor: [14, 41],
-    });
-    if (redMarker.current) {
-      redMarker.current.setLatLng(coordinates)
-    } else {
-      redMarker.current = L.marker(coordinates, { icon: redIcon }).addTo(map.current);
-      redMarker.current.setZIndexOffset(1000000);
-    }
-
-    map.current.setView(coordinates, 19, {
+    map.current.setView([feature[0].geometry.coordinates[1], feature[0].geometry.coordinates[0]], 19, {
       "animate": true,
       "pan": {
         "duration": .5
@@ -415,7 +390,6 @@ function MapView(props) {
     if (sDiff >= 0 && eDiff <= 0) return true;
     return false;
   };
-  let markersLength = 0;
   const drawClusterAndMarkers = (value) => {
     if (layerCluster.current) {
       map.current.removeLayer(layerCluster.current);
@@ -450,26 +424,17 @@ function MapView(props) {
         day = '0' + day;
 
       return [year, month, day].join('-');
-      // return console.log([year, month, day].join('-'))
-    }
-    const formatDateTime = (date) => {
-      // const formatted = moment(date).format('L');
-      const formatted = moment(date, 'x').format('lll');
-
-      var d = new Date(formatted),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
-
-      if (month.length < 2)
-        month = '0' + month;
-      if (day.length < 2)
-        day = '0' + day;
-
-      return [year, month, day].join('-');
-      // return console.log([year, month, day].join('-'))
     }
     const markers = [];
+    //            assetID: assetID,
+    //             room: room,
+    //             level: level,
+    //             serialNumber: serialNumber,
+    //             lastDetectTime: lastDetectTime,
+    //             EPC: EPC,
+    //             description: description,
+    //             RFID_TAG: RFID_TAG,
+    //             filterDate: filterDate,
 
     for (var i = 0; i < GeoJSON_Asset.current.features.length; i++) {
       var feature = GeoJSON_Asset.current.features[i];
@@ -500,84 +465,128 @@ function MapView(props) {
       });
       // markers.filter((x => x?.options?.asset_EPC.includes("E280116060000204A14088CE"))).push(marker);
       if (
-        value.ownerName === "" &&
-        value.assetName === "" &&
-        value.assetType === "" &&
-        value.department === "" &&
+        value.EPC === "" &&
+        value.assetID === "" &&
+        value.room === "" &&
+        value.level === "" &&
+        value.serialNumber === "" &&
+        value.lastDetectTime === "" &&
         value.description === "" &&
-        value.createdAt === "" &&
-        value.RFID_Tag === "" &&
-        value.createdAt === "" &&
-        value.updatedAt === ""
-
-
+        value.RFID_TAG === "" &&
+        value.filterDate === ""
       ) {
         markers.push(marker);
-        // console.log(markers.filter((x => x?.options?.asset_EPC.includes(""))));
+        console.log(markers.filter((x => x?.options?.asset_EPC.includes(""))));
         markers.forEach((marker) => {
           cluster.addLayer(marker);
         });
         map.current.addLayer(cluster);
         layerCluster.current = cluster;
         layerCluster.current.on("clusterclick", function (e) {
-          const childMarkers = e.layer.getAllChildMarkers();
-          if (childMarkers.length !== markersLength) {
-            // console.log(childMarkers);
-            markersLength = childMarkers.length;
-            set_clicked_zone_asset(e.layer.getAllChildMarkers());
-            setOpenDrawer(true);
-          }
+          set_clicked_zone_asset(e.layer.getAllChildMarkers());
+          setOpenDrawer(true);
         });
         // markers.push(marker);
       } else {
-
         markers.push(marker);
-        const newMarkers = markers
-        // console.log('run');
+        const newMarkers = markers.filter((x =>
+          x?.options?.asset_EPC.includes(value.EPC)
+          &&
+          x?.options?.assetDetails[0].Room_no.includes(value.room)
+          &&
+          x?.options?.assetDetails[0].Floor.includes(value.level)
+          &&
+          x?.options?.assetDetails[0].Serial_no.includes(value.serialNumber)
+          &&
+          x?.options?.assetDetails[0].Description.includes(value.description)
+          &&
+          x?.options?.assetDetails[0]["Thing Serial"].includes(value.RFID_TAG)
+          &&
+          formatDate(x?.options?.assetDetails[0].last_cycle_date) >= formatDate(filterDate) && formatDate(x?.options?.assetDetails[0].last_cycle_date) <= formatDate(filterDateEnd)
+        ))
+        console.log('run');
+        // console.log(moment(newMarkers?.options[0]?.assetDetails[0]?.last_cycle_date).toISOString());
+        console.log(newMarkers.filter((x => {
+          var startDate = formatDate(filterDate);
+          var endDate = formatDate(filterDateEnd);
+          var date = formatDate(x?.options?.assetDetails[0].last_cycle_date);
+          return (date >= startDate && date <= endDate);
+        })));
 
-        newMarkers.filter((x =>
-          value.filterDate === "" && value.createdAt === "" && value.updatedAt === "" && value.updatedAt === "" ?
-            x?.options?.asset_EPC?.toLowerCase().includes(value.RFID_Tag.toLowerCase())
-            &&
-            x?.options?.assetDetails[0]?.ownerName?.includes(value.ownerName)
-            &&
-            x?.options?.assetDetails[0]?.assetName?.includes(value.assetName)
-            &&
-            x?.options?.assetDetails[0]?.assetType?.includes(value.assetType)
-            &&
-            x?.options?.assetDetails[0]?.department?.includes(value.department)
-            :
-            x?.options?.asset_EPC?.toLowerCase().includes(value.RFID_Tag.toLowerCase())
-              &&
-              x?.options?.assetDetails[0]?.ownerName?.includes(value.ownerName)
-              &&
-              x?.options?.assetDetails[0]?.assetName?.includes(value.assetName)
-              &&
-              x?.options?.assetDetails[0]?.assetType?.includes(value.assetType)
-              &&
-              x?.options?.assetDetails[0]?.department?.includes(value.department)
-              &&
-              value.updatedAt === "" ?
-              formatDate(x?.options?.assetDetails[0].createdAt) >= formatDate(value.createdAt) && formatDate(x?.options?.assetDetails[0].createdAt) <= formatDate(value.createdAtEnd)
-              :
-              formatDateTime(x?.options?.assetDetails[0].updatedAt) >= formatDate(value.updatedAt) && formatDateTime(x?.options?.assetDetails[0].updatedAt) <= formatDate(value.updatedAtEnd)
-        )).forEach((marker) => {
+        newMarkers.forEach((marker) => {
           cluster.addLayer(marker);
         });
-        // setLoading(false)
         map.current.addLayer(cluster);
         layerCluster.current = cluster;
         layerCluster.current.on("clusterclick", function (e) {
-          const childMarkers = e.layer.getAllChildMarkers();
-          if (childMarkers.length !== markersLength) {
-            // console.log(childMarkers);
-            markersLength = childMarkers.length;
-            set_clicked_zone_asset(e.layer.getAllChildMarkers());
-            setOpenDrawer(true);
-          }
+          set_clicked_zone_asset(e.layer.getAllChildMarkers());
+          setOpenDrawer(true);
         });
 
       }
+
+
+      // } /
+      // else if (value.EPC.length > 0 || value.assetID.length > 0) {
+      //   // console.log(value);
+      //   if (
+      //     feature.properties.asset_EPC === value.EPC ||
+      //     feature.properties._id === value.assetID
+      //   ) {
+      //     console.log(value);
+      //     var marker = L.marker(
+      //       new L.LatLng(
+      //         feature.geometry.coordinates[1],
+      //         feature.geometry.coordinates[0]
+      //       ),
+      //       {
+      //         title: feature.properties.asset_EPC,
+      //         ...feature.properties,
+      //       }
+      //     ).on("click", function (e) {
+      //       setPinData(e.target.options);
+      //       setOpenDrawer(true);
+      //     });
+      //     markers.push(marker);
+      //     console.log(marker, 'marker marker marker');
+      //   }
+      // }
+      //  else if (feature.properties.assetDetails.length > 0) {
+      //   if (
+      //     new Date(
+      //       feature.properties.assetDetails[0].last_cycle_date
+      //     ).getTime() < new Date(value.filterDate).getTime()
+      //     ||
+      //     feature.properties.assetDetails[0].Room_no.includes(value.room)
+      //     ||
+      //     feature.properties.assetDetails[0].Floor.includes(value.level)
+      //     ||
+      //     feature.properties.assetDetails[0].Serial_no.includes(value.serialNumber)
+      //     ||
+      //     feature.properties.assetDetails[0].Description.includes(value.description)
+      //     ||
+      //     feature.properties.assetDetails[0]["Thing Serial"].includes(value.RFID_TAG)
+      //   ) {
+      //     // console.log(value);
+      //     // console.log(feature.properties.assetDetails.length)
+      //     // console.log(new Date(feature.properties.assetDetails[0].last_cycle_date).getTime() < new Date(value.filterDate).getTime());
+      //     var marker = L.marker(
+      //       new L.LatLng(
+      //         feature.geometry.coordinates[1],
+      //         feature.geometry.coordinates[0]
+      //       ),
+      //       {
+      //         title: feature.properties.asset_EPC,
+      //         ...feature.properties,
+      //       }
+      //     ).on("click", function (e) {
+      //       setPinData(e.target.options);
+      //       setOpenDrawer(true);
+      //     });
+      //     markers.push(marker);
+      //     console.log(marker, 'marker marker marker');
+      //   }
+      // }
     }
 
   };
@@ -641,21 +650,17 @@ function MapView(props) {
       });
   };
   const searchFilter = (e) => {
-    // setLoading(true)
     e.preventDefault();
     let x = {
-      ownerName: ownerName,
-      assetName: assetName,
-      department: department,
-      assetType: assetType,
+      assetID: assetID,
+      room: room,
+      level: level,
+      serialNumber: serialNumber,
       lastDetectTime: lastDetectTime,
-      EPC: RFID_Tag,
+      EPC: EPC,
       description: description,
-      RFID_TAG: RFID_Tag,
-      createdAt: createdAt !== null ? createdAt : '',
-      createdAtEnd: createdAtEnd !== null ? createdAtEnd : '',
-      updatedAt: updatedAt !== null ? updatedAt : '',
-      updatedAtEnd: updatedAtEnd !== null ? updatedAtEnd : '',
+      RFID_TAG: RFID_TAG,
+      filterDate: filterDate !== null ? filterDate : '',
     };
     // alert(JSON.stringify(x))
     console.log(x, 'data');
@@ -724,6 +729,7 @@ function MapView(props) {
         image.addTo(_map);
         image.bringToFront();
         layerImage.current = image;
+        console.log(bounds)
         _map.fitBounds(bounds);
       });
 
@@ -733,10 +739,9 @@ function MapView(props) {
         const req = await fetch(BASE_URL + "/zone/get/" + siteId);
         const zones = await req.json();
         const features = [];
-        // console.log(assets.length);
         for (let asset of assets) {
           if (asset.mConData) {
-            // console.log(asset)
+            // console.letog(asset)
             const _point = point([asset.mConData.long, asset.mConData.lat], {
               ...asset,
             });
@@ -755,16 +760,15 @@ function MapView(props) {
 
         GeoJSON_Asset.current = featureCollection(features);
         drawClusterAndMarkers({
-          ownerName: "",
-          assetName: "",
-          assetType: "",
-          department: "",
+          EPC: "",
+          assetID: "",
+          room: "",
+          level: "",
+          serialNumber: "",
+          lastDetectTime: "",
           description: "",
-          RFID_Tag: "",
-          createdAt: "",
-          updatedAt: "",
-          createdAtEnd: "",
-          updatedAtEnd: "",
+          RFID_TAG: "",
+          filterDate: "",
         });
       });
 
@@ -806,40 +810,17 @@ function MapView(props) {
         layerZone.current = L.geoJSON(collection, {
           onEachFeature: onEachFeature,
         }).addTo(_map);
-      }).catch((err => {
-        console.log(err);
-      }));
+      });
     map.current = _map;
+    // setTimeout(() => {
+    //   console.log(_map.getBounds());
+    //   _map.fitBounds([[23.580479181290773, 58.180623613254255], [23.582040155732994, 58.18377520884677]]);
+    // }, 10 * 1000)
     return () => map.current.remove();
   }, [siteId, refresh]);
 
   return (
     <React.Fragment>
-      {loading ? (
-        <div
-          style={{
-            position: "absolute",
-            display: "flex",
-            justifyContent: "center",
-            width: "100%",
-            flexDirection: "column",
-            alignItems: "center",
-            alignSelf: "center",
-            height: "100%",
-            backgroundColor: "rgba(28, 28, 28, 0.6)",
-            zIndex: 10,
-            left: 0,
-            top: 0,
-          }}
-        >
-
-          <ClipLoader
-            color={"white"}
-            loading={loading}
-            size={100}
-          />
-        </div>
-      ) : null}
       <CustomModal
         open={openModal}
         handleClose={handleOpenModal}
@@ -939,7 +920,7 @@ function MapView(props) {
             <h1 className="layers-h1">Sites</h1>
           </button>
 
-          <button onClick={() => setOpenDrawer(!openDrawer), () => setfilter(!filter)} className="layers layers-1">
+          <button onClick={() => setOpenDrawer(!openDrawer)} className="layers layers-1">
             <DetailsIcon htmlColor="#4A4A4A" style={{ width: '25px', height: '25px', objectFit: 'contain' }} />
             <h1 className="layers-h1">Open Details</h1>
           </button>
@@ -1005,7 +986,7 @@ function MapView(props) {
           }}
           className="map-right-side"
         >
-          <div className="dashboard-header" style={{ width: "100%", position: 'relative' }}>
+          <div className="dashboard-header" style={{ width: "100%" }}>
             <IconButton
               className="ml-2"
               aria-label="expand row"
@@ -1020,7 +1001,6 @@ function MapView(props) {
             </IconButton>
             <PeopleIcon htmlColor="black" className="ml-4 mr-4" />
             <h1 className="dashboard-heading">Map Report</h1>
-            <CloseIcon style={{ cursor: 'pointer', position: 'absolute', right: '30px' }} onClick={() => filterHandler()} htmlColor="black" fontSize="large" />
           </div>
           <Collapse
             in={fitlerToggler}
@@ -1051,40 +1031,64 @@ function MapView(props) {
                   position: 'relative',
                 }}
               >
-
                 <BasicTextFields
-                  name="RFID_Tag"
-                  value={RFID_Tag}
-                  onChangeEvent={(e) => setRFID_Tag(e.target.value)}
+                  name="Asset ID"
+                  value={assetID}
+                  onChangeEvent={(e) => setAssetID(e.target.value)}
                 />
                 <BasicTextFields
-                  name="ownerName"
-                  value={ownerName}
-                  onChangeEvent={(e) => setOwnerName(e.target.value)}
+                  name="Serial Number"
+                  value={serialNumber}
+                  onChangeEvent={(e) => setSerialNumber(e.target.value)}
                 />
                 <BasicTextFields
-                  name="assetName"
-                  value={assetName}
-                  onChangeEvent={(e) => setAssetName(e.target.value)}
+                  name="Level"
+                  value={level}
+                  onChangeEvent={(e) => setLevel(e.target.value)}
                 />
                 <BasicTextFields
-                  name="assetType"
-                  value={assetType}
-                  onChangeEvent={(e) => setAssetType(e.target.value)}
+                  name="Room"
+                  value={room}
+                  onChangeEvent={(e) => setRoom(e.target.value)}
                 />
+                {/* <DatePicker
+                  value={lastDetectTime}
+                  placeholder={"Last Detect Time"}
+                  className="input-mat-1"
+                  style={{
+                    border: '1px solid white',
+                    borderRadius: 5,
+                    height: 37,
+                    marginTop: 10,
+                    fontWeight: 'lighter'
+                  }}
+                  size={'large'}
+                  format={"YYYY-MM-DD"}
+                  onChange={(e) => setlastDetectTime(e)}
+                /> */}
                 <BasicTextFields
-                  name="department"
-                  value={department}
-                  onChangeEvent={(e) => setDepartment(e.target.value)}
-                />
-                <BasicTextFields
-                  name="description"
+                  name="Description"
                   value={description}
                   onChangeEvent={(e) => setDescription(e.target.value)}
                 />
-                <h1 style={{ textAlign: 'left', fontSize: '15px' }}>Created Time</h1>
+                <BasicTextFields
+                  name="Odoo_Tag"
+                  value={RFID_TAG}
+                  onChangeEvent={(e) => setRFID_TAG(e.target.value)}
+                />
+                <BasicTextFields
+                  name="EPC"
+                  value={EPC}
+                  onChangeEvent={(e) => setEPC(e.target.value)}
+                />
+                {/* <BasicTextFields
+                  secure={"date"}
+                  name="Date"
+                  value={filterDate}
+                  onChangeEvent={(e) => setfilterDate(e.target.value)}
+                /> */}
                 <DatePicker
-                  value={createdAt}
+                  value={filterDate}
                   placeholder={"Starting-Date"}
                   className="input-mat-1"
                   style={{
@@ -1096,10 +1100,10 @@ function MapView(props) {
                   }}
                   size={'large'}
                   format={"YYYY-MM-DD"}
-                  onChange={(e) => setCreatedAt(e)}
+                  onChange={(e) => setfilterDate(e)}
                 />
                 <DatePicker
-                  value={createdAtEnd}
+                  value={filterDateEnd}
                   placeholder={"Ending-Date"}
                   className="input-mat-1"
                   style={{
@@ -1111,38 +1115,7 @@ function MapView(props) {
                   }}
                   size={'large'}
                   format={"YYYY-MM-DD"}
-                  onChange={(e) => setCreatedAtEnd(e)}
-                />
-                <h1 style={{ textAlign: 'left', fontSize: '15px' }}>Last Cycle Date</h1>
-                <DatePicker
-                  value={updatedAt}
-                  placeholder={"Starting-Date"}
-                  className="input-mat-1"
-                  style={{
-                    border: '1px solid white',
-                    borderRadius: 5,
-                    height: 37,
-                    marginTop: 10,
-                    fontWeight: 'lighter'
-                  }}
-                  size={'large'}
-                  format={"YYYY-MM-DD"}
-                  onChange={(e) => setUpdatedAt(e)}
-                />
-                <DatePicker
-                  value={updatedAtEnd}
-                  placeholder={"Ending-Date"}
-                  className="input-mat-1"
-                  style={{
-                    border: '1px solid white',
-                    borderRadius: 5,
-                    height: 37,
-                    marginTop: 10,
-                    fontWeight: 'lighter'
-                  }}
-                  size={'large'}
-                  format={"YYYY-MM-DD"}
-                  onChange={(e) => setUpdatedAtEnd(e)}
+                  onChange={(e) => setfilterDateEnd(e)}
                 />
                 <Button
                   variant="contained"

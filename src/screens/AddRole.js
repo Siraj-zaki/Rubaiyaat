@@ -320,11 +320,14 @@ export class AddRole extends Component {
                 const roleAdded = await api.addRole(role)
                 if (roleAdded) {
                     toast.success("Role Added")
+                    setTimeout(() => {
+                        window.location.href = "/Roles"
+                    }, 500);
                 }
             }
         } catch (err) {
 
-            toast.error(JSON.stringify(err))
+            toast.error("Role Already exist")
         }
     }
     checkedVal = (e) => {

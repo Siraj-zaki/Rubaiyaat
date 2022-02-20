@@ -1,0 +1,198 @@
+.map-wrapper {
+	height: 80vh;
+	width: 100%;
+	margin: auto;
+	margin-top: 5px;
+}
+.map-wrapper .pin-info {
+	text-align: center;
+	width: 300px;
+	height: 80px;
+	color: white;
+	position: absolute;
+	background-color: rgba(0, 0, 0, 0.5);
+	padding: 10px;
+	top: 280px;
+	right: 10px;
+	border-radius: 25px;
+}
+.map-wrapper .map-layers {
+	background-color: rgba(0, 0, 0, 0.5);
+	width: auto;
+	height: auto;
+	position: absolute;
+	top: 35%;
+	right: 10px;
+	display: grid;
+	border-radius: 25px;
+	padding: 15px;
+	color: white;
+	font-size: 10px;
+}
+.map-wrapper .map-layers h3 {
+	text-align: center;
+	font-weight: bold;
+}
+.map-wrapper .map-layers button {
+	font-size: 10px;
+	border: none;
+	padding: 6px;
+	background-color: #19a9e7;
+	border-radius: 10px;
+	margin: 5px;
+	cursor: pointer;
+}
+.map-wrapper .map-layers button.selected {
+	border: 1px solid white;
+}
+.map-wrapper .store-menu {
+	padding: 10px;
+	position: absolute;
+	top: 50%;
+    left: 0;
+	background-color: white;
+	width: auto;
+	height: auto;
+}
+/* Side Menu */
+
+.map-side-menu{
+	position: absolute;
+	left: 20.4vw;
+	top: 170px;
+	height: 70%;
+	min-width: 500px;
+	max-width: 500px;
+	width: 500px;
+	background-color: #373e43;
+	color: white;
+	z-index: 1;
+	padding: 15px;
+	border-radius: 5px;
+	transition: 1s all;
+}
+
+.map-side-menu.hidden{
+   left: -500px;
+}
+
+.map-side-menu .nav-options{
+	display: flex;
+    /* gap: 10px; */
+    list-style-type: none;
+    justify-content: center;
+    align-items: center;
+	margin: 0;
+	padding: 10px;
+}
+.map-side-menu .nav-options li{
+	cursor: pointer;
+	min-width: 200px;
+	text-align: center;
+	/* box-shadow: 2px 2px 10px gray; */
+	padding: 5px 10px;
+	transition: 1s all;
+	font-weight: bold;
+    text-transform: capitalize;
+	background-color: #161d20;
+	border-left: 1px solid rgb(190, 190, 190);
+	border-right: 1px solid rgb(190, 190, 190);
+}
+.map-side-menu .nav-options li:hover{
+	box-shadow: 2px 2px 10px gray;
+}
+.map-side-menu .nav-options li.selected{
+	/* color: #19a9e7; */
+	/* box-shadow: 2px 2px 10px gray; */
+	border-bottom: 1px solid rgb(187, 40, 40);
+}
+
+.map-side-menu .hide-menu{
+	float: right;
+	width: 26px;
+	margin-right: -22.8vw;
+    margin-top: -60px;
+    padding:5px;
+    border-radius: 0 20% 20% 0;
+    text-align: center;
+	font-weight: bold;
+	cursor: pointer;
+	color: white;
+	background-color: #373e43;
+}
+
+.map-side-menu .hide-menu.hidden{
+	border-radius: 4px;
+	margin-right: -5px;
+	margin-top: -60px;
+}
+
+.map-side-menu .hide-menu:hover{
+	/* border: 1.5px solid grey; */
+	box-shadow: 2px 2px 10px gray;
+}
+
+.map-side-menu .selected-view{
+	margin-top: 10px;
+	overflow:auto;
+	height: 62vh;
+}
+
+.map-side-menu .body{
+	padding: 20px;
+    overflow: auto;
+    overflow-x: hidden;
+    max-height: 570px;
+}
+
+.map-side-menu .map-create-footer{
+	margin-top: 15px;
+    width: 25%;
+    float: right;
+}
+.nav-info{
+	display: grid;
+	padding: 10px 10px;
+	width: 100%;
+}
+.nav-info .info-row{
+	width: 100%;
+	padding: 5px 0;
+	/* flex: 0 1 100%;	 */
+}
+.site-view {
+	margin: 0;
+}
+
+.site-view li{
+	list-style: none;
+	padding: 5px 5px;
+	font-size: bold;
+	cursor: pointer;
+}
+.site-view li span.delete-button{
+	float:right;
+}
+.site-view li span.delete-button:hover{
+	float:right;
+	font-size: 14px;
+}
+
+.site-view li span.confirm-delete{
+	display: block;
+	padding: 5px;
+}
+
+.site-view li span.confirm-delete .buttons {
+	display: flex;
+    gap: 5px;
+    justify-content: right;
+}
+
+.site-view li.selected{
+	box-shadow: 1px 1px 5px white;
+}
+
+.site-view li:hover, .site-view li.selected{
+	box-shadow: 1px 1px 5px white;
+}

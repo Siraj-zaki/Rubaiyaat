@@ -48,15 +48,8 @@ export class SupplyChainIBTDataDispatch extends Component {
     this.setState({ openModal: false });
   };
   searchFunction = (e) => {
-    e.preventDefault();
-    const newarray = this.state.ASN;
-    if (!this.state.startingDate) {
-      return alert("PLease select Starting Date");
-    } else if (!this.state.endingDate) {
-      return alert("Please Select Ending Date");
-    } else {
-      this.setState({ ASN: this.dateFilter() });
-    }
+    this.setState({ ASN: this.dateFilter() });
+
   };
   dateCompare = (sDate, eDate) => {
     let { startingDate, endingDate } = this.state;
@@ -71,26 +64,21 @@ export class SupplyChainIBTDataDispatch extends Component {
     return false;
   };
   dateFilter = () => {
-    return this.state.allData.filter(
-      (x) =>
-        this.dateCompare(
-          x.packed_items.date,
-          !x.transfer_items ? null : x.transfer_items.date
-        )
-        &&
-        x.asn.includes(this.state.ibt)
-        &&
-        x.transfer_items?.remarks?.toLowerCase().includes(this.state.remarks.toLowerCase())
-    );
-  };
+    return this.state.allData.filter(x => this.dateCompare(
+      x?.received_items?.date, x?.transfer_items?.date)
+      &&
+      x.asn.toLowerCase().includes(this.state.ibt.toLowerCase())
+      &&
+      x?.transfer_items?.remarks.toLowerCase().includes(this.state.remarks.toLowerCase()))
+  }
   runFunction = async () => {
     this.setState({ loading: true });
     const ASN = await api.getASN();
-    let filtering = ASN.filter(
-      (item) => item.operation_name === "transfer out"
-    );
-    this.setState({ ASN: filtering.reverse(), allData: filtering.reverse() });
-    console.log(this.state.ASN);
+    // let filtering = ASN.filter(
+    //   (item) => item.operation_name === "transfer out"
+    // );
+    this.setState({ ASN: ASN, allData: ASN });
+    // console.log(filtering.map((item => item.transfer_items?.qt)));
     if (ASN) {
       this.setState({ loading: false });
       this.searchFunction()
@@ -248,7 +236,7 @@ export class SupplyChainIBTDataDispatch extends Component {
               >
 
               </div>
-              <SupplyChainASNDispatchTable asn={this.state.ASN} />
+              <SupplyChainASNDispatchTable asn={this.state.ASN.filter((item => item.operation_name === 'transfer out'))} />
             </div>
           </div>
         </div>

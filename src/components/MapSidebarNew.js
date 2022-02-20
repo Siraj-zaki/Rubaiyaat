@@ -9,6 +9,7 @@ import BasicTextFields from "./Input";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import LogoImg from '../assets/logo.png'
 
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
@@ -21,7 +22,6 @@ import TargetIcon from "../assets/target.png";
 import EnhancedTable from "./MapTable";
 import api from "../services/api";
 import { set } from "lodash";
-import moment from 'moment'
 
 function MapSidebar({
   drawer,
@@ -36,6 +36,7 @@ function MapSidebar({
   const [item, setItem] = useState(true);
   const [zone, setZone] = useState(true);
   const [pin, setPin] = useState(false);
+  const [close, setClose] = useState(false);
   const [properties, setProperties] = useState(false);
   const [assets, setAssets] = useState([]);
   const [assets1, setAssets1] = useState([]);
@@ -68,28 +69,11 @@ function MapSidebar({
       setPermissions([...permissions, e.target.value]);
     }
   };
-  const formatDateTime = (date) => {
-    // const formatted = moment(date).format('L');
-    const formatted = moment(date, 'x').format('lll');
-
-    var d = new Date(formatted),
-      month = '' + (d.getMonth() + 1),
-      day = '' + d.getDate(),
-      year = d.getFullYear();
-
-    if (month.length < 2)
-      month = '0' + month;
-    if (day.length < 2)
-      day = '0' + day;
-
-    return new Date(formatted);
-    // return console.log(moment([year, month, day].join('-')));
-  }
   const checkedValChildPin = async (e, data) => {
     // console.log(e, data)
-    // const assetDetails = await api.getAssetsByEPC(data);
-    console.log(data);
-    setProperties(data.options);
+    const assetDetails = await api.getAssetsByEPC(data);
+    console.log(assetDetails);
+    setProperties(assetDetails);
     setPin(!pin);
     setCluster(!cluster);
   };
@@ -110,7 +94,7 @@ function MapSidebar({
       setPin(true);
     }
     console.log(pinData);
-    setProperties(pinData ? pinData : null);
+    setProperties(pinData ? pinData?.assetDetails[0] : null);
   }, [pinData]);
 
   const dateFilter = () => {
@@ -127,6 +111,7 @@ function MapSidebar({
         left: drawer ? 0 : -300,
         top: 0,
         zIndex: 4000,
+        overflowY:'scroll',
         backgroundColor: "#373E43",
         width: 300,
         transition: "all .4s",
@@ -300,7 +285,7 @@ function MapSidebar({
                       <FormLabel
                         style={{ color: "white" }}
                         onClick={(e) =>
-                          checkedValChildPin(e, item)
+                          checkedValChildPin(e, item?.options?.title)
                         }
                       >
                         <React.Fragment>
@@ -327,6 +312,7 @@ function MapSidebar({
           style={{
             display: "flex",
             justifyContent: "flex-start",
+            
             alignItems: "flex-start",
             flexDirection: "column",
             width: "100%",
@@ -367,7 +353,7 @@ function MapSidebar({
                       fontFamily: "inherit",
                     }}
                   >
-                    {properties.assetDetails[0]["Thing Name"]}
+                    {properties["Thing Name"]}
                   </h2>
                   <h2
                     style={{
@@ -377,7 +363,7 @@ function MapSidebar({
                       fontFamily: "inherit",
                     }}
                   >
-                    {properties.assetDetails[0]?.RFID_Tag}
+                    {properties?.RFID_Tag}
                   </h2>
                 </div>
                 <div
@@ -394,7 +380,7 @@ function MapSidebar({
                 >
                   <FlareIcon htmlColor="white" />
                 </div>
-                <IconButton aria-label="pin-click" onClick={(e) => { console.log(properties); clickPinZoom(properties.assetDetails[0]?.RFID_Tag) }}>
+                <IconButton aria-label="pin-click" onClick={(e) => { console.log(properties); clickPinZoom(properties.RFID_Tag) }}>
                   <CenterFocusStrongIcon style={{ color: "red" }} />
                 </IconButton>
 
@@ -403,6 +389,7 @@ function MapSidebar({
                 style={{
                   width: "100%",
                   display: "flex",
+                  minHeight:'100%',
                   justifyContent: "space-between",
                   alignItems: "center",
                   flexDirection: "column",
@@ -423,7 +410,38 @@ function MapSidebar({
                     style={{
                       fontSize: 14,
                       color: "white",
-                      fontWeight: "bold",
+                      fontWeight: "lighter",
+                      fontFamily: "inherit",
+                    }}
+                  >
+                    Image
+                  </h2>
+                  <h2
+                    style={{
+                      fontSize: 13,
+                      color: "white",
+                      fontFamily: "inherit",
+                    }}
+                  >
+                    <img src={LogoImg}  style={{ objectFit: "contain" }} width="100%" height="150px" alt="" />
+                  </h2>
+                </div>
+                <div
+                  className="map-table-1"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "flex-start",
+                    flexDirection: "column",
+                    width: "100%",
+                    padding: 5,
+                  }}
+                >
+                  <h2
+                    style={{
+                      fontSize: 14,
+                      color: "white",
+                      fontWeight: "lighter",
                       fontFamily: "inherit",
                     }}
                   >
@@ -436,100 +454,7 @@ function MapSidebar({
                       fontFamily: "inherit",
                     }}
                   >
-                    {properties.assetDetails[0]?.RFID_Tag}
-                  </h2>
-                </div>
-                <div
-                  className="map-table-1"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "flex-start",
-                    flexDirection: "column",
-                    width: "100%",
-                    padding: 5,
-                  }}
-                >
-                  <h2
-                    style={{
-                      fontSize: 14,
-                      color: "white",
-                      fontWeight: "bold",
-                      fontFamily: "inherit",
-                    }}
-                  >
-                    Description
-                  </h2>
-                  <h2
-                    style={{
-                      fontSize: 13,
-                      color: "white",
-                      fontFamily: "inherit",
-                    }}
-                  >
-                    {properties.assetDetails[0]?.description}
-                  </h2>
-                </div>
-                <div
-                  className="map-table-1"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "flex-start",
-                    flexDirection: "column",
-                    width: "100%",
-                    padding: 5,
-                  }}
-                >
-                  <h2
-                    style={{
-                      fontSize: 14,
-                      color: "white",
-                      fontWeight: "bold",
-                      fontFamily: "inherit",
-                    }}
-                  >
-                    Department
-                  </h2>
-                  <h2
-                    style={{
-                      fontSize: 13,
-                      color: "white",
-                      fontFamily: "inherit",
-                    }}
-                  >
-                    {properties.assetDetails[0]?.department}
-                  </h2>
-                </div>
-                <div
-                  className="map-table-1"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "flex-start",
-                    flexDirection: "column",
-                    width: "100%",
-                    padding: 5,
-                  }}
-                >
-                  <h2
-                    style={{
-                      fontSize: 14,
-                      color: "white",
-                      fontWeight: "bold",
-                      fontFamily: "inherit",
-                    }}
-                  >
-                    Asset Value
-                  </h2>
-                  <h2
-                    style={{
-                      fontSize: 13,
-                      color: "white",
-                      fontFamily: "inherit",
-                    }}
-                  >
-                    {properties.assetDetails[0]?.assetValue}
+                    {properties?.RFID_Tag}
                   </h2>
                 </div>
                 <div
@@ -547,72 +472,6 @@ function MapSidebar({
                     style={{
                       fontSize: 13,
                       color: "white",
-                      fontWeight: "bold",
-                      fontFamily: "inherit",
-                    }}
-                  >
-                    Asset Type
-                  </h2>
-                  <h2
-                    style={{
-                      fontSize: 14,
-                      color: "white",
-                      fontWeight: "lighter",
-                      fontFamily: "inherit",
-                    }}
-                  >
-                    {properties.assetDetails[0]?.assetType}
-                  </h2>
-                </div>
-                <div
-                  className="map-table-1"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "flex-start",
-                    flexDirection: "column",
-                    width: "100%",
-                    padding: 5,
-                  }}
-                >
-                  <h2
-                    style={{
-                      fontSize: 13,
-                      color: "white",
-                      fontWeight: "bold",
-                      fontFamily: "inherit",
-                    }}
-                  >
-                  Asset Status
-                  </h2>
-                  <h2
-                    style={{
-                      fontSize: 14,
-                      color: "white",
-                      fontWeight: "lighter",
-                      fontFamily: "inherit",
-                    }}
-                  >
-                    {properties.assetDetails[0]?.assetStatus}
-                  </h2>
-                </div>
-
-                <div
-                  className="map-table-1"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "flex-start",
-                    flexDirection: "column",
-                    width: "100%",
-                    padding: 5,
-                  }}
-                >
-                  <h2
-                    style={{
-                      fontSize: 13,
-                      color: "white",
-                      fontWeight: "bold",
                       fontFamily: "inherit",
                     }}
                   >
@@ -626,7 +485,70 @@ function MapSidebar({
                       fontFamily: "inherit",
                     }}
                   >
-                    {properties.assetDetails[0].assetName}
+                    {properties?.assetName}
+                  </h2>
+                </div>
+                <div
+                  className="map-table-1"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "flex-start",
+                    flexDirection: "column",
+                    width: "100%",
+                    padding: 5,
+                  }}
+                >
+                  <h2
+                    style={{
+                      fontSize: 13,
+                      color: "white",
+                      fontFamily: "inherit",
+                    }}
+                  >
+                    Description
+                  </h2>
+                  <h2
+                    style={{
+                      fontSize: 14,
+                      color: "white",
+                      fontWeight: "lighter",
+                      fontFamily: "inherit",
+                    }}
+                  >
+                    {properties?.description}
+                  </h2>
+                </div>
+
+                <div
+                  className="map-table-1"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "flex-start",
+                    flexDirection: "column",
+                    width: "100%",
+                    padding: 5,
+                  }}
+                >
+                  <h2
+                    style={{
+                      fontSize: 13,
+                      color: "white",
+                      fontFamily: "inherit",
+                    }}
+                  >
+                    department
+                  </h2>
+                  <h2
+                    style={{
+                      fontSize: 14,
+                      color: "white",
+                      fontWeight: "lighter",
+                      fontFamily: "inherit",
+                    }}
+                  >
+                    {properties?.department}
                   </h2>
                 </div>
 
@@ -645,11 +567,11 @@ function MapSidebar({
                     style={{
                       fontSize: 14,
                       color: "white",
-                      fontWeight: "bold",
+                      fontWeight: "lighter",
                       fontFamily: "inherit",
                     }}
                   >
-                    Created Time
+                    Last Cycle Date
                   </h2>
                   <h2
                     style={{
@@ -658,8 +580,7 @@ function MapSidebar({
                       fontFamily: "inherit",
                     }}
                   >
-
-                    {properties?.assetDetails[0].createdAt ? new Date(properties?.assetDetails[0].createdAt).toLocaleString() : '----'}
+                    {new Date(properties?.updatedAt).toLocaleString('en-Us', "Asia/Muscat")}
                   </h2>
                 </div>
                 <div
@@ -677,11 +598,11 @@ function MapSidebar({
                     style={{
                       fontSize: 14,
                       color: "white",
-                      fontWeight: "bold",
+                      fontWeight: "lighter",
                       fontFamily: "inherit",
                     }}
                   >
-                    Last Cycle Time
+                    inventory Date
                   </h2>
                   <h2
                     style={{
@@ -690,8 +611,7 @@ function MapSidebar({
                       fontFamily: "inherit",
                     }}
                   >
-
-                    {properties?.assetDetails[0].updatedAt ? new Date(properties?.assetDetails[0].updatedAt).toLocaleString() : '----'}
+                    {properties?.inventoryDate}
                   </h2>
                 </div>
                 <div
@@ -709,11 +629,11 @@ function MapSidebar({
                     style={{
                       fontSize: 14,
                       color: "white",
-                      fontWeight: "bold",
+                      fontWeight: "lighter",
                       fontFamily: "inherit",
                     }}
                   >
-                    Inventory Date
+                    Owner Name
                   </h2>
                   <h2
                     style={{
@@ -722,38 +642,7 @@ function MapSidebar({
                       fontFamily: "inherit",
                     }}
                   >
-                    {properties.assetDetails[0]?.inventoryDate}
-                  </h2>
-                </div>
-                <div
-                  className="map-table-1"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "flex-start",
-                    flexDirection: "column",
-                    width: "100%",
-                    padding: 5,
-                  }}
-                >
-                  <h2
-                    style={{
-                      fontSize: 14,
-                      color: "white",
-                      fontWeight: "bold",
-                      fontFamily: "inherit",
-                    }}
-                  >
-                    Maintenance Time
-                  </h2>
-                  <h2
-                    style={{
-                      fontSize: 13,
-                      color: "white",
-                      fontFamily: "inherit",
-                    }}
-                  >
-                    {properties.assetDetails[0]?.maintenanceDate}
+                    {properties?.ownerName}
                   </h2>
                 </div>
               </div>
