@@ -2,6 +2,7 @@ import { Button } from '@material-ui/core';
 import PeopleIcon from '@material-ui/icons/People';
 import React, { Component } from 'react';
 import Select from 'react-select';
+import { toast } from 'react-toastify';
 import BasicTextFields from '../components/Input';
 import '../css/Dashboard.css';
 import api from '../services/api';
@@ -10,7 +11,7 @@ export class EditUser extends Component {
         filterName: this.props.location?.state?.name,
         filterUsername: this.props.location?.state?.userName,
         status: this.props.location?.state?.status,
-        role: this.props.location?.state?.roleId?.role_name,
+        role: this.props.location?.state?.roleId?._id,
         store: this.props.location?.state?.siteId?._id,
         editUserData: '',
         Role: [],
@@ -49,7 +50,14 @@ export class EditUser extends Component {
             last_login: "",
             // id:this.state.preData._id
         }
-        this.EditUser(editUserData)
+        this.EditUser(editUserData).then((res => {
+            toast.success("User Edited")
+            setTimeout(() => {
+                window.location.href = 'Users'
+            }, 500);
+        })).catch((err => {
+            return toast.error("Something Wrong")
+        }))
         // this.setState({ editUserData: editUserData })
         console.log(editUserData, "ADSASDAS")
     }
