@@ -41,18 +41,27 @@ function Row(props) {
                     {row.createdAt ? moment(row.createdAt).format("YYYY/MM/DD/HH:MM:A") : '---'}
                 </TableCell>
                 <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">
+                    {row.updatedAt ? moment(row.createdAt).format("YYYY/MM/DD/HH:MM:A") : '---'}
+                </TableCell>
+                <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">
                     {row.zoneId ? row.zoneId.zone_name : '----'}
                 </TableCell>
                 <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">
                     {row?.siteId?.site_name}
                 </TableCell>
-                <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">
+                {/* <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">
                     {row.inputNote ? row.inputNote : '----'}
+                </TableCell> */}
+                <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">
+                    {row.operation_name ? row.operation_name : '----'}
                 </TableCell>
                 <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">
-                    {row.operation ? row.operation : '----'}
+                    {row.destination ? row.destination?.site_name : '----'}
                 </TableCell>
                 <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">
+                    {row.destinationZone ? row.destinationZone?.zone_name : '----'}
+                </TableCell>
+                {/* <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">
                     <Link to={{
                         pathname: "/EPCDetailMovement", state: {
                             row: { row },
@@ -60,7 +69,7 @@ function Row(props) {
                         }
                     }}
                     >{row.epc ? row.epc.length : '----'}</Link>
-                </TableCell>
+                </TableCell> */}
             </TableRow>
         </React.Fragment>
     );
@@ -88,28 +97,41 @@ export default function AnalyticsMovementHistoryTable({ data }) {
         setPage(0);
     };
     // const groups = _.groupBy(data, 'division');
-    var results = data.reduce(function (results, org) {
-        (results[org?.asn?.asn] = results[org?.asn?.asn] || []).push(org);
-        return results;
-    }, {})
+    // var results = data.reduce(function (results, org) {
+    //     (results[org?.asn?.asn] = results[org?.asn?.asn] || []).push(org);
+    //     return results;
+    // }, {})
 
     // console.log('asdfasf', results);
-    let newRes = Object.entries(results).map(([asn, data]) => ({ asn, data }))
+    // let newRes = Object.entries(results).map(([asn, data]) => ({ asn, data }))
     return (
         <Paper className={classes.root}  >
             {
-                newRes.map(({ asn, data }) =>
+                data.map(({ epc, changing }) =>
 
-                    <TableContainer key={asn?.asn} >
+                    <TableContainer key={epc} >
                         {/* <h1 style={{ color: "white", margin: 10, fontSize: 15 }}>ASN: {asn}</h1> */}
-                        <Button variant="contained" color="primary" style={{ padding: 10, margin: 10 }} >ASN: {asn}</Button>
+                        
+                        {/* <Button variant="contained" color="primary" style={{ padding: 10, margin: 10 }} > */}
+                        <TableCell
+                                    colSpan={3}
+                                        style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center"
+                                    >
+                                     EPC:  {epc}
+                                    </TableCell>
+                        {/* </Button> */}
                         <Table size="small" aria-label="collapsible table">
                             <TableHead   >
                                 <TableRow >
                                     <TableCell
                                         style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center"
                                     >
-                                        Date
+                                       Created Date
+                                    </TableCell>
+                                    <TableCell
+                                        style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center"
+                                    >
+                                       Updated Date
                                     </TableCell>
                                     <TableCell
                                         style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center"
@@ -121,11 +143,11 @@ export default function AnalyticsMovementHistoryTable({ data }) {
                                     >
                                         Site Name
                                     </TableCell>
-                                    <TableCell
+                                    {/* <TableCell
                                         style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center"
                                     >
                                         Input Note
-                                    </TableCell>
+                                    </TableCell> */}
                                     <TableCell
                                         style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center"
                                     >
@@ -134,14 +156,24 @@ export default function AnalyticsMovementHistoryTable({ data }) {
                                     <TableCell
                                         style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center"
                                     >
-                                        Total Epc
+                                        Destination Zone
                                     </TableCell>
+                                    <TableCell
+                                        style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center"
+                                    >
+                                        Destination Site
+                                    </TableCell>
+                                    {/* <TableCell
+                                        style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center"
+                                    >
+                                        Total Epc
+                                    </TableCell> */}
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {data
+                                {changing
                                     .map((row) => (
-                                        <Row key={row} asn={asn} row={row} />
+                                        <Row key={row} asn={data} row={row} />
                                     ))}
                             </TableBody>
                         </Table>
@@ -151,7 +183,7 @@ export default function AnalyticsMovementHistoryTable({ data }) {
             <TablePagination
                 rowsPerPageOptions={[10, 25, 100]}
                 component="div"
-                count={newRes.length}
+                count={data.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}
