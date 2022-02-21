@@ -57,10 +57,10 @@ export default function ViewEPCDetailTable({ ibt, perData, loader, openModal, Ro
                         </TableRow>
                     </TableHead>
                     <TableBody >
-                        {ibt[0] ? ibt[0].epc.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                        {ibt[0] ? ibt[0].epc.reverse().slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                             <React.Fragment>
                                 <TableRow >
-                                    <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} align="center">{ibt[0] ? moment(ibt[0].createdAt).format("YYYY-MM-DD") : '----'}</TableCell>
+                                    <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} align="center">{ibt[0] ? new Date(ibt[0].createdAt).toLocaleString('en-Us', "Asia/Muscat") : '----'}</TableCell>
                                     <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} align="center">{row ? row : '----'}</TableCell>
                                     <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} align="center">{ibt[0] ? ibt[0].operation : '----'}</TableCell>
                                     {zone ? <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} align="center">{zone}</TableCell> : null}

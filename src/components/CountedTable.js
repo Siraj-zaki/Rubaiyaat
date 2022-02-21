@@ -95,7 +95,7 @@ export default function CountedTable({ asn, openModal }) {
                         {/* {asn.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                             <Row openModal={(device) => openModal(device)} key={row.Odoo_Tag} row={row} />
                         ))} */}
-                        {asn.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                        {asn.reverse().slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                             return (
                                 <TableRow style={{ backgroundColor: '#263238' }} hover role="checkbox" tabIndex={-1} key={row?.createdAt}>
                                     <React.Fragment>

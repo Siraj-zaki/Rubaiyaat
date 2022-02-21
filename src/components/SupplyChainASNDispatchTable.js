@@ -42,7 +42,7 @@ function Row(props) {
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{row?.siteId?.site_name}</TableCell>
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center"><Link to={{ pathname: "/EPCDetail", state: { row: { operation: 'transfer out', asn: row._id }, data: { zone: row?.zoneId?.zone_name } } }}>{row.transfer_items?.qt}</Link> </TableCell>
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{row?.operation_name}</TableCell>
-                <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{moment(row?.transfer_items?.date).format("YYYY/MM/DD/-HH:MM:SS:A")}</TableCell>
+                <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{new Date(row?.transfer_items?.date).toLocaleString('en-Us', "Asia/Muscat")}</TableCell>
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{row?.transfer_items?.remarks}</TableCell>
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{row?.zoneId?.zone_name}</TableCell>
             </TableRow>
@@ -92,7 +92,7 @@ export default function SupplyChainASNDispatchTable({ asn }) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {asn.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                        {asn.reverse().slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                             <Row key={row.name} row={row} />
                         ))}
                     </TableBody>
