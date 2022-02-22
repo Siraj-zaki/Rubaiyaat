@@ -250,18 +250,18 @@ export class FirstReport extends Component {
     ];
     const data = this.state.assetsDetails.map((item) => {
       return {
-        Creation_Date: new Date(item?.assetDetails[0].createdAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
-        Asset_Name: item?.assetDetails[0].assetName || "----",
-        Asset_Type: item?.assetDetails[0].assetType || "----",
-        asset_EPC: item?.assetDetails[0].RFID_Tag || "----",
-        Department: item?.assetDetails[0].department || "----",
-        Asset_Location: item?.assetDetails[0].location || "----",
-        Inventory_Date: new Date(item?.assetDetails[0].inventoryDate).toLocaleString('en-Us', "Asia/Muscat") || "----",
-        Modification_Date: new Date(item?.assetDetails[0].updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
-        Asset_Status: item?.assetDetails[0].assetStatus || "----",
-        Asset_Value: item?.assetDetails[0].assetValue || "----",
-        Site: item?.assetDetails[0].site?.site_name || "----",
-        Description: item?.assetDetails[0].description || "----",
+        Creation_Date: new Date(item?.assetDetails[0]?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
+        Asset_Name: item?.assetDetails[0]?.assetName || "----",
+        Asset_Type: item?.assetDetails[0]?.assetType || "----",
+        asset_EPC: item?.assetDetails[0]?.EPCID || "----",
+        Department: item?.assetDetails[0]?.department || "----",
+        Asset_Location: item?.assetDetails[0]?.location || "----",
+        Inventory_Date: new Date(item?.assetDetails[0]?.inventoryDate).toLocaleString('en-Us', "Asia/Muscat") || "----",
+        Modification_Date: new Date(item?.assetDetails[0]?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
+        Asset_Status: item?.assetDetails[0]?.assetStatus || "----",
+        Asset_Value: item?.assetDetails[0]?.assetValue || "----",
+        Site: item?.assetDetails[0]?.site?.site_name || "----",
+        Description: item?.assetDetails[0]?.description || "----",
         // Asset_Image: item?.assetDetails[0].image,
       }
     });

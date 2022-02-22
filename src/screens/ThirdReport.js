@@ -74,18 +74,18 @@ export class ThirdReport extends Component {
   dateFilter = () => {
     return this.state.allData.filter(
       (x) =>
-        x?.assetDetails[0]?.ASSET_ID?.toLowerCase().includes(
+        x?.assetDetails[0]?.description?.toLowerCase().includes(
           this.state?.Asset_ID.toLowerCase()
         ) &&
-        x?.assetDetails[0]?.Item_Category?.toLowerCase().includes(
-          this.state?.Item_Category.toLowerCase()
+        x?.assetDetails[0]?.CATEGORY_CODE?.includes(
+          this.state?.Item_Category
         ) &&
-        x?.assetDetails[0]?.Serial_no?.toLowerCase().includes(
+        x?.assetDetails[0]?.EPCID?.toLowerCase().includes(
           this.state?.Serial_no.toLowerCase()
         ) &&
         this.dateCompare(
-          x?.createdAt,
-          x?.createdAt
+          x?.assetDetails[0]?.createdAt,
+          x?.assetDetails[0]?.createdAt
         )
     );
   };
@@ -120,131 +120,64 @@ export class ThirdReport extends Component {
     };
     const headers = [
       {
-        label: "Scan Time",
-        key: "Time",
+        label: "EPCID",
+        key: "EPCID",
       },
       {
-        label: "Odoo_Tag",
-        key: "Odoo_Tag",
+        label: "CATEGORY_CODE",
+        key: "CATEGORY_CODE",
       },
       {
-        label: "ASSET_ID",
-        key: "ASSET_ID",
+        label: "createdAt",
+        key: "createdAt",
       },
       {
-        label: "EPC",
-        key: "asset_EPC",
+        label: "MODIFICATION_DATE",
+        key: "MODIFICATION_DATE",
       },
       {
-        label: "Floor",
-        key: "Floor",
+        label: "inventoryDate",
+        key: "inventoryDate",
       },
       {
-        label: "Asset_Location",
-        key: "Asset_Location",
+        label: "SITE",
+        key: "SITE",
       },
       {
-        label: "Room_no",
-        key: "Room_no",
+        label: "assetType",
+        key: "assetType",
       },
       {
-        label: "Brand",
-        key: "Brand",
+        label: "department",
+        key: "department",
       },
       {
-        label: "Category",
-        key: "Item_Category",
+        label: "location",
+        key: "location",
       },
       {
-        label: "Description",
-        key: "Description",
+        label: "description",
+        key: "description",
       },
       {
-        label: "Device_Type",
-        key: "Device_Type",
-      },
-      {
-        label: "Maintenance_Period",
-        key: "Maintenance_Period",
-      },
-      {
-        label: "make",
-        key: "make",
-      },
-      {
-        label: "Manufacturer",
-        key: "Manufacturer",
-      },
-      {
-        label: "Owner Group",
-        key: "Owner_Group",
-      },
-      {
-        label: "Purchase_Date",
-        key: "Purchase_Date",
-      },
-      {
-        label: "Serial_no",
-        key: "Serial_no",
-      },
-      {
-        label: "Supplier",
-        key: "Supplier",
-      },
-      {
-        label: "Supplier Code",
-        key: "Supplier Code",
-      },
-      {
-        label: "Thing Type Code",
-        key: "Thing Type Code",
-      },
-      {
-        label: "Thing Name",
-        key: "Thing Name",
-      },
-      {
-        label: "UUIDMobile",
-        key: "UUIDMobile",
-      },
-      {
-        label: "Warranty_Expiry_date",
-        key: "Warranty_Expiry_date",
-      },
-      {
-        label: "Warranty_Period",
-        key: "Warranty_Period",
+        label: "assetStatus",
+        key: "assetStatus",
       },
     ];
     const data = this.state.SOH
-      .filter((i) => !!i.assetDetails.length)
       .map((item) => {
         return {
-          Time: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat"),
-          Odoo_Tag: item?.assetDetails[0]["Thing Serial"],
-          ASSET_ID: item?.assetDetails[0].ASSET_ID,
-          asset_EPC: item?.asset_EPC,
-          Floor: item?.assetDetails[0].Floor,
-          Asset_Location: item?.assetDetails[0].Asset_Location,
-          Room_no: item?.assetDetails[0].Room_no,
-          Brand: item?.assetDetails[0].Brand,
-          Item_Category: item?.assetDetails[0].Item_Category,
-          Description: item?.assetDetails[0].Description,
-          Device_Type: item?.assetDetails[0].Device_Type,
-          Maintenance_Period: item?.assetDetails[0].Maintenance_Period,
-          make: item?.assetDetails[0].make,
-          Serial_no: item?.assetDetails[0].Serial_no,
-          Manufacturer: item?.assetDetails[0].Manufacturer,
-          "Owner_Group": item?.assetDetails[0]["Owner Group"],
-          Purchase_Date: item?.assetDetails[0].Purchase_Date,
-          "Thing Serial": item?.assetDetails[0]["Thing Serial"],
-          Supplier: item?.assetDetails[0].Supplier,
-          "Supplier Code": item?.assetDetails[0]["Supplier Code"],
-          "Thing Type Code": item?.assetDetails[0]["Thing Type Code"],
-          "Thing Name": item?.assetDetails[0]["Thing Name"],
-          UUIDMobile: item?.assetDetails[0].UUIDMobile,
-          Warranty_Expiry_date: item?.assetDetails[0].Warranty_Expiry_date,
-          Warranty_Period: item?.assetDetails[0].Warranty_Period,
+          createdAt: new Date(item.assetDetails[0]?.createdAt).toLocaleString('en-Us', "Asia/Muscat"),
+          CATEGORY_CODE: item?.assetDetails[0]?.CATEGORY_CODE,
+          EPCID: item?.assetDetails[0]?.EPCID,
+          MODIFICATION_DATE:new Date(item?.assetDetails[0]?.MODIFICATION_DATE).toLocaleString('en-Us', "Asia/Muscat") ,
+          inventoryDate:new Date(item?.assetDetails[0]?.inventoryDate).toLocaleString('en-Us', "Asia/Muscat") ,
+          SITE: item?.assetDetails[0]?.SITE,
+          assetType: item?.assetDetails[0]?.assetType,
+          department: item?.assetDetails[0]?.department,
+          location: item?.assetDetails[0]?.location,
+          description: item?.assetDetails[0]?.description,
+          assetStatus: item?.assetDetails[0]?.assetStatus,
         }
       });
 
@@ -328,8 +261,8 @@ export class ThirdReport extends Component {
                   <form style={{ width: '50%', margin: 20, marginBottom: 0, display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 0, flexDirection: 'column' }}  >
                     <BasicTextFields
                       margin={10}
-                      placeholder="Asset_ID"
-                      name="Asset_ID"
+                      placeholder="Description"
+                      name="Description"
                       value={this.state.Asset_ID}
                       onChangeEvent={(e) =>
                         this.setState({ Asset_ID: e.target.value })
@@ -349,8 +282,8 @@ export class ThirdReport extends Component {
                   <form style={{ width: '50%', margin: 20, marginBottom: 0, display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 0, flexDirection: 'column' }}  >
                     <BasicTextFields
                       margin={10}
-                      name="Serial Number"
-                      placeholder={"Serial Number"}
+                      name="EPC"
+                      placeholder={"EPC"}
                       value={this.state?.Serial_no}
                       onChangeEvent={(e) =>
                         this.setState({ Serial_no: e.target.value })
