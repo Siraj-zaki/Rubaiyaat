@@ -90,15 +90,15 @@ export class ItemMasterReport extends Component {
     dateFilter = () => {
         return this.state.assetsDetailsNew.filter(
             (x) =>
-                x?.assetName?.toLowerCase().includes(this.state?.asset_name?.toLowerCase())
-                &&
-                x?.RFID_Tag?.includes(this.state?.epc)
-                &&
-                x?.assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
-                &&
-                this.dateCompareCreation(x?.createdAt, x?.createdAt)
-                &&
-                this.dateCompareUpdated(x?.updatedAt, x?.updatedAt)
+                // x?.assetName?.toLowerCase().includes(this.state?.asset_name?.toLowerCase())
+                // &&
+                x?.EPCID?.includes(this.state?.epc)
+                // &&
+                // x?.assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
+                // &&
+                // this.dateCompareCreation(x?.createdAt, x?.createdAt)
+                // &&
+                // this.dateCompareUpdated(x?.updatedAt, x?.updatedAt)
         );
     };
     runFunction = async () => {
@@ -347,7 +347,7 @@ export class ItemMasterReport extends Component {
                                                 this.setState({ epc: e.target.value })
                                             }
                                         />
-                                        <BasicTextFields
+                                        {/* <BasicTextFields
                                             margin={10}
                                             placeholder="Asset Name"
                                             name="Asset Name"
@@ -355,7 +355,7 @@ export class ItemMasterReport extends Component {
                                             onChangeEvent={(e) =>
                                                 this.setState({ asset_name: e.target.value })
                                             }
-                                        />
+                                        /> */}
                                         <BasicTextFields
                                             margin={10}
                                             placeholder="Asset Status"
