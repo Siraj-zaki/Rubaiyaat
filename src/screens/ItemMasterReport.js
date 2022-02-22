@@ -90,7 +90,7 @@ export class ItemMasterReport extends Component {
     dateFilter = () => {
         return this.state.assetsDetailsNew.filter(
             (x) =>
-                // x?.assetName?.toLowerCase().includes(this.state?.asset_name?.toLowerCase())
+                // x?.ownerName?.toLowerCase().includes(this.state?.asset_name?.toLowerCase())
                 // &&
                 x?.EPCID?.includes(this.state?.epc)
                 // &&
@@ -108,8 +108,8 @@ export class ItemMasterReport extends Component {
 
         console.log(assetRoutes, "assetsDetails");
         await this.setState({
-            assetsDetails: assetRoutes.reverse(),
-            assetsDetailsNew: assetRoutes.reverse(),
+            assetsDetails: assetRoutes,
+            assetsDetailsNew: assetRoutes,
         });
 
         if (assetRoutes) {
@@ -211,7 +211,7 @@ export class ItemMasterReport extends Component {
                 key: "assetType",
             },
             {
-                label: "RFID_Tag",
+                label: "EPC",
                 key: "RFID_Tag",
             },
             {
@@ -252,7 +252,7 @@ export class ItemMasterReport extends Component {
                 createdAt: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
                 assetName: item?.assetName || "----",
                 assetType: item?.assetType || "----",
-                RFID_Tag: item?.RFID_Tag || "----",
+                RFID_Tag: item?.EPCID || "----",
                 department: item?.department || "----",
                 location: item?.location || "----",
                 inventoryDate: new Date(item?.inventoryDate).toLocaleString('en-Us', "Asia/Muscat") || "----",
@@ -347,15 +347,15 @@ export class ItemMasterReport extends Component {
                                                 this.setState({ epc: e.target.value })
                                             }
                                         />
-                                        {/* <BasicTextFields
+                                        <BasicTextFields
                                             margin={10}
-                                            placeholder="Asset Name"
-                                            name="Asset Name"
+                                            placeholder="Owner Name"
+                                            name="Owner Name"
                                             value={this.state.asset_name}
                                             onChangeEvent={(e) =>
                                                 this.setState({ asset_name: e.target.value })
                                             }
-                                        /> */}
+                                        />
                                         <BasicTextFields
                                             margin={10}
                                             placeholder="Asset Status"

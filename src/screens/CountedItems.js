@@ -90,9 +90,7 @@ export class CountedItems extends Component {
     dateFilter = () => {
         return this.state.assetsDetailsNew.filter(
             (x) =>
-                x?.assetName?.toLowerCase().includes(this.state?.asset_name?.toLowerCase())
-                &&
-                x?.RFID_Tag?.toLowerCase().includes(this.state?.epc?.toLowerCase())
+                x?.EPCID?.toLowerCase().includes(this.state?.epc?.toLowerCase())
                 &&
                 x?.assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
                 &&
@@ -110,7 +108,7 @@ export class CountedItems extends Component {
         
         let newArray = []
         
-        newArray = assetRoutes.filter(f => assetsDetails.find(item => item?.asset_EPC === f.RFID_Tag));
+        newArray = assetRoutes.filter(f => assetsDetails.find(item => item?.asset_EPC === f.EPCID));
         await this.setState({
             assetsDetails: newArray.reverse(),
             assetsDetailsNew: newArray.reverse(),
@@ -118,7 +116,7 @@ export class CountedItems extends Component {
         console.log(newArray, "newArray");
         if (assetsDetails) {
             await this.setState({ loading: false });
-            await this.searchFunction()
+            // await this.searchFunction()
         }
     };
 
@@ -355,7 +353,7 @@ export class CountedItems extends Component {
                                                 this.setState({ epc: e.target.value })
                                             }
                                         />
-                                        <BasicTextFields
+                                        {/* <BasicTextFields
                                             margin={10}
                                             placeholder="Asset Name"
                                             name="Asset Name"
@@ -363,7 +361,7 @@ export class CountedItems extends Component {
                                             onChangeEvent={(e) =>
                                                 this.setState({ asset_name: e.target.value })
                                             }
-                                        />
+                                        /> */}
                                         <BasicTextFields
                                             margin={10}
                                             placeholder="Asset Status"

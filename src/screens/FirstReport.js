@@ -89,20 +89,20 @@ export class FirstReport extends Component {
   dateFilter = () => {
     return this.state.assetsDetailsNew.filter(
       (x) =>
-        x?.assetDetails[0]?.assetName?.toLowerCase().includes(this.state?.asset_name?.toLowerCase())
+        x?.assetDetail[0]?.assetName?.toLowerCase().includes(this.state?.asset_name?.toLowerCase())
         &&
-        x?.asset_EPC?.toLowerCase().includes(this.state?.epc?.toLowerCase())
+        x?.EPCID?.toLowerCase().includes(this.state?.epc?.toLowerCase())
         &&
-        x?.assetDetails[0].assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
+        x?.assetDetail[0].assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
         &&
-        this.dateCompareCreation(x?.assetDetails[0].createdAt, x?.assetDetails[0].createdAt)
+        this.dateCompareCreation(x?.createdAt, x?.createdAt)
         &&
-        this.dateCompareUpdated(x?.assetDetails[0].updatedAt, x?.assetDetails[0].updatedAt)
+        this.dateCompareUpdated(x?.updatedAt, x?.updatedAt)
     );
   };
   runFunction = async () => {
     this.setState({ loading: true });
-    const assetsDetails = await api.getAssetsBySoh();
+    const assetsDetails = await api.getAssetsDetailsASSO();
     await this.setState({
       assetsDetails: assetsDetails.reverse(),
       assetsDetailsNew: assetsDetails.reverse(),
@@ -110,7 +110,7 @@ export class FirstReport extends Component {
     console.log(assetsDetails, "assetsDetails");
     if (assetsDetails) {
       await this.setState({ loading: false });
-      await this.searchFunction()
+      // await this.searchFunction()
     }
   };
   async componentDidMount() {
@@ -250,18 +250,18 @@ export class FirstReport extends Component {
     ];
     const data = this.state.assetsDetails.map((item) => {
       return {
-        Creation_Date: new Date(item?.assetDetails[0]?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
-        Asset_Name: item?.assetDetails[0]?.assetName || "----",
-        Asset_Type: item?.assetDetails[0]?.assetType || "----",
-        asset_EPC: item?.assetDetails[0]?.EPCID || "----",
-        Department: item?.assetDetails[0]?.department || "----",
-        Asset_Location: item?.assetDetails[0]?.location || "----",
-        Inventory_Date: new Date(item?.assetDetails[0]?.inventoryDate).toLocaleString('en-Us', "Asia/Muscat") || "----",
-        Modification_Date: new Date(item?.assetDetails[0]?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
-        Asset_Status: item?.assetDetails[0]?.assetStatus || "----",
-        Asset_Value: item?.assetDetails[0]?.assetValue || "----",
-        Site: item?.assetDetails[0]?.site?.site_name || "----",
-        Description: item?.assetDetails[0]?.description || "----",
+        Creation_Date: new Date(item?.assetDetail?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
+        Asset_Name: item?.assetDetail?.assetName || "----",
+        Asset_Type: item?.assetDetail?.assetType || "----",
+        asset_EPC: item?.assetDetail?.EPCID || "----",
+        Department: item?.assetDetail?.department || "----",
+        Asset_Location: item?.assetDetail?.location || "----",
+        Inventory_Date: new Date(item?.assetDetail?.inventoryDate).toLocaleString('en-Us', "Asia/Muscat") || "----",
+        Modification_Date: new Date(item?.assetDetail?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
+        Asset_Status: item?.assetDetail?.assetStatus || "----",
+        Asset_Value: item?.assetDetail?.assetValue || "----",
+        Site: item?.assetDetail?.site?.site_name || "----",
+        Description: item?.assetDetail?.description || "----",
         // Asset_Image: item?.assetDetails[0].image,
       }
     });

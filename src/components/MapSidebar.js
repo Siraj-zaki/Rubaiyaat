@@ -436,7 +436,7 @@ function MapSidebar({
                       fontFamily: "inherit",
                     }}
                   >
-                    {properties.assetDetails[0]?.RFID_Tag}
+                    {properties.assetDetails[0]?.EPCID}
                   </h2>
                 </div>
                 <div

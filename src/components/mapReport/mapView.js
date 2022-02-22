@@ -536,8 +536,8 @@ function MapView(props) {
         // console.log('run');
 
         newMarkers.filter((x =>
-          value.filterDate === "" && value.createdAt === "" && value.updatedAt === "" && value.updatedAt === "" ?
-            x?.options?.assetDetails[0]?.RFID_Tag?.toLowerCase().includes(value.RFID_Tag.toLowerCase())
+          value.filterDate === "" && value.createdAt === "" && value.updatedAt === "" && value.updatedAtEnd === "" ?
+            x?.options?.asset_EPC.includes(value.RFID_Tag)
             &&
             x?.options?.assetDetails[0]?.ownerName?.includes(value.ownerName)
             &&
@@ -547,7 +547,7 @@ function MapView(props) {
             &&
             x?.options?.assetDetails[0]?.department?.includes(value.department)
             :
-            x?.options?.assetDetails[0]?.RFID_Tag?.toLowerCase().includes(value.RFID_Tag.toLowerCase())
+            x?.options?.asset_EPC.includes(value.RFID_Tag)
               &&
               x?.options?.assetDetails[0]?.ownerName?.includes(value.ownerName)
               &&

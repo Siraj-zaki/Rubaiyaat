@@ -29,6 +29,7 @@ const Path = {
   GET_ASSETS: `${BASE_URL}/activity/get/all`,
   GET_ASSETS_SITE: `${BASE_URL}/asset/get_Asset_by_site_zone_ref/61b62968c72421b96dd9281b`,
   GET_ASSETS_DETAILS: `${BASE_URL}/assetDetailRoutes/getScans`,
+  GET_ASSETS_DETAILS_ASSO: `${BASE_URL}/assetDetailRoutes/getAssociTags`,
   UPLOAD_DATA: `${BASE_URL}/assetDetailRoutes/update/or/add/assetDetail`,
   GET_ASSETS_DETAILS_BY_EPC: `${BASE_URL}/assetDetailRoutes/getByEpc`,
   GET_ASSETS_DETAILS_BY_ALL: `${BASE_URL}/assetDetailRoutes/get`,

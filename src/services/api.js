@@ -112,6 +112,10 @@ const getAssetsDetails = async (payLoad) => {
   const { data } = await axios.get(`${Path.GET_ASSETS_DETAILS}`);
   return data;
 };
+const getAssetsDetailsASSO = async (payLoad) => {
+  const { data } = await axios.get(`${Path.GET_ASSETS_DETAILS_ASSO}`);
+  return data;
+};
 const getMovementHistory = async (payLoad) => {
   const { data } = await axios.get(`${Path.GET_MOVEMENT_HISTORY}`);
   return data;
@@ -150,4 +154,5 @@ export default {
   getAssetsByAll,
   uploadingData,
   getMovementHistory,
+  getAssetsDetailsASSO,
 };
