@@ -205,7 +205,7 @@ export class CountedItems extends Component {
                 key: "Creation_Date",
             },
             {
-                label: "Asset_Name",
+                label: "Owner_name",
                 key: "Asset_Name",
             },
             {
@@ -256,16 +256,16 @@ export class CountedItems extends Component {
         const data = this.state.assetsDetails.map((item) => {
             return {
                 Creation_Date: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
-                Asset_Name: item?.assetName || "----",
+                Asset_Name: item?.ownerName || "----",
                 Asset_Type: item?.assetType || "----",
-                asset_EPC: item?.RFID_Tag || "----",
+                asset_EPC: item?.EPCID || "----",
                 Department: item?.department || "----",
                 Asset_Location: item?.location || "----",
                 Inventory_Date: new Date(item?.inventoryDate).toLocaleString('en-Us', "Asia/Muscat") || "----",
                 Modification_Date: new Date(item?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
                 Asset_Status: item?.assetStatus || "----",
-                Asset_Value: item?.assetValue || "----",
-                Site: item?.site?.site_name || "----",
+                Asset_Value: item?.VALUE || "----",
+                Site: item?.SITE || "----",
                 Description: item?.description || "----",
                 // Asset_Image: item?.image,
             }
