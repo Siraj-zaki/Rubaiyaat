@@ -293,7 +293,7 @@ MuiTab-wrapper:last-child{
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
 
 
-tr:nth-of-type(even) {
+/* tr:nth-of-type(even) {
   background-color: rgba(45, 49, 58, 0.329) !important;
   border: none !important;
 }
@@ -301,9 +301,9 @@ tr:nth-of-type(even) {
 tr:nth-of-type(odd) {
   background-color: rgba(45, 49, 58, 0.629) !important;
   border: none !important;
-}
+} */
 
-tr:nth-of-type(even):hover {
+/* tr:nth-of-type(even):hover {
   background-color: rgba(40, 44, 54, 0.589) !important;
   border: none !important;
 }
@@ -311,7 +311,7 @@ tr:nth-of-type(even):hover {
 tr:nth-of-type(odd):hover {
   background-color: rgba(45, 49, 58, 0.808) !important;
   border: none !important;
-}
+} */
 
 tr {
   transition: all .4s;
@@ -534,4 +534,22 @@ body>div:nth-child(10)>div>div {
   transition: .4s all;
   position: absolute;
   z-index: 31239085;
+}
+.ant-checkbox-inner{
+  border: 1px solid #b4b4b4!important;
+}
+.counted-class-red{
+  background-color: #6e1c1c!important;
+  border-bottom: 1px solid #6f6f6f!important;
+  
+}
+.counted-class-gray{
+  background-color: 363636!important;
+  border-bottom: 1px solid #6f6f6f!important;
+  
+}
+.counted-class-green{
+  background-color: #076004!important;
+  border-bottom: 1px solid #6f6f6f!important;
+  
 }

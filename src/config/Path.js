@@ -1,4 +1,5 @@
-const BASE_URL = "https://rubaiyat-asset.herokuapp.com";
+// const BASE_URL = "https://rubaiyat-asset.herokuapp.com";
+const BASE_URL = "https://rubaiyat-qa.herokuapp.com";
 // const BASE_URL = 'http://172.16.83.107:5000';
 // const BASE_URL = 'http://localhost:5000'
 // const BASE_URL = "https://7005-103-225-51-7.ngrok.io";
@@ -25,7 +26,7 @@ const Path = {
   GET_COUNTED_ITEMS: `${BASE_URL}/countedItems/get`,
   GET_EPC_DETAIL: `${BASE_URL}/activity/get/by`,
   GET_ASN_BY_EPC: `${BASE_URL}/activity/by/epc`,
-  GET_ASSETS_SOH: `${BASE_URL}/asset/getSoh`,
+  GET_ASSETS_SOH: `${BASE_URL}/asset/getSoh1/62036bc22e18dce8a9fbfa53/620a0772170ade002307b0b3`,
   GET_ASSETS: `${BASE_URL}/activity/get/all`,
   GET_ASSETS_SITE: `${BASE_URL}/asset/get_Asset_by_site_zone_ref/61b62968c72421b96dd9281b`,
   GET_ASSETS_DETAILS: `${BASE_URL}/assetDetailRoutes/getScans`,
