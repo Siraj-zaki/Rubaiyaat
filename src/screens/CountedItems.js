@@ -193,7 +193,6 @@ export class CountedItems extends Component {
                 ))
                 await this.setState({
                     assetsDetails: newData,
-
                 });
                 await this.setState({ loading: false });
             } else {
