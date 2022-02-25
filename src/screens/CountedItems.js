@@ -68,6 +68,8 @@ export class CountedItems extends Component {
         zones: [],
         zone: '',
         site: '',
+        counted: [],
+        allSoh: [],
     };
     async componentDidMount() {
         const sites = await api.getAllSite()
@@ -139,90 +141,70 @@ export class CountedItems extends Component {
     }
     runFunction = async () => {
         this.setState({ loading: true });
-        if (this.state.assetsDetails === true || this.state.site !== '') {
+        if (this.state.assetsDetails === true) {
             const CountedItems = await api.getCountedItems();
-            const assetBySOH = await api.getAssetsBySohWithParam(this.state.site === '' ? this.state.sites[0]?._id : this.state.site?.value, this.state.zone === '' ? this.state.zones[0]?._id : this.state.zone?.value);
-            let newArray = []
-            let Solutuion = assetBySOH.map(f => ({
-                ...f,
-                Matched: CountedItems.find(item => item?.asset_EPC === f.asset_EPC) ? true : false,
-                MatchedColor: CountedItems.find(item => item?.asset_EPC === f.asset_EPC) ? 'green' : 'gray',
-            }));
-            let SolutuionTwo = CountedItems.map(f => ({
-                ...f,
-                OversCounted: assetBySOH.find(item => item?.asset_EPC !== f.asset_EPC) ? true : false,
-                MatchedColor: assetBySOH.find(item => item?.asset_EPC !== f.asset_EPC) ? 'red' : '',
-
-            }));
-            newArray = await newArray.concat(Solutuion, SolutuionTwo)
-
-            let shuffled = newArray
-                .map(value => ({ value, sort: Math.random() }))
-                .sort((a, b) => a.sort - b.sort)
-                .map(({ value }) => value)
-            console.log(shuffled, "newArray-new");
-            if (this.state.checkedList.includes('Matched') || this.state.checkedList.includes('Overs') || this.state.checkedList.includes('Unders')) {
-                let newData = await shuffled?.filter((item =>
-                    this.state.checkedList.includes('Matched') &&
-                    item.Matched === true
-                    ||
-                    this.state.checkedList.includes('Overs') &&
-                    item.OversCounted === true
-                    ||
-                    this.state.checkedList.includes('Unders') &&
-                    item.Matched === false
-                ))
-                await this.setState({
-                    assetsDetails: newData,
-                    assetsDetailsNew: shuffled,
-
-                });
-                this.searchFunction()
-                await this.setState({ loading: false });
-            } else {
-                await this.setState({
-                    assetsDetails: shuffled,
-                    assetsDetailsNew: shuffled,
-                });
-                this.searchFunction()
-                await this.setState({ loading: false });
-            }
-
-            // console.log(newArray, "newArray");
+            // const assetBySOH = await api.getAssetsBySohWithParam(this.state.site === '' ? this.state.sites[0]?._id : this.state.site?.value, this.state.zone === '' ? this.state.zones[0]?._id : this.state.zone?.value);
+            const assetBySOH = await api.getAssetsBySoh();
             if (CountedItems && assetBySOH) {
-
-                await this.setState({ loading: false });
-            }
-
-        } else {
-            if (this.state.checkedList.includes('Matched') || this.state.checkedList.includes('Overs') || this.state.checkedList.includes('Unders')) {
-                let newData = await this.state.assetsDetailsNew?.filter((item =>
-                    this.state.checkedList.includes('Matched') &&
-                    item.Matched === true
-                    ||
-                    this.state.checkedList.includes('Overs') &&
-                    item.OversCounted === true
-                    ||
-                    this.state.checkedList.includes('Unders') &&
-                    item.Matched === false
-                ))
-                await this.setState({
-                    assetsDetails: newData,
-                });
-                this.searchFunction()
-                await this.setState({ loading: false });
-            } else {
-                let newData = await this.state.assetsDetailsNew
-                await this.setState({
-                    assetsDetails: newData,
-
-                });
-                this.searchFunction()
-                await this.setState({ loading: false });
+                let newArray = []
+                newArray = await newArray.concat(CountedItems, assetBySOH)
+                await this.setState({ assetsDetails: newArray, assetsDetailsNew: newArray })
+                this.runFunctionSearch(CountedItems, assetBySOH)
+                this.setState({ loading: false });
             }
         }
+    }
+    matchedFunction = () => {
+        let newData = this.state.assetsDetailsNew?.filter((item =>
+            item.Matched === true
+        ))
+        this.setState({
+            assetsDetails: newData,
+        });
+    }
+    oversFunction = () => {
+        let newData = this.state.assetsDetailsNew?.filter((item =>
+            item.OversCounted == true
+        ))
+        this.setState({
+            assetsDetails: newData,
+        });
+    }
+    undersFunction = () => {
+        let newData = this.state.assetsDetailsNew?.filter((item =>
+            item.Matched !== true
+        ))
+        this.setState({
+            assetsDetails: newData,
+        });
+    }
 
+    runFunctionSearch = async (counted, allSoh) => {
+        this.setState({ loading: true });
+        let newArray = []
+        let Solutuion = allSoh.map(f => ({
+            ...f,
+            Matched: counted.find(item => item?.asset_EPC === f.asset_EPC) ? true : false,
+            MatchedColor: counted.find(item => item?.asset_EPC === f.asset_EPC) ? 'green' : 'gray',
+        }));
+        let SolutuionTwo = counted.map(f => ({
+            ...f,
+            OversCounted: allSoh.find(item => item?.asset_EPC !== f.asset_EPC) ? true : false,
+            MatchedColor: allSoh.find(item => item?.asset_EPC !== f.asset_EPC) ? 'red' : '',
 
+        }));
+        newArray = await newArray.concat(Solutuion, SolutuionTwo)
+        let shuffled = newArray
+            .map(value => ({ value, sort: Math.random() }))
+            .sort((a, b) => a.sort - b.sort)
+            .map(({ value }) => value)
+        console.log(shuffled, "newArray-new");
+        await this.setState({
+            assetsDetails: shuffled,
+            assetsDetailsNew: shuffled,
+
+        });
+        this.setState({ loading: false });
     };
     handleClickOpen = (device) => {
         this.setState({ openModal: true })
@@ -307,7 +289,7 @@ export class CountedItems extends Component {
                 asset_EPC: item?.asset_EPC || "----",
                 department: item?.asset_name?.department || "----",
                 location: item?.asset_name?.location || "----",
-                inventoryDate: new Date(item?.asset_name?.inventoryDate).toLocaleString('en-Us', "Asia/Muscat") || "----",
+                inventoryDate: item?.asset_name?.inventoryDate || "----",
                 updatedAt: new Date(item?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
                 assetStatus: item?.asset_name?.assetStatus || "----",
                 VALUE: item?.asset_name?.VALUE || "----",
@@ -410,6 +392,15 @@ export class CountedItems extends Component {
                                 <PeopleIcon htmlColor="black" className="ml-4 mr-4" />
                                 <h1 className="dashboard-heading">Counted Item (Report)</h1>
                                 <Button
+                                    onClick={() => this.searchFunction()}
+                                    type="submit"
+                                    color={"secondary"}
+                                    variant="contained"
+                                    style={{ position: "absolute", right: "190px" }}
+                                >
+                                    Search
+                                </Button>
+                                <Button
                                     onClick={() => this.runFunction()}
                                     type="submit"
                                     color={"secondary"}
@@ -465,7 +456,12 @@ export class CountedItems extends Component {
                                     </form>
                                     <div style={{ width: '1px', height: '100%', backgroundColor: 'white', position: 'absolute' }}></div>
                                     <form style={{ width: '50%', margin: 20, marginBottom: 0, display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 0, flexDirection: 'column' }}  >
-                                        <CheckboxGroup options={plainOptions} value={this.state.checkedList} onChange={this.onChange} />
+                                        {/* <CheckboxGroup options={plainOptions} value={this.state.checkedList} onChange={this.onChange} /> */}
+                                        <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+                                            <Button color={"primary"} variant="contained" onClick={() => this.matchedFunction()} >Matched</Button>
+                                            <Button color={"primary"} variant="contained" onClick={() => this.oversFunction()} >Overs</Button>
+                                            <Button color={"primary"} variant="contained" onClick={() => this.undersFunction()} >Unders</Button>
+                                        </div>
                                         <DatePicker value={this.state.creation_date} placeholder={"Creation Date"} className="input-mat-1" style={{ border: '1px solid white', borderRadius: 5, height: 37, marginTop: 10, fontWeight: 'lighter' }} size={'large'} format={"YYYY-MM-DD"} onChange={(e) => this.setState({ creation_date: e })} />
                                         <DatePicker value={this.state.modification_date} placeholder={"Modification Date"} className="input-mat-1" style={{ border: '1px solid white', borderRadius: 5, height: 37, marginTop: 10, fontWeight: 'lighter' }} size={'large'} format={"YYYY-MM-DD"} onChange={(e) => this.setState({ modification_date: e })} />
                                     </form>

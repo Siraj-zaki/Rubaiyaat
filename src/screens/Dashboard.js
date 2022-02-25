@@ -29,19 +29,19 @@ export class Dashboard extends Component {
         if (Users && Site && HandHeld) {
             this.setState({ loading: false })
         }
-        const CountedItems = await api.getCountedItems()
-        await this.setState({ CountedItems })
-        const AssetsBySoh = await api.getAssetsBySoh()
-        await this.setState({ AssetsBySoh })
+        // const CountedItems = await api.getCountedItems()
+        // await this.setState({ CountedItems })
+        // const AssetsBySoh = await api.getAssetsBySoh()
+        // await this.setState({ AssetsBySoh })
         // console.log(AssetsBySoh, 'AssetsBySoh');
         // console.log(CountedItems, 'CountedItems');
-        let re = this.state?.CountedItems?.filter(o1 => this.state?.AssetsBySoh?.some(o2 => o1?.asset_EPC === o2?.asset_EPC));
-        this.setState({ count: re?.length })
-        this.setState({ uncount: this.state.CountedItems?.length - this.state.count })
-        let Unders = re?.filter(o1 => this.state.AssetsBySoh?.some(o2 => o1?.asset_EPC === o2?.asset_EPC));
-        this.setState({ Unders })
-        console.log(re, 'Counted');
-        console.log(this.state.chartData, 'Chart Data');
+        // let re = this.state?.CountedItems?.filter(o1 => this.state?.AssetsBySoh?.some(o2 => o1?.asset_EPC === o2?.asset_EPC));
+        // this.setState({ count: re?.length })
+        // this.setState({ uncount: this.state.CountedItems?.length - this.state.count })
+        // let Unders = re?.filter(o1 => this.state.AssetsBySoh?.some(o2 => o1?.asset_EPC === o2?.asset_EPC));
+        // this.setState({ Unders })
+        // console.log(re, 'Counted');
+        // console.log(this.state.chartData, 'Chart Data');
     }
     resultInPercentage(value1, value2) {
         let result = Math.round((value1 / value2) * 100)
@@ -93,7 +93,7 @@ export class Dashboard extends Component {
                                     2021-08-13 04:25:58 -- StockSummary Dump Job Run Successfully for Store 0002162 Total items inserted 809 in store 0002162-- StockSummary Dump Job Run Successfully for Store 0002162 Total items inserted 809 in store 0002162-- logType -- StockSummaryDump-- StoreID -- 0002162-- retail_cycleCount_id -- 0002162"
                                     mainText="Activities"
                                 />
-                                <ActivityCard
+                                {/* <ActivityCard
                                     flex="1"
                                     mainText="Last Scan"
                                     matching={this.resultInPercentage(this.state.count, this.state.AssetsBySoh.length) + "%"}
@@ -104,7 +104,7 @@ export class Dashboard extends Component {
                                     count={this.state.count}
                                     salesFloor={"20"}
                                     selectStore
-                                />
+                                /> */}
                             </div>
                         </div>
                     </div>

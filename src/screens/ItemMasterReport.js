@@ -203,8 +203,8 @@ export class ItemMasterReport extends Component {
                 key: "createdAt",
             },
             {
-                label: "assetName",
-                key: "assetName",
+                label: "ownerName",
+                key: "ownerName",
             },
             {
                 label: "assetType",
@@ -250,7 +250,7 @@ export class ItemMasterReport extends Component {
         const data = this.state.assetsDetails.map((item) => {
             return {
                 createdAt: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
-                assetName: item?.assetName || "----",
+                ownerName: item?.ownerName || "----",
                 assetType: item?.assetType || "----",
                 RFID_Tag: item?.EPCID || "----",
                 department: item?.department || "----",
@@ -259,7 +259,7 @@ export class ItemMasterReport extends Component {
                 updatedAt: new Date(item?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
                 assetStatus: item?.assetStatus || "----",
                 assetValue: item?.assetValue || "----",
-                site: item?.site?.site_name || "----",
+                site: item?.SITE || "----",
                 description: item?.description || "----",
                 // Asset_Image: item?.image,
             }

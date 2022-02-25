@@ -56,7 +56,7 @@ export class ThirdReport extends Component {
   };
   searchFunction = () => {
     this.setState({ SOH: this.dateFilter() });
-    console.log(this.state.allData.map((item) => item?.assetDetails[0]));
+    // console.log(this.state.allData.map((item) => item?.asset_name));
   };
   dateCompare = (sDate, eDate) => {
     let { LastTimeDate } = this.state;
@@ -74,18 +74,18 @@ export class ThirdReport extends Component {
   dateFilter = () => {
     return this.state.allData.filter(
       (x) =>
-        x?.assetDetails[0]?.description?.toLowerCase().includes(
+        x?.asset_name?.description?.toLowerCase().includes(
           this.state?.Asset_ID.toLowerCase()
         ) &&
-        x?.assetDetails[0]?.CATEGORY_CODE?.includes(
+        x?.asset_name?.CATEGORY_CODE?.includes(
           this.state?.Item_Category
         ) &&
-        x?.assetDetails[0]?.EPCID?.toLowerCase().includes(
+        x?.asset_name?.EPCID?.toLowerCase().includes(
           this.state?.Serial_no.toLowerCase()
         ) &&
         this.dateCompare(
-          x?.assetDetails[0]?.createdAt,
-          x?.assetDetails[0]?.createdAt
+          x?.createdAt,
+          x?.createdAt
         )
     );
   };
@@ -167,17 +167,17 @@ export class ThirdReport extends Component {
     const data = this.state.SOH
       .map((item) => {
         return {
-          createdAt: new Date(item.assetDetails[0]?.createdAt).toLocaleString('en-Us', "Asia/Muscat"),
-          CATEGORY_CODE: item?.assetDetails[0]?.CATEGORY_CODE,
-          EPCID: item?.assetDetails[0]?.EPCID,
-          MODIFICATION_DATE:new Date(item?.assetDetails[0]?.MODIFICATION_DATE).toLocaleString('en-Us', "Asia/Muscat") ,
-          inventoryDate:new Date(item?.assetDetails[0]?.inventoryDate).toLocaleString('en-Us', "Asia/Muscat") ,
-          SITE: item?.assetDetails[0]?.SITE,
-          assetType: item?.assetDetails[0]?.assetType,
-          department: item?.assetDetails[0]?.department,
-          location: item?.assetDetails[0]?.location,
-          description: item?.assetDetails[0]?.description,
-          assetStatus: item?.assetDetails[0]?.assetStatus,
+          createdAt: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat"),
+          CATEGORY_CODE: item?.asset_name?.CATEGORY_CODE,
+          EPCID: item?.asset_name?.EPCID,
+          MODIFICATION_DATE:new Date(item?.asset_name?.MODIFICATION_DATE).toLocaleString('en-Us', "Asia/Muscat") ,
+          inventoryDate:new Date(item?.asset_name?.inventoryDate).toLocaleString('en-Us', "Asia/Muscat") ,
+          SITE: item?.asset_name?.SITE,
+          assetType: item?.asset_name?.assetType,
+          department: item?.asset_name?.department,
+          location: item?.asset_name?.location,
+          description: item?.asset_name?.description,
+          assetStatus: item?.asset_name?.assetStatus,
         }
       });
 
@@ -317,11 +317,6 @@ export class ThirdReport extends Component {
                 }}
               >
 
-                {/* <CSVLink data={data} headers={headers}>
-                  <Button color="primary" variant="contained">
-                    CSV
-                  </Button>
-                </CSVLink> */}
               </div>
               <ThirdReportTable asn={this.state.SOH} />
             </div>

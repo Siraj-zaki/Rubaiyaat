@@ -538,6 +538,9 @@ body>div:nth-child(10)>div>div {
 .ant-checkbox-inner{
   border: 1px solid #b4b4b4!important;
 }
+.makeStyles-root-17 {
+  background-color: rgb(32 32 32) !important;
+}
 .counted-class-red{
   background-color: #6e1c1c!important;
   border-bottom: 1px solid #6f6f6f!important;
