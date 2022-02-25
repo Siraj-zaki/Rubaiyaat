@@ -12,6 +12,10 @@ const getAllSite = async (payLoad) => {
   const { data } = await axios.get(`${Path.GET_ALL_SITE}`, payLoad);
   return data;
 };
+const getAllZone = async (payLoad) => {
+  const { data } = await axios.get(`${Path.GET_ALL_ZONE}`, payLoad);
+  return data;
+};
 const addRole = async (payLoad) => {
   const { data } = await axios.post(`${Path.ADD_ROLE}`, payLoad);
   return data;
@@ -74,6 +78,10 @@ const getBatch = async (payLoad) => {
 };
 const getAssetsBySoh = async (payLoad) => {
   const { data } = await axios.get(`${Path.GET_ASSETS_SOH}`, payLoad);
+  return data;
+};
+const getAssetsBySohWithParam = async (site,zone) => {
+  const { data } = await axios.get(`${Path.GET_ASSETS_SOH_PARAM}/${site}/${zone}`);
   return data;
 };
 const getAssetsByEPC = async (payLoad) => {
@@ -155,4 +163,6 @@ export default {
   uploadingData,
   getMovementHistory,
   getAssetsDetailsASSO,
+  getAllZone,
+  getAssetsBySohWithParam,
 };

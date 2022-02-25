@@ -7,7 +7,6 @@ import ActivityCard from "../components/ActivityCard";
 // import StickyHeadTable from '../components/Table';
 import CollapsibleTable from "../components/Table";
 import BasicTextFields from "../components/Input";
-
 import { Button, Typography, IconButton } from "@material-ui/core";
 import StickyHeadTable from "../components/StoreInformationTable";
 import Select from "react-select";
@@ -26,18 +25,13 @@ import Papa from "papaparse";
 import FirstReportTable from "../components/FirstReportTable";
 import { CSVLink } from "react-csv";
 import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
-import { DatePicker, Radio, Space, Checkbox, Divider } from 'antd';
+import { DatePicker, Radio, Space } from 'antd';
 import { toast } from "react-toastify";
-
+import CSVReader from "../components/CsvUploader";
+import Barcode from 'react-barcode'
 import CountedTable from "../components/CountedTable";
-
-
-const CheckboxGroup = Checkbox.Group;
-
-const plainOptions = ['Unders', 'Overs', "Matched"];
-const defaultCheckedList = [];
 const { RangePicker } = DatePicker;
-export class CountedItems extends Component {
+export class UnderTheOver extends Component {
     state = {
         location: "",
         ASN: [],
@@ -49,7 +43,7 @@ export class CountedItems extends Component {
         endingDate: "",
         ibt: "",
         allData: [],
-        assetsDetails: true,
+        assetsDetails: [],
         remarks: "",
         assetsDetailsNew: [],
         epc: '',
@@ -58,42 +52,13 @@ export class CountedItems extends Component {
         creation_date: '',
         modification_date: '',
         image: '',
-        checkedList: defaultCheckedList,
-        indeterminate: true,
-        checkAll: false,
-        overs: false,
-        unders: false,
-        matched: false,
-        sites: [],
-        zones: [],
-        zone: '',
-        site: '',
-    };
-    async componentDidMount() {
-        const sites = await api.getAllSite()
-        const zones = await api.getAllZone()
-        this.setState({ zones, sites })
-        console.log(sites, 'sites');
-        console.log(zones, 'zones');
-    }
-    onChange = list => {
-        this.setState({ checkedList: list });
-        this.setState({ indeterminate: !!list.length && list.length < plainOptions.length });
-        this.setState({ checkAll: list.length === plainOptions.length });
-    };
-
-    onCheckAllChange = e => {
-        this.setState({ checkedList: e.target.checked ? plainOptions : [] })
-        this.setState({ indeterminate: false });
-        this.setState({ checkAll: e.target.checked });
-
     };
 
     onSubmitEvent = () => {
         console.log("User");
     };
     searchFunction = async () => {
-
+        // e.preventDefault();
         await this.setState({ assetsDetails: this.dateFilter() });
     };
     dateCompareCreation = (sDate, eDate) => {
@@ -103,6 +68,7 @@ export class CountedItems extends Component {
             return true;
         }
         creation_date = moment(creation_date);
+        // endingDate = moment(endingDate)
         let sDiff = moment(sDate).diff(creation_date, "days");
         let eDiff = !eDate ? -1 : moment(eDate).diff(endingDate, "days");
         if (sDiff >= 0 && eDiff <= 0) return true;
@@ -115,252 +81,200 @@ export class CountedItems extends Component {
             return true;
         }
         modification_date = moment(modification_date);
+        // endingDate = moment(endingDate)
         let sDiff = moment(sDate).diff(modification_date, "days");
         let eDiff = !eDate ? -1 : moment(eDate).diff(endingDate, "days");
         if (sDiff >= 0 && eDiff <= 0) return true;
         return false;
     };
     dateFilter = () => {
-        return this.state.assetsDetails.filter(
+        return this.state.assetsDetailsNew.filter(
             (x) =>
-                x?.asset_EPC?.includes(this.state?.epc)
-                // x?.asset_name?.assetStatus.includes(this.state.asset_status)
+            
+                x?.EPCID?.includes(this.state?.epc)
+                &&
+                x?.assetStatus.includes(this.state.asset_status)
                 &&
                 this.dateCompareCreation(x?.createdAt, x?.createdAt)
                 &&
                 this.dateCompareUpdated(x?.updatedAt, x?.updatedAt)
         );
     };
-    shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-    }
     runFunction = async () => {
         this.setState({ loading: true });
-        if (this.state.assetsDetails === true || this.state.site !== '') {
-            const CountedItems = await api.getCountedItems();
-            const assetBySOH = await api.getAssetsBySohWithParam(this.state.site === '' ? this.state.sites[0]?._id : this.state.site?.value, this.state.zone === '' ? this.state.zones[0]?._id : this.state.zone?.value);
-            let newArray = []
-            let Solutuion = assetBySOH.map(f => ({
-                ...f,
-                Matched: CountedItems.find(item => item?.asset_EPC === f.asset_EPC) ? true : false,
-                MatchedColor: CountedItems.find(item => item?.asset_EPC === f.asset_EPC) ? 'green' : 'gray',
-            }));
-            let SolutuionTwo = CountedItems.map(f => ({
-                ...f,
-                OversCounted: assetBySOH.find(item => item?.asset_EPC !== f.asset_EPC) ? true : false,
-                MatchedColor: assetBySOH.find(item => item?.asset_EPC !== f.asset_EPC) ? 'red' : '',
+        const assetsDetails = await api.getCountedItems();
+        const assetRoutes = await api.getAssetsByAll();
+        const assetBySOH = await api.getAssetsBySoh();
+        console.log(assetsDetails, "counted");
+        console.log(assetRoutes, "assetsDetails");
+        console.log(assetBySOH, "assetBySOH");
 
-            }));
-            newArray = await newArray.concat(Solutuion, SolutuionTwo)
+        let newArray = []
 
-            let shuffled = newArray
-                .map(value => ({ value, sort: Math.random() }))
-                .sort((a, b) => a.sort - b.sort)
-                .map(({ value }) => value)
-            console.log(shuffled, "newArray-new");
-            if (this.state.checkedList.includes('Matched') || this.state.checkedList.includes('Overs') || this.state.checkedList.includes('Unders')) {
-                let newData = await shuffled?.filter((item =>
-                    this.state.checkedList.includes('Matched') &&
-                    item.Matched === true
-                    ||
-                    this.state.checkedList.includes('Overs') &&
-                    item.OversCounted === true
-                    ||
-                    this.state.checkedList.includes('Unders') &&
-                    item.Matched === false
-                ))
-                await this.setState({
-                    assetsDetails: newData,
-                    assetsDetailsNew: shuffled,
-
-                });
-                this.searchFunction()
-                await this.setState({ loading: false });
-            } else {
-                await this.setState({
-                    assetsDetails: shuffled,
-                    assetsDetailsNew: shuffled,
-                });
-                this.searchFunction()
-                await this.setState({ loading: false });
-            }
-
-            // console.log(newArray, "newArray");
-            if (CountedItems && assetBySOH) {
-
-                await this.setState({ loading: false });
-            }
-
-        } else {
-            if (this.state.checkedList.includes('Matched') || this.state.checkedList.includes('Overs') || this.state.checkedList.includes('Unders')) {
-                let newData = await this.state.assetsDetailsNew?.filter((item =>
-                    this.state.checkedList.includes('Matched') &&
-                    item.Matched === true
-                    ||
-                    this.state.checkedList.includes('Overs') &&
-                    item.OversCounted === true
-                    ||
-                    this.state.checkedList.includes('Unders') &&
-                    item.Matched === false
-                ))
-                await this.setState({
-                    assetsDetails: newData,
-                });
-                this.searchFunction()
-                await this.setState({ loading: false });
-            } else {
-                let newData = await this.state.assetsDetailsNew
-                await this.setState({
-                    assetsDetails: newData,
-
-                });
-                this.searchFunction()
-                await this.setState({ loading: false });
-            }
+        newArray = assetRoutes.filter(f => assetsDetails.find(item => item?.asset_EPC === f.EPCID));
+        newArray = newArray.filter(f => assetBySOH.find(item => item?.asset_EPC !== f.EPCID))
+        await this.setState({
+            assetsDetails: newArray.reverse(),
+            assetsDetailsNew: newArray.reverse(),
+        });
+        console.log(newArray, "newArray");
+        if (assetsDetails) {
+            await this.setState({ loading: false });
+            // await this.searchFunction()
         }
-
-
     };
+
+    async componentDidMount() {
+        // let data = this.imagetoBase64()
+
+        // setTimeout(() => {
+        //   console.log(data,'data');
+        //   console.log(this.state.image);
+        // }, 3000);
+    }
+    imagetoBase64 = () => {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "https://images.unsplash.com/photo-1600857062241-98e5dba7f214?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=498&q=80", true);
+        xhr.responseType = "blob";
+        xhr.onload = function (e) {
+            console.log(this.response);
+            var reader = new FileReader();
+            reader.onload = function (event) {
+                var res = event.target.result;
+                console.log(res)
+            }
+            var file = this.response;
+            reader.readAsDataURL(file)
+        };
+        xhr.send()
+    }
+    getBase64FromUrl = async (url) => {
+        const data = await fetch(url);
+        const blob = await data.blob();
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(blob);
+            reader.onloadend = () => {
+                const base64data = reader.result;
+                resolve(base64data);
+            }
+        });
+    }
     handleClickOpen = (device) => {
         this.setState({ openModal: true })
+        // console.log(device);
         this.setState({ QrCode: device })
     }
     handleClose = () => {
         this.setState({ openModal: false })
     }
-    handleChangeZone = (e) => {
-        this.setState({ zone: e })
+    csvUploader = (e) => {
+        console.log(e.target.files[0]);
+        const files = e.target.files;
+        console.log(files);
+        if (files) {
+
+            Papa.parse(files[0], {
+                header: true,
+                complete: results => {
+                    console.log(results.data)
+                },
+            })
+        } else {
+            return toast.error("Please Upload Csv")
+        }
     }
-    handleChangeSite = (e) => {
-        this.setState({ site: e })
-    }
+
 
     render() {
-        const headers = [
-            {
-                label: "createdAt",
-                key: "createdAt",
-            },
-            {
-                label: "ownerName",
-                key: "ownerName",
-            },
-            {
-                label: "assetType",
-                key: "assetType",
-            },
-            {
-                label: "asset_EPC",
-                key: "asset_EPC",
-            },
-            {
-                label: "department",
-                key: "department",
-            },
-            {
-                label: "location",
-                key: "location",
-            },
-            {
-                label: "inventoryDate",
-                key: "inventoryDate",
-            },
-            {
-                label: "updatedAt",
-                key: "updatedAt",
-            },
-            {
-                label: "assetStatus",
-                key: "assetStatus",
-            },
-            {
-                label: "VALUE",
-                key: "VALUE",
-            },
-            {
-                label: "SITE",
-                key: "SITE",
-            },
-            {
-                label: "description",
-                key: "description",
-            },
-            {
-                label: "SUB_CATEGORY_CODE",
-                key: "SUB_CATEGORY_CODE",
-            },
-            {
-                label: "SUB_CATEGORY_NAME",
-                key: "SUB_CATEGORY_NAME",
-            },
-
-        ];
-        let arr = []
-        const data = this.state.assetsDetails !== true ? this.state.assetsDetails.map((item) => {
-            return {
-                createdAt: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
-                ownerName: item?.asset_name?.ownerName || "----",
-                assetType: item?.asset_name?.assetType || "----",
-                asset_EPC: item?.asset_EPC || "----",
-                department: item?.asset_name?.department || "----",
-                location: item?.asset_name?.location || "----",
-                inventoryDate: new Date(item?.asset_name?.inventoryDate).toLocaleString('en-Us', "Asia/Muscat") || "----",
-                updatedAt: new Date(item?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
-                assetStatus: item?.asset_name?.assetStatus || "----",
-                VALUE: item?.asset_name?.VALUE || "----",
-                SITE: item?.asset_name?.SITE || "----",
-                description: item?.asset_name?.description || "----",
-                SUB_CATEGORY_CODE: item?.asset_name?.SUB_CATEGORY_CODE || "----",
-                SUB_CATEGORY_NAME: item?.asset_name?.SUB_CATEGORY_NAME || "----",
-                // Asset_Image: item?.asset_name?.image,
-            }
-        }) : arr
         const customStyles = {
             control: (base, state) => ({
                 ...base,
-                background: "transparent",
-                backgroundColor: 'transparent',
-                height: 33,
                 marginTop: 10,
-
+                backgroundColor: "transparent",
             }),
-            menu: base => ({
+            menu: (base) => ({
                 ...base,
-                // override border radius to match the box
-                borderRadius: 0,
-                // kill the gap
-                marginTop: 0,
-                background: 'transparent'
-            }),
-            menuList: base => ({
-                ...base,
-                // kill the white space on first and last option
-                padding: 0,
-                background: 'gray'
-
-            }),
-            option: provided => ({
-                ...provided,
-                color: 'black',
-                zIndex: 312312312312312
+                zIndex: 30,
             }),
             singleValue: (provided, state) => {
                 const opacity = state.isDisabled ? 0.5 : 1;
-                const transition = 'opacity 300ms';
-
+                const transition = "opacity 300ms";
                 return { ...provided, opacity, transition, color: "white" };
             },
         };
-
-        const sites = this.state.sites.map((item => {
-            return { label: item?.site_name, value: item?._id }
-        }))
-        const zones = this.state.zones.map((item => {
-            return { label: item?.zone_name, value: item?._id }
-        }))
+        const headers = [
+            {
+                label: "Creation_Date",
+                key: "Creation_Date",
+            },
+            {
+                label: "Owner_name",
+                key: "Asset_Name",
+            },
+            {
+                label: "Asset_Type",
+                key: "Asset_Type",
+            },
+            {
+                label: "EPC",
+                key: "asset_EPC",
+            },
+            {
+                label: "Department",
+                key: "Department",
+            },
+            {
+                label: "Asset_Location",
+                key: "Asset_Location",
+            },
+            {
+                label: "Inventory_Date",
+                key: "Inventory_Date",
+            },
+            {
+                label: "Modification_Date",
+                key: "Modification_Date",
+            },
+            {
+                label: "Asset_Status",
+                key: "Asset_Status",
+            },
+            {
+                label: "Asset_Value",
+                key: "Asset_Value",
+            },
+            {
+                label: "Site",
+                key: "Site",
+            },
+            {
+                label: "Description",
+                key: "Description",
+            },
+            // {
+            //     label: "Asset_Image",
+            //     key: "Asset_Image",
+            // },
+        ];
+        const data = this.state.assetsDetails.map((item) => {
+            return {
+                Creation_Date: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
+                Asset_Name: item?.ownerName || "----",
+                Asset_Type: item?.assetType || "----",
+                asset_EPC: item?.EPCID || "----",
+                Department: item?.department || "----",
+                Asset_Location: item?.location || "----",
+                Inventory_Date: new Date(item?.inventoryDate).toLocaleString('en-Us', "Asia/Muscat") || "----",
+                Modification_Date: new Date(item?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
+                Asset_Status: item?.assetStatus || "----",
+                Asset_Value: item?.VALUE || "----",
+                Site: item?.SITE || "----",
+                Description: item?.description || "----",
+                // Asset_Image: item?.image,
+            }
+        });
+        console.log(data, "asdfasdf");
         return (
             <React.Fragment>
                 <CustomModal data={this.state.QrCode} brcode={true} image={true} open={this.state.openModal} handleClose={() => this.handleClose()} handleClickOpen={() => this.handleClickOpen} />
@@ -408,7 +322,7 @@ export class CountedItems extends Component {
                                     )}
                                 </IconButton>
                                 <PeopleIcon htmlColor="black" className="ml-4 mr-4" />
-                                <h1 className="dashboard-heading">Counted Item (Report)</h1>
+                                <h1 className="dashboard-heading">Under the Overs (Report)</h1>
                                 <Button
                                     onClick={() => this.runFunction()}
                                     type="submit"
@@ -420,7 +334,7 @@ export class CountedItems extends Component {
                                 </Button>
                                 {/* <CSVReader /> */}
                                 <IconButton style={{ position: "absolute", right: "90px", cursor: 'pointer' }}>
-                                    <CSVLink filename="Counted Report" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: 60 }} data={data} headers={headers}>
+                                    <CSVLink filename="Discrepancy Report" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: 60 }} data={data} headers={headers}>
                                         <SystemUpdateAltIcon fontSize="large" htmlColor="black" />
                                         <h1 className="dashboard-heading" style={{ fontSize: '15px' }} >CSV</h1>
                                     </CSVLink>
@@ -432,27 +346,8 @@ export class CountedItems extends Component {
                                 unmountOnExit
                                 style={{ width: "100%" }}
                             >
-
                                 <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', backgroundColor: 'transparent', minHeight: 50, marginTop: 10, position: 'relative' }}>
                                     <form style={{ width: '50%', margin: 20, marginBottom: 0, display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 0, flexDirection: 'column' }}  >
-                                        <Select
-                                            value={this.state.site}
-                                            onChange={(e) => this.handleChangeSite(e)}
-                                            options={sites}
-                                            isSearchable={true}
-                                            placeholder={"Site"}
-                                            className="last-scan-select-2"
-                                            styles={customStyles}
-                                        />
-                                        <Select
-                                            value={this.state.zone}
-                                            onChange={(e) => this.handleChangeZone(e)}
-                                            options={zones}
-                                            isSearchable={true}
-                                            placeholder={"Zone"}
-                                            className="last-scan-select-2"
-                                            styles={customStyles}
-                                        />
                                         <BasicTextFields
                                             margin={10}
                                             placeholder="EPC"
@@ -462,10 +357,27 @@ export class CountedItems extends Component {
                                                 this.setState({ epc: e.target.value })
                                             }
                                         />
+                                        {/* <BasicTextFields
+                                            margin={10}
+                                            placeholder="Asset Name"
+                                            name="Asset Name"
+                                            value={this.state.asset_name}
+                                            onChangeEvent={(e) =>
+                                                this.setState({ asset_name: e.target.value })
+                                            }
+                                        /> */}
+                                        <BasicTextFields
+                                            margin={10}
+                                            placeholder="Asset Status"
+                                            name="Asset Status"
+                                            value={this.state.asset_status}
+                                            onChangeEvent={(e) =>
+                                                this.setState({ asset_status: e.target.value })
+                                            }
+                                        />
                                     </form>
                                     <div style={{ width: '1px', height: '100%', backgroundColor: 'white', position: 'absolute' }}></div>
                                     <form style={{ width: '50%', margin: 20, marginBottom: 0, display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 0, flexDirection: 'column' }}  >
-                                        <CheckboxGroup options={plainOptions} value={this.state.checkedList} onChange={this.onChange} />
                                         <DatePicker value={this.state.creation_date} placeholder={"Creation Date"} className="input-mat-1" style={{ border: '1px solid white', borderRadius: 5, height: 37, marginTop: 10, fontWeight: 'lighter' }} size={'large'} format={"YYYY-MM-DD"} onChange={(e) => this.setState({ creation_date: e })} />
                                         <DatePicker value={this.state.modification_date} placeholder={"Modification Date"} className="input-mat-1" style={{ border: '1px solid white', borderRadius: 5, height: 37, marginTop: 10, fontWeight: 'lighter' }} size={'large'} format={"YYYY-MM-DD"} onChange={(e) => this.setState({ modification_date: e })} />
                                     </form>
@@ -480,6 +392,11 @@ export class CountedItems extends Component {
                                     margin: "10px",
                                 }}
                             >
+                                {/* <CSVLink data={data} headers={headers}>
+                  <Button color="primary" variant="contained">
+                    CSV
+                  </Button>
+                </CSVLink> */}
                             </div>
                             <CountedTable openModal={(device) => this.handleClickOpen(device)} asn={this.state.assetsDetails} />
                         </div>
@@ -490,4 +407,4 @@ export class CountedItems extends Component {
     }
 }
 
-export default CountedItems;
+export default UnderTheOver;

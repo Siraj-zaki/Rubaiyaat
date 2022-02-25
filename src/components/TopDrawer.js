@@ -669,7 +669,7 @@ function ScrollableTabsButtonForce(props) {
             ) : (
               ""
             )}
-            {permissions.includes("Associated_Items") ? (
+            {/* {permissions.includes("Associated_Items") ? (
               <NavLink
                 exact
                 to="/Reports/DiscrepancyReport"
@@ -681,7 +681,7 @@ function ScrollableTabsButtonForce(props) {
               </NavLink>
             ) : (
               ""
-            )}
+            )} */}
             {permissions.includes("Associated_Items") ? (
               <NavLink
                 exact
