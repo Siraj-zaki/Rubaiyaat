@@ -396,7 +396,7 @@ export class CountedItems extends Component {
                                     type="submit"
                                     color={"secondary"}
                                     variant="contained"
-                                    style={{ position: "absolute", right: "190px" }}
+                                    style={{ position: "absolute", right: "90px" }}
                                 >
                                     Search
                                 </Button>
@@ -410,7 +410,7 @@ export class CountedItems extends Component {
                                     Run
                                 </Button>
                                 {/* <CSVReader /> */}
-                                <IconButton style={{ position: "absolute", right: "90px", cursor: 'pointer' }}>
+                                <IconButton style={{ position: "absolute", right: "170px", cursor: 'pointer' }}>
                                     <CSVLink filename="Counted Report" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: 60 }} data={data} headers={headers}>
                                         <SystemUpdateAltIcon fontSize="large" htmlColor="black" />
                                         <h1 className="dashboard-heading" style={{ fontSize: '15px' }} >CSV</h1>

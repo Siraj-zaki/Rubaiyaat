@@ -251,7 +251,7 @@ export class FirstReport extends Component {
     const data = this.state.assetsDetails.map((item) => {
       return {
         Creation_Date: new Date(item?.assetDetail?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
-        Asset_Name: item?.assetDetail?.assetName || "----",
+        Asset_Name: item?.assetDetail?.ownerName || "----",
         Asset_Type: item?.assetDetail?.assetType || "----",
         asset_EPC: item?.assetDetail?.EPCID || "----",
         Department: item?.assetDetail?.department || "----",
@@ -259,8 +259,8 @@ export class FirstReport extends Component {
         Inventory_Date: new Date(item?.assetDetail?.inventoryDate).toLocaleString('en-Us', "Asia/Muscat") || "----",
         Modification_Date: new Date(item?.assetDetail?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
         Asset_Status: item?.assetDetail?.assetStatus || "----",
-        Asset_Value: item?.assetDetail?.assetValue || "----",
-        Site: item?.assetDetail?.site?.site_name || "----",
+        Asset_Value: item?.assetDetail?.VALUE || "----",
+        Site: item?.assetDetail?.SITE || "----",
         Description: item?.assetDetail?.description || "----",
         // Asset_Image: item?.assetDetails[0].image,
       }
