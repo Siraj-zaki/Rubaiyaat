@@ -28,6 +28,7 @@ import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
 import { DatePicker, Radio, Space, Checkbox, Divider } from 'antd';
 import { toast } from "react-toastify";
 import CountedTable from "../components/CountedTable";
+import _ from 'lodash'
 const CheckboxGroup = Checkbox.Group;
 const plainOptions = ['Unders', 'Overs', "Matched"];
 const defaultCheckedList = [];
@@ -122,14 +123,14 @@ export class CountedItems extends Component {
         return false;
     };
     dateFilter = () => {
-        return this.state.assetsDetails.filter(
+        return this.state.assetsDetailsNew.filter(
             (x) =>
                 x?.asset_EPC?.includes(this.state?.epc)
-                // x?.asset_name?.assetStatus.includes(this.state.asset_status)
-                &&
-                this.dateCompareCreation(x?.createdAt, x?.createdAt)
-                &&
-                this.dateCompareUpdated(x?.updatedAt, x?.updatedAt)
+            // x?.asset_name?.assetStatus.includes(this.state.asset_status)
+            // &&
+            // this.dateCompareCreation(x?.createdAt, x?.createdAt)
+            // &&
+            // this.dateCompareUpdated(x?.updatedAt, x?.updatedAt)
         );
     };
     shuffleArray(array) {
@@ -181,27 +182,47 @@ export class CountedItems extends Component {
     runFunctionSearch = async (counted, allSoh) => {
         this.setState({ loading: true });
         let newArray = []
+        // var matched = []
+        // var newData = []
+        // for (var j = 0; j < counted.length; j++) {
+        //     for (var i = 0; i < allSoh.length; i++) {
+        //         if (allSoh[i].asset_EPC === counted[j].asset_EPC) {
+        //             matched.push(allSoh[i])
+        //         }
+        //         else {
+        //             allSoh[i].status = "unders"
+        //             counted[j].status = "overs"
+        //             newData = newData.concat(allSoh, counted)
+        //         }
+        //     }
+        // }
+        // let gropasdf = _.groupBy(newData, 'status')
+        // console.log(gropasdf, 'asd');
         let Solutuion = allSoh.map(f => ({
             ...f,
             Matched: counted.find(item => item?.asset_EPC === f.asset_EPC) ? true : false,
-            MatchedColor: counted.find(item => item?.asset_EPC === f.asset_EPC) ? 'green' : 'gray',
+            // MatchedColor: counted.some(item => item?.asset_EPC === f.asset_EPC) ? 'green' : 'gray',
         }));
+
+        console.log(allSoh.filter((item => item.asset_EPC === "E2000016170F00310900BD16")), "soh");
+        console.log(counted.filter((item => item.asset_EPC === "E2000016170F00310900BD16")), "counted");
         let SolutuionTwo = counted.map(f => ({
             ...f,
-            OversCounted: allSoh.find(item => item?.asset_EPC !== f.asset_EPC) ? true : false,
-            MatchedColor: allSoh.find(item => item?.asset_EPC !== f.asset_EPC) ? 'red' : '',
-
+            OversCounted: allSoh.find(item => item?.asset_EPC === f.asset_EPC) ? false : true,
+            // MatchedColor: allSoh.some(item => item?.asset_EPC !== f.asset_EPC) ? '' : 'red',
         }));
+
+        SolutuionTwo = SolutuionTwo.filter((item => item?.OversCounted === true))
         newArray = await newArray.concat(Solutuion, SolutuionTwo)
         newArray = newArray.filter((item => item.Matched === true || item.Matched === false || item.OversCounted === true))
-        let shuffled = newArray
-            .map(value => ({ value, sort: Math.random() }))
-            .sort((a, b) => a.sort - b.sort)
-            .map(({ value }) => value)
-        console.log(shuffled, "newArray-new");
+        // let shuffled = newArray
+        //     .map(value => ({ value, sort: Math.random() }))
+        //     .sort((a, b) => a.sort - b.sort)
+        //     .map(({ value }) => value)
+        // console.log(shuffled, "newArray-new");
         await this.setState({
-            assetsDetails: shuffled,
-            assetsDetailsNew: shuffled,
+            assetsDetails: newArray,
+            assetsDetailsNew: newArray,
 
         });
         this.setState({ loading: false });

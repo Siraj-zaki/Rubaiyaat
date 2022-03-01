@@ -10,6 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import TablePagination from '@material-ui/core/TablePagination';
 import { Button, Modal } from '@material-ui/core';
 import BasicTextFields from './Input';
+import { Typography } from 'antd';
 const useRowStyles = makeStyles({
     root: {
         backgroundColor: 'rgba(92, 92, 92, 1)',
@@ -41,6 +42,12 @@ function Row(props) {
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.assetDetail[0].assetValue || "----"}</TableCell>
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.assetDetail[0].site?.site_name || "----"}</TableCell>
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.assetDetail[0].description || "----"}</TableCell>
+                <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">
+                    <Button style={{ minWidth: 20, height: 20 }} onClick={() => openModal(row?.assetDetail[0].imageLink)} variant="contained" className="m-1" color="primary"  >Image</Button>
+                </TableCell>
+                <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">
+                    <Button style={{ minWidth: 20, height: 20 }} onClick={() => openModal(row?.assetDetail[0].EPCID)} variant="contained" className="m-1" color="primary"  >Barcode</Button>
+                </TableCell>
             </TableRow>
         </React.Fragment >
     );
@@ -73,8 +80,10 @@ export default function ItemMasterTable({ asn, openModal }) {
     };
     useEffect(() => {
         setData(asn)
-        setPage(0);
+        // console.log(asn.length, asn);
+        // setPage(0);/
     }, [asn]);
+
     const handleClose = () => {
         setOpen(!open)
     }
@@ -84,8 +93,32 @@ export default function ItemMasterTable({ asn, openModal }) {
             <Modal
                 open={open}
                 onClose={handleClose}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}
             >
-                <h2>asdasd</h2>
+                <div style={{ width: '60%', minHeight: "80%", background: 'lightgray', display: 'flex', justifyContent: 'space-evenly', alignItems: 'space-evenly', flexDirection: 'column' }}>
+                    <div style={{ width: '100%', minHeight: "100%", background: 'lightgray', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
+
+                        <div style={{ minWidth: 300, width: '45%', height: '85%', minHeight: '300px', flexDirection: 'column' }}>
+                            <Typography colo>Current Values</Typography>
+                            <BasicTextFields
+                                margin={10}
+                                placeholder="Category"
+                                name="Category"
+                                value={"asset Details"}
+                            // onChangeEvent={(e) =>
+                            //     this.setState({ Item_Category: e.target.value })
+                            // }
+                            />
+                        </div>
+                        <div style={{ minWidth: 300, width: '45%', height: '85%', minHeight: '300px', flexDirection: 'column' }}>
+                            <Typography colo>New  Values</Typography>
+                        </div>
+                    </div>
+                    <div style={{ width: '100%', display: 'flex', justifyContent: 'space-evenly', minHeight: 150 }}>
+                        sdf
+                    </div>
+                </div>
+
             </Modal>
             <Paper className={classes.root}  >
                 <TableContainer  >
@@ -95,7 +128,6 @@ export default function ItemMasterTable({ asn, openModal }) {
                                 <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">action</TableCell>
                                 <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Creation_Date</TableCell>
                                 <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Owner_Name</TableCell>
-                                {/* <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Asset_Type</TableCell> */}
                                 <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">EPC</TableCell>
                                 <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Department</TableCell>
                                 <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Asset_Location</TableCell>
@@ -105,15 +137,17 @@ export default function ItemMasterTable({ asn, openModal }) {
                                 <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Asset_Value </TableCell>
                                 <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Site </TableCell>
                                 <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Description </TableCell>
+                                <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Image</TableCell>
+                                <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Barcode </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {/* {asn.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                             <Row openModal={(device) => openModal(device)} key={row.Odoo_Tag} row={row} />
                         ))} */}
-                            {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                            {asn.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
                                 return (
-                                    <TableRow style={{ backgroundColor: '#263238' }} hover role="checkbox" tabIndex={-1} key={row?.createdAt}>
+                                    <TableRow style={{ backgroundColor: '#263238' }} hover role="checkbox" tabIndex={-1} key={index}>
                                         <React.Fragment>
                                             <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">
                                                 <Button
@@ -121,9 +155,8 @@ export default function ItemMasterTable({ asn, openModal }) {
                                                     color={"primary"}
                                                     onClick={() => setOpen(true)}
                                                     variant="contained"
-                                                   
-                                                >
 
+                                                >
                                                     Edit
                                                 </Button>
                                             </TableCell>
@@ -139,6 +172,12 @@ export default function ItemMasterTable({ asn, openModal }) {
                                             <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.assetValue || "----"}</TableCell>
                                             <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.SITE || "----"}</TableCell>
                                             <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.description || "----"}</TableCell>
+                                            <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">
+                                                <Button style={{ minWidth: 20, height: 20 }} onClick={() => openModal(row?.imageLink)} variant="contained" className="m-1" color="primary"  >Image</Button>
+                                            </TableCell>
+                                            <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">
+                                                <Button style={{ minWidth: 20, height: 20 }} onClick={() => openModal(row?.EPCID)} variant="contained" className="m-1" color="primary"  >Barcode</Button>
+                                            </TableCell>
                                         </React.Fragment>
                                     </TableRow>
                                 );

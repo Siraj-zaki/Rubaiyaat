@@ -58,7 +58,8 @@ export class FirstReport extends Component {
   };
   searchFunction = async () => {
     // e.preventDefault();
-    await this.setState({ assetsDetails: this.dateFilter() });
+    await this.setState({ assetsDetails: this.dateFilter() })
+    console.log(this.dateFilter(), 'daratatatatat');
   };
   dateCompareCreation = (sDate, eDate) => {
     let { creation_date } = this.state;

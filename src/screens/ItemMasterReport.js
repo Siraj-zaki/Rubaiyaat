@@ -90,15 +90,27 @@ export class ItemMasterReport extends Component {
     dateFilter = () => {
         return this.state.assetsDetailsNew.filter(
             (x) =>
-                x?.ownerName?.includes(this.state?.asset_name)
-                &&
-                x?.EPCID?.includes(this.state?.epc)
-                &&
-                x?.assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
-                &&
-                this.dateCompareCreation(x?.createdAt, x?.createdAt)
-                &&
-                this.dateCompareUpdated(x?.updatedAt, x?.updatedAt)
+                this.state.creation_date === '' ?
+                    x?.ownerName?.includes(this.state?.asset_name)
+                    &&
+                    x?.EPCID?.includes(this.state?.epc)
+                    &&
+                    x?.assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
+                    :
+                    this.state.modification_date === '' ?
+                        x?.ownerName?.includes(this.state?.asset_name)
+                        &&
+                        x?.EPCID?.includes(this.state?.epc)
+                        &&
+                        x?.assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
+                        &&
+                        this.dateCompareUpdated(x?.updatedAt, x?.updatedAt)
+                        :
+                        x?.ownerName?.includes(this.state?.asset_name)
+                        &&
+                        x?.EPCID?.includes(this.state?.epc)
+                        &&
+                        x?.assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
         );
     };
     runFunction = async () => {
