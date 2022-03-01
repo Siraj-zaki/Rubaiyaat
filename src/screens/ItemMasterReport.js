@@ -93,12 +93,12 @@ export class ItemMasterReport extends Component {
                 // x?.ownerName?.toLowerCase().includes(this.state?.asset_name?.toLowerCase())
                 // &&
                 x?.EPCID?.includes(this.state?.epc)
-                // &&
-                // x?.assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
-                // &&
-                // this.dateCompareCreation(x?.createdAt, x?.createdAt)
-                // &&
-                // this.dateCompareUpdated(x?.updatedAt, x?.updatedAt)
+            // &&
+            // x?.assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
+            // &&
+            // this.dateCompareCreation(x?.createdAt, x?.createdAt)
+            // &&
+            // this.dateCompareUpdated(x?.updatedAt, x?.updatedAt)
         );
     };
     runFunction = async () => {
@@ -199,71 +199,92 @@ export class ItemMasterReport extends Component {
         };
         const headers = [
             {
-                label: "createdAt",
-                key: "createdAt",
+                label: "CATEGORY_CODE",
+                key: "CATEGORY_CODE",
             },
             {
-                label: "ownerName",
-                key: "ownerName",
+                label: "CATEGORY_NAME",
+                key: "CATEGORY_NAME",
             },
             {
-                label: "assetType",
-                key: "assetType",
+                label: "DEPRECIATION",
+                key: "DEPRECIATION",
             },
             {
-                label: "EPC",
-                key: "RFID_Tag",
+                label: "EPCID",
+                key: "EPCID",
             },
             {
-                label: "department",
-                key: "department",
+                label: "NBV",
+                key: "NBV",
             },
             {
-                label: "location",
-                key: "location",
+                label: "REMARKS",
+                key: "REMARKS",
             },
             {
-                label: "inventoryDate",
-                key: "inventoryDate",
+                label: "SITE",
+                key: "SITE",
             },
             {
-                label: "updatedAt",
-                key: "updatedAt",
+                label: "SUB_CATEGORY_CODE",
+                key: "SUB_CATEGORY_CODE",
+            },
+            {
+                label: "SUB_CATEGORY_NAME",
+                key: "SUB_CATEGORY_NAME",
+            },
+            {
+                label: "VALUE",
+                key: "VALUE",
             },
             {
                 label: "assetStatus",
                 key: "assetStatus",
             },
             {
-                label: "assetValue",
-                key: "assetValue",
+                label: "assetType",
+                key: "assetType",
             },
             {
-                label: "site",
-                key: "site",
+                label: "department",
+                key: "department",
             },
             {
                 label: "description",
                 key: "description",
             },
+            {
+                label: "inventoryDate",
+                key: "inventoryDate",
+            },
+            {
+                label: "location",
+                key: "location",
+            },
+            {
+                label: "ownerName",
+                key: "ownerName",
+            },
         ];
-        const data = this.state.assetsDetails.map((item) => {
-            return {
-                createdAt: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
-                ownerName: item?.ownerName || "----",
-                assetType: item?.assetType || "----",
-                RFID_Tag: item?.EPCID || "----",
-                department: item?.department || "----",
-                location: item?.location || "----",
-                inventoryDate: new Date(item?.inventoryDate).toLocaleString('en-Us', "Asia/Muscat") || "----",
-                updatedAt: new Date(item?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
-                assetStatus: item?.assetStatus || "----",
-                assetValue: item?.assetValue || "----",
-                site: item?.SITE || "----",
-                description: item?.description || "----",
-                // Asset_Image: item?.image,
-            }
-        });
+        const data = this.state.assetsDetails.map((item) =>
+            // return {
+            //     createdAt: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
+            //     ownerName: item?.ownerName || "----",
+            //     assetType: item?.assetType || "----",
+            //     RFID_Tag: item?.EPCIDID || "----",
+            //     department: item?.department || "----",
+            //     location: item?.location || "----",
+            //     inventoryDate: new Date(item?.inventoryDate).toLocaleString('en-Us', "Asia/Muscat") || "----",
+            //     updatedAt: new Date(item?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
+            //     assetStatus: item?.assetStatus || "----",
+            //     assetValue: item?.assetValue || "----",
+            //     site: item?.SITE || "----",
+            //     description: item?.description || "----",
+            //     // Asset_Image: item?.image,
+            // }
+            item
+        );
         console.log(data, "asdfasdf");
         return (
             <React.Fragment>

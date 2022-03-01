@@ -138,7 +138,7 @@ export default function ThirdReportTable({ asn, openModal }) {
                                         <Button style={{ minWidth: 20, height: 20 }} onClick={() => openModal(row?.asset_name?.imageLink)} variant="contained" className="m-1" color="primary"  >Image</Button>
                                     </TableCell>
                                     <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">
-                                        <Button style={{ minWidth: 20, height: 20 }} onClick={() => openModal(row?.EPCID)} variant="contained" className="m-1" color="primary"  >Barcode</Button>
+                                        <Button style={{ minWidth: 20, height: 20 }} onClick={() => openModal(row?.asset_name?.EPCID)} variant="contained" className="m-1" color="primary"  >Barcode</Button>
                                     </TableCell>
                                 </TableRow>
                             </React.Fragment>
