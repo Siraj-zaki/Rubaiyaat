@@ -120,7 +120,7 @@ const getCountedItemsByParams = async (site, zone) => {
 };
 const EPCDetail = async (asn, operation) => {
   const { data } = await axios.get(
-    `${Path.GET_EPC_DETAIL} /${asn}/${operation} `
+    `${Path.GET_EPC_DETAIL}${asn}/${operation}`
   );
   return data;
 };
