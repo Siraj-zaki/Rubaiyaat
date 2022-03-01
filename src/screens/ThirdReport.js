@@ -53,6 +53,7 @@ export class ThirdReport extends Component {
     zones: [],
     zone: '',
     site: '',
+    QrCode: '',
   };
 
   async componentDidMount() {
@@ -116,6 +117,14 @@ export class ThirdReport extends Component {
   }
   handleChangeSite = (e) => {
     this.setState({ site: e })
+  }
+  handleClickOpen = (device) => {
+    this.setState({ openModal: true })
+    // console.log(device);
+    this.setState({ QrCode: device })
+  }
+  handleClose = () => {
+    this.setState({ openModal: false })
   }
   render() {
     const customStyles = {
@@ -248,13 +257,7 @@ export class ThirdReport extends Component {
     }))
     return (
       <React.Fragment>
-        <CustomModal
-          image
-          open={this.state.openModal}
-          handleClose={() => this.handleClose()}
-          handleClickOpen={() => this.handleClickOpen}
-          data={Logo}
-        />
+        <CustomModal data={this.state.QrCode} brcode={true} image={true} open={this.state.openModal} handleClose={() => this.handleClose()} handleClickOpen={() => this.handleClickOpen} />
         <div>
           <div className="main-dashboard">
             {this.state.loading ? (
@@ -401,7 +404,7 @@ export class ThirdReport extends Component {
               >
 
               </div>
-              <ThirdReportTable asn={this.state.SOH} />
+              <ThirdReportTable openModal={(device) => this.handleClickOpen(device)} asn={this.state.SOH} />
             </div>
           </div>
         </div>

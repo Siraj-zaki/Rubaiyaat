@@ -165,18 +165,23 @@ export class itemMasterUpload extends Component {
                 complete: results => {
                     console.log(results.data)
                     this.setState({
-                        assetsDetails: results.data.map((item => {
-                            return {
-                                assetName: item.assetName,
-                                assetType: item.assetType,
-                                RFID_Tag: item.RFID_Tag,
-                                department: item.department,
-                                assetStatus: item.assetStatus,
-                                assetValue: item.assetValue,
-                                site: item.site,
-                                description: item.description,
-                            }
-                        }))
+                        assetsDetails: results.data.map((item =>
+                            // return {
+                            //     createdAt: item.createdAt,
+                            //     ownerName: item.ownerName,
+                            //     assetType: item.assetType,
+                            //     EPC: item.EPC,
+                            //     department: item.department,
+                            //     location: item.location,
+                            //     inventoryDate: item.inventoryDate,
+                            //     updatedAt: item.updatedAt,
+                            //     updatedAt: item.updatedAt,
+                            //     updatedAt: item.updatedAt,
+                            //     updatedAt: item.updatedAt,
+                            //     updatedAt: item.updatedAt,
+                            // }
+                            item
+                        ))
                     })
                 },
             })
