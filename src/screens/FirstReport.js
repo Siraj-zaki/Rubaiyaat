@@ -64,7 +64,7 @@ export class FirstReport extends Component {
     let { creation_date } = this.state;
     let endingDate = this.state.creation_date;
     if (!creation_date && !endingDate) {
-        return true;
+      return true;
     }
     creation_date = moment(creation_date);
     let sDiff = moment(sDate).diff(creation_date, "days");
@@ -259,7 +259,7 @@ export class FirstReport extends Component {
         key: "CATEGORY_CODE",
       },
       {
-        label: "ImageLink",
+        label: "imageLink",
         key: "ImageLink",
       },
       // {
@@ -286,7 +286,7 @@ export class FirstReport extends Component {
         SUB_CATEGORY_NAME: item?.assetDetail?.SUB_CATEGORY_NAME || "----",
         CATEGORY_NAME: item?.assetDetail?.CATEGORY_NAME || "----",
         CATEGORY_CODE: item?.assetDetail?.CATEGORY_CODE || "----",
-        imageLink: item?.assetDetail?.imageLink || "----",
+        imageLink: toString(item?.assetDetail?.imageLink) || "----",
         // Asset_Image: item?.assetDetails[0].image,
       }
     });

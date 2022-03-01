@@ -227,10 +227,6 @@ export class CountedItems extends Component {
                 key: "ownerName",
             },
             {
-                label: "assetType",
-                key: "assetType",
-            },
-            {
                 label: "asset_EPC",
                 key: "asset_EPC",
             },
@@ -281,7 +277,7 @@ export class CountedItems extends Component {
             return {
                 createdAt: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
                 ownerName: item?.asset_name?.ownerName || "----",
-                assetType: item?.asset_name?.assetType || "----",
+                // assetType: item?.asset_name?.assetType || "----",
                 asset_EPC: item?.asset_EPC || "----",
                 department: item?.asset_name?.department || "----",
                 location: item?.asset_name?.location || "----",
@@ -293,6 +289,8 @@ export class CountedItems extends Component {
                 description: item?.asset_name?.description || "----",
                 SUB_CATEGORY_CODE: item?.asset_name?.SUB_CATEGORY_CODE || "----",
                 SUB_CATEGORY_NAME: item?.asset_name?.SUB_CATEGORY_NAME || "----",
+                CATEGORY_NAME: item?.asset_name?.SUB_CATEGORY_NAME || "----",
+                CATEGORY_CODE: item?.asset_name?.SUB_CATEGORY_CODE || "----",
                 // Asset_Image: item?.asset_name?.image,
             }
         }) : arr

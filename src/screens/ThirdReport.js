@@ -202,12 +202,28 @@ export class ThirdReport extends Component {
         label: "assetStatus",
         key: "assetStatus",
       },
+      {
+        label: "CATEGORY_CODE",
+        key: "CATEGORY_CODE",
+      },
+      {
+        label: "CATEGORY_NAME",
+        key: "CATEGORY_NAME",
+      },
+      {
+        label: "SUB_CATEGORY_CODE",
+        key: "SUB_CATEGORY_CODE",
+      },
+      {
+        label: "SUB_CATEGORY_NAME",
+        key: "SUB_CATEGORY_NAME",
+      },
     ];
     const data = this.state.SOH
       .map((item) => {
         return {
           createdAt: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat"),
-          CATEGORY_CODE: item?.asset_name?.CATEGORY_CODE,
+          // CATEGORY_CODE: item?.asset_name?.CATEGORY_CODE,
           EPCID: item?.asset_name?.EPCID,
           MODIFICATION_DATE: new Date(item?.asset_name?.MODIFICATION_DATE).toLocaleString('en-Us', "Asia/Muscat"),
           inventoryDate: new Date(item?.asset_name?.inventoryDate).toLocaleString('en-Us', "Asia/Muscat"),
@@ -217,6 +233,10 @@ export class ThirdReport extends Component {
           location: item?.asset_name?.location,
           description: item?.asset_name?.description,
           assetStatus: item?.asset_name?.assetStatus,
+          CATEGORY_CODE: item?.asset_name.CATEGORY_CODE,
+          CATEGORY_NAME: item?.asset_name.CATEGORY_NAME,
+          SUB_CATEGORY_CODE: item?.asset_name.SUB_CATEGORY_CODE,
+          SUB_CATEGORY_NAME: item?.asset_name.SUB_CATEGORY_NAME,
         }
       });
     let sites = this.state.sites.map((item => {
