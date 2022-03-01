@@ -85,7 +85,7 @@ export default function ItemMasterTable({ asn, openModal }) {
                 open={open}
                 onClose={handleClose}
             >
-                
+                <h2>asdasd</h2>
             </Modal>
             <Paper className={classes.root}  >
                 <TableContainer  >
