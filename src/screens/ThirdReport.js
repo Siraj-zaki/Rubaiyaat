@@ -49,8 +49,19 @@ export class ThirdReport extends Component {
     Item_Category: "",
     LastTimeDate: "",
     Serial_no: "",
+    sites: [],
+    zones: [],
+    zone: '',
+    site: '',
   };
 
+  async componentDidMount() {
+    const sites = await api.getAllSite()
+    const zones = await api.getAllZone()
+    this.setState({ zones, sites })
+    console.log(sites, 'sites');
+    console.log(zones, 'zones');
+  }
   onSubmitEvent = () => {
     console.log("User");
   };
@@ -91,7 +102,7 @@ export class ThirdReport extends Component {
   };
   runFunction = async () => {
     this.setState({ loading: true });
-    const SOH = await api.getAssetsBySoh();
+    const SOH = await api.getAssetsBySohWithParam(this.state.site === '' ? this.state.sites[0]?._id : this.state.site?.value, this.state.zone === '' ? this.state.zones[0]?._id : this.state.zone?.value);
     // let filtering = ASN.filter((item => item.operation_name === "receiving"))
     this.setState({ SOH: SOH, allData: SOH });
     console.log(SOH, "asdfsdafasdf");
@@ -100,20 +111,48 @@ export class ThirdReport extends Component {
       this.searchFunction()
     }
   };
+  handleChangeZone = (e) => {
+    this.setState({ zone: e })
+  }
+  handleChangeSite = (e) => {
+    this.setState({ site: e })
+  }
   render() {
     const customStyles = {
       control: (base, state) => ({
         ...base,
+        background: "transparent",
+        backgroundColor: 'transparent',
+        height: 33,
         marginTop: 10,
-        backgroundColor: "transparent",
+        // zIndex: 312312312312312
+
       }),
-      menu: (base) => ({
+      menu: base => ({
         ...base,
-        zIndex: 30,
+        // override border radius to match the box
+        borderRadius: 0,
+        // kill the gap
+        marginTop: 0,
+        background: 'transparent',
+        zIndex: 312312312312312
+      }),
+      menuList: base => ({
+        ...base,
+        // kill the white space on first and last option
+        padding: 0,
+        background: 'gray',
+        zIndex: 312312312312312
+
+      }),
+      option: provided => ({
+        ...provided,
+        color: 'black',
+        zIndex: 312312312312312
       }),
       singleValue: (provided, state) => {
         const opacity = state.isDisabled ? 0.5 : 1;
-        const transition = "opacity 300ms";
+        const transition = 'opacity 300ms';
 
         return { ...provided, opacity, transition, color: "white" };
       },
@@ -170,8 +209,8 @@ export class ThirdReport extends Component {
           createdAt: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat"),
           CATEGORY_CODE: item?.asset_name?.CATEGORY_CODE,
           EPCID: item?.asset_name?.EPCID,
-          MODIFICATION_DATE:new Date(item?.asset_name?.MODIFICATION_DATE).toLocaleString('en-Us', "Asia/Muscat") ,
-          inventoryDate:new Date(item?.asset_name?.inventoryDate).toLocaleString('en-Us', "Asia/Muscat") ,
+          MODIFICATION_DATE: new Date(item?.asset_name?.MODIFICATION_DATE).toLocaleString('en-Us', "Asia/Muscat"),
+          inventoryDate: new Date(item?.asset_name?.inventoryDate).toLocaleString('en-Us', "Asia/Muscat"),
           SITE: item?.asset_name?.SITE,
           assetType: item?.asset_name?.assetType,
           department: item?.asset_name?.department,
@@ -180,7 +219,13 @@ export class ThirdReport extends Component {
           assetStatus: item?.asset_name?.assetStatus,
         }
       });
+    let sites = this.state.sites.map((item => {
+      return { label: item?.site_name, value: item?._id }
+    }))
 
+    const zones = this.state.zones.map((item => {
+      return { label: item?.zone_name, value: item?._id }
+    }))
     return (
       <React.Fragment>
         <CustomModal
@@ -259,6 +304,24 @@ export class ThirdReport extends Component {
               >
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', backgroundColor: 'transparent', minHeight: 50, marginTop: 10, position: 'relative' }}>
                   <form style={{ width: '50%', margin: 20, marginBottom: 0, display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 0, flexDirection: 'column' }}  >
+                    <Select
+                      value={this.state.site}
+                      onChange={(e) => this.handleChangeSite(e)}
+                      options={sites}
+                      isSearchable={true}
+                      placeholder={"Site"}
+                      className="last-scan-select-2"
+                      styles={customStyles}
+                    />
+                    <Select
+                      value={this.state.zone}
+                      onChange={(e) => this.handleChangeZone(e)}
+                      options={zones}
+                      isSearchable={true}
+                      placeholder={"Zone"}
+                      className="last-scan-select-2"
+                      styles={customStyles}
+                    />
                     <BasicTextFields
                       margin={10}
                       placeholder="Description"

@@ -80,7 +80,7 @@ const getAssetsBySoh = async (payLoad) => {
   const { data } = await axios.get(`${Path.GET_ASSETS_SOH}`, payLoad);
   return data;
 };
-const getAssetsBySohWithParam = async (site,zone) => {
+const getAssetsBySohWithParam = async (site, zone) => {
   const { data } = await axios.get(`${Path.GET_ASSETS_SOH_PARAM}/${site}/${zone}`);
   return data;
 };
@@ -92,6 +92,10 @@ const getAssetsByEPC = async (payLoad) => {
 };
 const getAssetsByAll = async (payLoad) => {
   const { data } = await axios.get(`${Path.GET_ASSETS_DETAILS_BY_ALL}`);
+  return data;
+};
+const getStockOnHand = async (payLoad) => {
+  const { data } = await axios.get(`${Path.GET_STOCK_ON_HAND}`);
   return data;
 };
 const getAssets = async (payLoad) => {
@@ -165,4 +169,5 @@ export default {
   getAssetsDetailsASSO,
   getAllZone,
   getAssetsBySohWithParam,
+  getStockOnHand,
 };

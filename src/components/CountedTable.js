@@ -26,7 +26,7 @@ function Row(props) {
     const { row } = props
     const { openModal } = props
     return (
-        <TableRow className={`counted-class-${row?.Matched === true ? 'green' : row.Matched === false ? 'gray' : 'red'}`} key={row.asset_EPC} hover role="checkbox" tabIndex={-1} >
+        <TableRow className={`counted-class-${row?.Matched === true ? 'green' : row.Matched === false ? 'gray' : row?.OversCounted === true ? 'red' : ''}`} key={row.asset_EPC} hover role="checkbox" tabIndex={-1} >
             <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px" }} align="center">{new Date(row?.createdAt).toLocaleString('en-Us', "Asia/Muscat")}</TableCell>
             <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.asset_name?.ownerName || "----"}</TableCell>
             <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.asset_name?.assetType || "----"}</TableCell>
@@ -75,8 +75,10 @@ export default function CountedTable({ asn, openModal }) {
         // setData(asn)
         if (asn === true) {
             setData([])
+            setPage(0);
         } else {
             setData(asn)
+            setPage(0);
         }
     }, [asn]);
 
@@ -104,7 +106,7 @@ export default function CountedTable({ asn, openModal }) {
                     </TableHead>
                     <TableBody>
                         {data?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-                            <Row openModal={(device) => openModal(device)} key={row.asset_EPC} row={row} />
+                            <Row openModal={(device) => openModal(device)} key={row._id} row={row} />
                         ))}
                         {/* {asn.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                             return (

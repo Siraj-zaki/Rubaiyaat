@@ -669,19 +669,19 @@ function ScrollableTabsButtonForce(props) {
             ) : (
               ""
             )}
-            {/* {permissions.includes("Associated_Items") ? (
+            {permissions.includes("Associated_Items") ? (
               <NavLink
                 exact
-                to="/Reports/DiscrepancyReport"
+                to="/Reports/StockOnHand"
                 className={`top-drawer-btn top-drawer-btn-${ActiveBtn6}`}
                 activeClassName="top-drawer-btn top-drawer-btn-active"
               >
                 <DashboardIcon htmlColor="white" />
-                Discrepancy report
+                Stock Count Report
               </NavLink>
             ) : (
               ""
-            )} */}
+            )}
             {permissions.includes("Associated_Items") ? (
               <NavLink
                 exact

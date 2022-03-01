@@ -7,7 +7,6 @@ import ActivityCard from "../components/ActivityCard";
 // import StickyHeadTable from '../components/Table';
 import CollapsibleTable from "../components/Table";
 import BasicTextFields from "../components/Input";
-
 import { Button, Typography, IconButton } from "@material-ui/core";
 import StickyHeadTable from "../components/StoreInformationTable";
 import Select from "react-select";
@@ -28,12 +27,8 @@ import { CSVLink } from "react-csv";
 import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
 import { DatePicker, Radio, Space, Checkbox, Divider } from 'antd';
 import { toast } from "react-toastify";
-
 import CountedTable from "../components/CountedTable";
-
-
 const CheckboxGroup = Checkbox.Group;
-
 const plainOptions = ['Unders', 'Overs', "Matched"];
 const defaultCheckedList = [];
 const { RangePicker } = DatePicker;
@@ -141,18 +136,18 @@ export class CountedItems extends Component {
     }
     runFunction = async () => {
         this.setState({ loading: true });
-        if (this.state.assetsDetails === true) {
-            const CountedItems = await api.getCountedItems();
-            // const assetBySOH = await api.getAssetsBySohWithParam(this.state.site === '' ? this.state.sites[0]?._id : this.state.site?.value, this.state.zone === '' ? this.state.zones[0]?._id : this.state.zone?.value);
-            const assetBySOH = await api.getAssetsBySoh();
-            if (CountedItems && assetBySOH) {
-                let newArray = []
-                newArray = await newArray.concat(CountedItems, assetBySOH)
-                await this.setState({ assetsDetails: newArray, assetsDetailsNew: newArray })
-                this.runFunctionSearch(CountedItems, assetBySOH)
-                this.setState({ loading: false });
-            }
+        // if (this.state.assetsDetails === true) {
+        const CountedItems = await api.getCountedItems();
+        const assetBySOH = await api.getAssetsBySohWithParam(this.state.site === '' ? this.state.sites[0]?._id : this.state.site?.value, this.state.zone === '' ? this.state.zones[0]?._id : this.state.zone?.value);
+        // const assetBySOH = await api.getAssetsBySoh();
+        if (CountedItems && assetBySOH) {
+            let newArray = []
+            newArray = await newArray.concat(CountedItems, assetBySOH)
+            await this.setState({ assetsDetails: newArray, assetsDetailsNew: newArray })
+            this.runFunctionSearch(CountedItems, assetBySOH)
+            this.setState({ loading: false });
         }
+        // }
     }
     matchedFunction = () => {
         let newData = this.state.assetsDetailsNew?.filter((item =>
@@ -172,7 +167,7 @@ export class CountedItems extends Component {
     }
     undersFunction = () => {
         let newData = this.state.assetsDetailsNew?.filter((item =>
-            item.Matched !== true
+            item.Matched === false
         ))
         this.setState({
             assetsDetails: newData,
@@ -194,6 +189,7 @@ export class CountedItems extends Component {
 
         }));
         newArray = await newArray.concat(Solutuion, SolutuionTwo)
+        newArray = newArray.filter((item => item.Matched === true || item.Matched === false || item.OversCounted === true))
         let shuffled = newArray
             .map(value => ({ value, sort: Math.random() }))
             .sort((a, b) => a.sort - b.sort)
@@ -337,9 +333,10 @@ export class CountedItems extends Component {
             },
         };
 
-        const sites = this.state.sites.map((item => {
+        let sites = this.state.sites.map((item => {
             return { label: item?.site_name, value: item?._id }
         }))
+
         const zones = this.state.zones.map((item => {
             return { label: item?.zone_name, value: item?._id }
         }))

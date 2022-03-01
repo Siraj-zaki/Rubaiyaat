@@ -64,7 +64,7 @@ export default function CustomModal({ handleClickOpen, open, handleClose, data, 
                 {EpcData ? "EPC" : ""}
             </DialogTitle>
             <DialogContent style={{ backgroundColor: QrCode ? "gray " : '#212121', color: "whitesmoke", wordBreak: 'break-word', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', flexDirection: 'column' }} dividers>
-                {image ? <Barcode value={data}  /> : null}
+                {image ? data?.includes('profilePics') ? <img src={data} height={200} width={'100%'} style={{objectFit:'contain'}} /> : <Barcode value={data} /> : null}
                 {QrCode ? <QRCode renderAs='svg' width="60%" height="60%" size={200} value={`${QrCode.userName}|${QrCode.password}|${QrCode.siteId ? QrCode.siteId._id : null}|${QrCode.server}`} /> : ""}
                 {ZplDetail ? "^XA ^LL430 ^PW431 ^XZ ^XA ^FO30,130^A0B,32,32,^FDStyle no:${Retail_Product_style}^FS ^FO80,90^A0B,32,32,^FD${Retail_Product_SKUOriginal}^FS ^FO140,180^A0B,32,32,^FDSize:${Retail_Product_Size}^FS ^FO140,140^A0B,32,32,^FDS^FS ^FO180,90^GB3,150,3^FS ^FO200,195^A0B,32,32,^FDSR.^FS ^FO200,80^A0B,32,32,^FD${Retail_Product_Price}^FS ^FO260,17^BY2,2,70,^BCB,100,Y,N,Y,A^FD${Retail_Product_item_code}^FS ^RFW,H^FD${serialNumber}^FS ^FO20,20^A0N,16,18,^FH^FD${serialNumber}^FS ^XZ " : ""}
                 {permissions ? Object.entries(permissions).map((item => {

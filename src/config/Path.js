@@ -36,6 +36,7 @@ const Path = {
   UPLOAD_DATA: `${BASE_URL}/assetDetailRoutes/update/or/add/assetDetail`,
   GET_ASSETS_DETAILS_BY_EPC: `${BASE_URL}/assetDetailRoutes/getByEpc`,
   GET_ASSETS_DETAILS_BY_ALL: `${BASE_URL}/assetDetailRoutes/get`,
+  GET_STOCK_ON_HAND: `${BASE_URL}/asset/getSoh/and/counted`,
 };
 
 export { Path };

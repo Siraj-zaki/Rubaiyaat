@@ -64,10 +64,9 @@ export class FirstReport extends Component {
     let { creation_date } = this.state;
     let endingDate = this.state.creation_date;
     if (!creation_date && !endingDate) {
-      return true;
+        return true;
     }
     creation_date = moment(creation_date);
-    // endingDate = moment(endingDate)
     let sDiff = moment(sDate).diff(creation_date, "days");
     let eDiff = !eDate ? -1 : moment(eDate).diff(endingDate, "days");
     if (sDiff >= 0 && eDiff <= 0) return true;
@@ -89,11 +88,11 @@ export class FirstReport extends Component {
   dateFilter = () => {
     return this.state.assetsDetailsNew.filter(
       (x) =>
-        x?.assetDetail[0]?.assetName?.toLowerCase().includes(this.state?.asset_name?.toLowerCase())
+        x?.assetDetail?.ownerName?.toLowerCase().includes(this.state?.asset_name?.toLowerCase())
         &&
         x?.EPCID?.toLowerCase().includes(this.state?.epc?.toLowerCase())
         &&
-        x?.assetDetail[0].assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
+        x?.assetDetail?.assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
         &&
         this.dateCompareCreation(x?.createdAt, x?.createdAt)
         &&
@@ -110,7 +109,7 @@ export class FirstReport extends Component {
     console.log(assetsDetails, "assetsDetails");
     if (assetsDetails) {
       await this.setState({ loading: false });
-      // await this.searchFunction()
+      await this.searchFunction()
     }
   };
   async componentDidMount() {
@@ -200,16 +199,16 @@ export class FirstReport extends Component {
         key: "Creation_Date",
       },
       {
-        label: "assetName",
+        label: "Owner_name",
         key: "Asset_Name",
       },
       {
-        label: "assetType",
-        key: "Asset_Type",
+        label: "EPC",
+        key: "asset_EPC",
       },
       {
-        label: "RFID_Tag",
-        key: "asset_EPC",
+        label: "Serial_no",
+        key: "Serial_no",
       },
       {
         label: "department",
@@ -243,6 +242,26 @@ export class FirstReport extends Component {
         label: "description",
         key: "Description",
       },
+      {
+        label: "SUB_CATEGORY_CODE",
+        key: "SUB_CATEGORY_CODE",
+      },
+      {
+        label: "SUB_CATEGORY_NAME",
+        key: "SUB_CATEGORY_NAME",
+      },
+      {
+        label: "CATEGORY_NAME",
+        key: "CATEGORY_NAME",
+      },
+      {
+        label: "CATEGORY_CODE",
+        key: "CATEGORY_CODE",
+      },
+      {
+        label: "ImageLink",
+        key: "ImageLink",
+      },
       // {
       //   label: "Asset_Image",
       //   key: "Asset_Image",
@@ -252,8 +271,9 @@ export class FirstReport extends Component {
       return {
         Creation_Date: new Date(item?.assetDetail?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
         Asset_Name: item?.assetDetail?.ownerName || "----",
-        Asset_Type: item?.assetDetail?.assetType || "----",
-        asset_EPC: item?.assetDetail?.EPCID || "----",
+        // Asset_Type: item?.assetDetail?.assetType || "----",
+        // Serial_no: item?.assetDetail?.EPCID || "----",
+        asset_EPC: item?.EPCID || "----",
         Department: item?.assetDetail?.department || "----",
         Asset_Location: item?.assetDetail?.location || "----",
         Inventory_Date: new Date(item?.assetDetail?.inventoryDate).toLocaleString('en-Us', "Asia/Muscat") || "----",
@@ -262,6 +282,11 @@ export class FirstReport extends Component {
         Asset_Value: item?.assetDetail?.VALUE || "----",
         Site: item?.assetDetail?.SITE || "----",
         Description: item?.assetDetail?.description || "----",
+        SUB_CATEGORY_CODE: item?.assetDetail?.SUB_CATEGORY_CODE || "----",
+        SUB_CATEGORY_NAME: item?.assetDetail?.SUB_CATEGORY_NAME || "----",
+        CATEGORY_NAME: item?.assetDetail?.CATEGORY_NAME || "----",
+        CATEGORY_CODE: item?.assetDetail?.CATEGORY_CODE || "----",
+        imageLink: item?.assetDetail?.imageLink || "----",
         // Asset_Image: item?.assetDetails[0].image,
       }
     });
@@ -350,7 +375,7 @@ export class FirstReport extends Component {
                     />
                     <BasicTextFields
                       margin={10}
-                      placeholder="Asset Name"
+                      placeholder="Owner Name"
                       name="Asset Name"
                       value={this.state.asset_name}
                       onChangeEvent={(e) =>

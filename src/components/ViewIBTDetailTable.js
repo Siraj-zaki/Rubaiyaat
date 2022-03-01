@@ -51,7 +51,7 @@ export default function ViewIBTDetailTable({ ibt, perData, loader, zone }) {
                         <TableRow >
                             <TableCell align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1,}}>Date</TableCell>
                             <TableCell align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1,}}>EPC</TableCell>
-                            <TableCell align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1,}}>Asset_Name</TableCell>
+                            {/* <TableCell align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1,}}>Asset_Name</TableCell> */}
                             <TableCell align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1,}}>Input_Note</TableCell>
                             <TableCell align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1,}}>Operation</TableCell>
                             <TableCell align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1,}}>Zone Name</TableCell>
@@ -63,7 +63,7 @@ export default function ViewIBTDetailTable({ ibt, perData, loader, zone }) {
                                 <TableRow >
                                     <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1,}} align="center">{perData.packed_items ? perData.packed_items.date : '----'}</TableCell>
                                     <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1,}} align="center">{row.asset_EPC ? row.asset_EPC : '----'}</TableCell>
-                                    <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1,}} align="center">{row.asset_name ? row.asset_name : '----'}</TableCell>
+                                    {/* <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1,}} align="center">{row.asset_name ? row.asset_name : '----'}</TableCell> */}
                                     <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1,}} align="center">{row.inputNote ? row.inputNote : '----'}</TableCell>
                                     <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1,}} align="center">{row.operation ? row.operation : '----'}</TableCell>
                                     <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1,}} align="center">{zone ? zone : '----'}</TableCell>
