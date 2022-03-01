@@ -216,8 +216,17 @@ export class CountedItems extends Component {
     handleChangeZone = (e) => {
         this.setState({ zone: e })
     }
-    handleChangeSite = (e) => {
+    handleChangeSite = async (e) => {
+        this.setState({ loading: true })
         this.setState({ site: e })
+        let { value } = e
+        const zones = await api.getZoneBySite(value)
+        if (zones) {
+            this.setState({ zones })
+            this.setState({ loading: false })
+            console.log(value);
+
+        }
     }
 
     render() {

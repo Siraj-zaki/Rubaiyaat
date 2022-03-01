@@ -16,6 +16,10 @@ const getAllZone = async (payLoad) => {
   const { data } = await axios.get(`${Path.GET_ALL_ZONE}`, payLoad);
   return data;
 };
+const getZoneBySite = async (payLoad) => {
+  const { data } = await axios.get(`${Path.GET_ALL_ZONE}${payLoad}`);
+  return data;
+};
 const addRole = async (payLoad) => {
   const { data } = await axios.post(`${Path.ADD_ROLE}`, payLoad);
   return data;
@@ -175,4 +179,5 @@ export default {
   getAssetsBySohWithParam,
   getStockOnHand,
   getCountedItemsByParams,
+  getZoneBySite
 };

@@ -86,14 +86,14 @@ export class ThirdReport extends Component {
   dateFilter = () => {
     return this.state.allData.filter(
       (x) =>
-        x?.asset_name?.description?.toLowerCase().includes(
-          this.state?.Asset_ID.toLowerCase()
+        x?.asset_name?.description?.includes(
+          this.state?.Asset_ID
         ) &&
         x?.asset_name?.CATEGORY_CODE?.includes(
           this.state?.Item_Category
         ) &&
-        x?.asset_name?.EPCID?.toLowerCase().includes(
-          this.state?.Serial_no.toLowerCase()
+        x?.asset_EPC?.includes(
+          this.state?.Serial_no
         ) &&
         this.dateCompare(
           x?.createdAt,
@@ -233,7 +233,7 @@ export class ThirdReport extends Component {
         return {
           createdAt: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat"),
           // CATEGORY_CODE: item?.asset_name?.CATEGORY_CODE,
-          EPCID: item?.asset_name?.EPCID,
+          EPCID: item?.EPCID,
           MODIFICATION_DATE: item?.asset_name?.MODIFICATION_DATE,
           inventoryDate: item?.asset_name?.inventoryDate,
           SITE: item?.asset_name?.SITE,

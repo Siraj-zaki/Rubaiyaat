@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -36,7 +36,7 @@ function Row(props) {
     return (
         <React.Fragment>
             <TableRow className={classes.root}>
-                <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row.asset_name?.EPCID}</TableCell>
+                <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.EPCID}</TableCell>
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row.asset_name?.CATEGORY_CODE}</TableCell>
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{new Date(row.createdAt).toLocaleString('en-Us', "Asia/Muscat")}</TableCell>
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row.asset_name?.MODIFICATION_DATE}</TableCell>
@@ -70,12 +70,14 @@ export default function ThirdReportTable({ asn, openModal }) {
             backgroundColor: "#263238",
         },
     });
+
     // const { row } = props;
     const [open, setOpen] = React.useState(false);
     // const classes = useRowStyles();
     const classes = useStyles();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [data, setData] = React.useState([]);
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -83,6 +85,9 @@ export default function ThirdReportTable({ asn, openModal }) {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
+    useEffect(() => {
+        setData(asn)
+    }, [asn]);
     return (
         <Paper className={classes.root}  >
             <TableContainer  >
@@ -112,11 +117,11 @@ export default function ThirdReportTable({ asn, openModal }) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {asn.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                        {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                             // <Row key={row.Odoo_Tag} row={row} />
                             <React.Fragment>
                                 <TableRow className={classes.root}>
-                                    <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row.asset_name?.EPCID}</TableCell>
+                                    <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.asset_EPC}</TableCell>
                                     <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row.asset_name?.CATEGORY_CODE}</TableCell>
                                     <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{new Date(row.createdAt).toLocaleString('en-Us', "Asia/Muscat")}</TableCell>
                                     <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row.asset_name?.MODIFICATION_DATE}</TableCell>
