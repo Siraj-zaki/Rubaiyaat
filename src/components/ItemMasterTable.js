@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -30,7 +30,7 @@ function Row(props) {
             <TableRow className={classes.root}>
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{new Date(row?.createdAt).toLocaleString('en-Us', "Asia/Muscat")}</TableCell>
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.assetDetail[0].assetName || "----"}</TableCell>
-                <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.assetDetail[0].assetType || "----"}</TableCell>
+                {/* <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.assetDetail[0].assetType || "----"}</TableCell> */}
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.assetDetail[0].EPCID || "----"}</TableCell>
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.assetDetail[0].department || "----"}</TableCell>
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.assetDetail[0].location || "----"}</TableCell>
@@ -61,6 +61,7 @@ export default function ItemMasterTable({ asn, openModal }) {
     // const classes = useRowStyles();
     const classes = useStyles();
     const [page, setPage] = React.useState(0);
+    const [data, setData] = React.useState([]);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -69,6 +70,10 @@ export default function ItemMasterTable({ asn, openModal }) {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
+    useEffect(() => {
+        setData(asn)
+    }, [asn]);
+
     return (
         <Paper className={classes.root}  >
             <TableContainer  >
@@ -77,7 +82,7 @@ export default function ItemMasterTable({ asn, openModal }) {
                         <TableRow >
                             <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Creation_Date</TableCell>
                             <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Owner_Name</TableCell>
-                            <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Asset_Type</TableCell>
+                            {/* <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Asset_Type</TableCell> */}
                             <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">EPC</TableCell>
                             <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Department</TableCell>
                             <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Asset_Location</TableCell>
@@ -93,7 +98,7 @@ export default function ItemMasterTable({ asn, openModal }) {
                         {/* {asn.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                             <Row openModal={(device) => openModal(device)} key={row.Odoo_Tag} row={row} />
                         ))} */}
-                        {asn.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                        {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                             return (
                                 <TableRow style={{ backgroundColor: '#263238' }} hover role="checkbox" tabIndex={-1} key={row?.createdAt}>
                                     <React.Fragment>

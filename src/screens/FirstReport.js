@@ -286,7 +286,7 @@ export class FirstReport extends Component {
         SUB_CATEGORY_NAME: item?.assetDetail?.SUB_CATEGORY_NAME || "----",
         CATEGORY_NAME: item?.assetDetail?.CATEGORY_NAME || "----",
         CATEGORY_CODE: item?.assetDetail?.CATEGORY_CODE || "----",
-        imageLink: toString(item?.assetDetail?.imageLink) || "----",
+        imageLink: `=HYPERLINK(""${item?.assetDetail.imageLink}"",  ""image !"")` || "----",
         // Asset_Image: item?.assetDetails[0].image,
       }
     });

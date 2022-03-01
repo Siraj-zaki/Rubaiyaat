@@ -90,15 +90,15 @@ export class ItemMasterReport extends Component {
     dateFilter = () => {
         return this.state.assetsDetailsNew.filter(
             (x) =>
-                // x?.ownerName?.toLowerCase().includes(this.state?.asset_name?.toLowerCase())
-                // &&
+                x?.ownerName?.includes(this.state?.asset_name)
+                &&
                 x?.EPCID?.includes(this.state?.epc)
-            // &&
-            // x?.assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
-            // &&
-            // this.dateCompareCreation(x?.createdAt, x?.createdAt)
-            // &&
-            // this.dateCompareUpdated(x?.updatedAt, x?.updatedAt)
+                &&
+                x?.assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
+                &&
+                this.dateCompareCreation(x?.createdAt, x?.createdAt)
+                &&
+                this.dateCompareUpdated(x?.updatedAt, x?.updatedAt)
         );
     };
     runFunction = async () => {
@@ -242,10 +242,10 @@ export class ItemMasterReport extends Component {
                 label: "assetStatus",
                 key: "assetStatus",
             },
-            {
-                label: "assetType",
-                key: "assetType",
-            },
+            // {
+            //     label: "assetType",
+            //     key: "assetType",
+            // },
             {
                 label: "department",
                 key: "department",
