@@ -54,6 +54,7 @@ export class StockOnHand extends Component {
         Serial_no: "",
         sites: [],
         groupedData: [],
+        groupedDataNew: [],
         hardcoreData: [
             {
                 "site_name": "03 - RMLP",
@@ -684,7 +685,7 @@ export class StockOnHand extends Component {
         console.log("User");
     };
     searchFunction = () => {
-        this.setState({ hardcoreData: this.dateFilter() });
+        this.setState({ groupedData: this.dateFilter() });
         // console.log(this.state.allData.map((item) => item?.asset_name));
     };
     dateCompare = (sDate, eDate) => {
@@ -701,13 +702,14 @@ export class StockOnHand extends Component {
         return false;
     };
     handleChangeSite = (e) => {
-        this.setState({ site: e.value })
+        this.setState({ site: e })
+        console.log(e);
     }
     dateFilter = () => {
-        return this.state.hardcoreDataNew.filter(
+        return this.state.groupedDataNew.filter(
             (x) =>
-                x?.site_name?.toLowerCase().includes(
-                    this.state?.site.toLowerCase()
+                x?.site_name?.includes(
+                    this.state.site === '' ? '' : this.state.site?.value
                 )
         );
     };
@@ -723,13 +725,13 @@ export class StockOnHand extends Component {
         console.log(SOH, "asdfsdafasdf");
         if (SOH) {
             this.setState({ loading: false });
-            var grouped = _.mapValues(_.groupBy(this.state.hardcoreData, 'site_name'),
+            var grouped = _.mapValues(_.groupBy(this.state.SOH, 'site_name'),
                 clist => clist.map(singleSite => singleSite));
             let groupedData = Object.entries(grouped).map(([key, value]) => {
                 return { site_name: key, data: value }
             })
             console.log(groupedData);
-            this.setState({ groupedData })
+            this.setState({ groupedData: groupedData, groupedDataNew: groupedData })
             this.searchFunction()
         }
     };
@@ -737,16 +739,35 @@ export class StockOnHand extends Component {
         const customStyles = {
             control: (base, state) => ({
                 ...base,
+                background: "transparent",
+                backgroundColor: 'transparent',
+                height: 33,
                 marginTop: 10,
-                backgroundColor: "transparent",
+
             }),
-            menu: (base) => ({
+            menu: base => ({
                 ...base,
-                zIndex: 30,
+                // override border radius to match the box
+                borderRadius: 0,
+                // kill the gap
+                marginTop: 0,
+                background: 'transparent'
+            }),
+            menuList: base => ({
+                ...base,
+                // kill the white space on first and last option
+                padding: 0,
+                background: 'gray'
+
+            }),
+            option: provided => ({
+                ...provided,
+                color: 'black',
+                zIndex: 312312312312312
             }),
             singleValue: (provided, state) => {
                 const opacity = state.isDisabled ? 0.5 : 1;
-                const transition = "opacity 300ms";
+                const transition = 'opacity 300ms';
 
                 return { ...provided, opacity, transition, color: "white" };
             },
@@ -776,7 +797,7 @@ export class StockOnHand extends Component {
         let sites = this.state.sites.map((item => {
             return { label: item?.site_name, value: item?.site_name }
         }))
-        // sites = [{ label: "", value: '' }, ...sites]
+        sites = [{ label: "all sites", value: '' }, ...sites]
 
         const data = this.state.hardcoreData
             .map((item) => {
@@ -869,7 +890,7 @@ export class StockOnHand extends Component {
                                 <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', backgroundColor: 'transparent', minHeight: 50, marginTop: 10, position: 'relative' }}>
                                     <form style={{ width: '50%', margin: 20, marginBottom: 0, display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 0, flexDirection: 'column' }}  >
                                         <Select
-                                            value={this.state.site || "all site"}
+                                            value={this.state.site}
                                             onChange={(e) => this.handleChangeSite(e)}
                                             options={sites}
                                             isSearchable={true}
