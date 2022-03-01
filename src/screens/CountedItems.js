@@ -67,11 +67,15 @@ export class CountedItems extends Component {
         allSoh: [],
     };
     async componentDidMount() {
+        this.setState({ loading: true });
         const sites = await api.getAllSite()
         const zones = await api.getAllZone()
         this.setState({ zones, sites })
         console.log(sites, 'sites');
         console.log(zones, 'zones');
+        if (sites && zones) {
+            this.setState({ loading: false });
+        }
     }
     onChange = list => {
         this.setState({ checkedList: list });
@@ -137,7 +141,7 @@ export class CountedItems extends Component {
     runFunction = async () => {
         this.setState({ loading: true });
         // if (this.state.assetsDetails === true) {
-        const CountedItems = await api.getCountedItems();
+        const CountedItems = await api.getCountedItemsByParams(this.state.site === '' ? this.state.sites[0]?._id : this.state.site?.value, this.state.zone === '' ? this.state.zones[0]?._id : this.state.zone?.value);
         const assetBySOH = await api.getAssetsBySohWithParam(this.state.site === '' ? this.state.sites[0]?._id : this.state.site?.value, this.state.zone === '' ? this.state.zones[0]?._id : this.state.zone?.value);
         // const assetBySOH = await api.getAssetsBySoh();
         if (CountedItems && assetBySOH) {
@@ -331,11 +335,11 @@ export class CountedItems extends Component {
             },
         };
 
-        let sites = this.state.sites.map((item => {
+        let sites = this.state?.sites?.map((item => {
             return { label: item?.site_name, value: item?._id }
         }))
 
-        const zones = this.state.zones.map((item => {
+        const zones = this.state?.zones?.map((item => {
             return { label: item?.zone_name, value: item?._id }
         }))
         return (

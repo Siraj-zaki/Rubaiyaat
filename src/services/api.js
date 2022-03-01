@@ -110,14 +110,18 @@ const getCountedItems = async (payLoad) => {
   const { data } = await axios.get(`${Path.GET_COUNTED_ITEMS}`, payLoad);
   return data;
 };
+const getCountedItemsByParams = async (site, zone) => {
+  const { data } = await axios.get(`${Path.GET_COUNTED_ITEMS_BY_PARAM}/${site}/${zone} `);
+  return data;
+};
 const EPCDetail = async (asn, operation) => {
   const { data } = await axios.get(
-    `${Path.GET_EPC_DETAIL}/${asn}/${operation}`
+    `${Path.GET_EPC_DETAIL} /${asn}/${operation} `
   );
   return data;
 };
 const getASNbyEPC = async (epc, operation) => {
-  const { data } = await axios.get(`${Path.GET_ASN_BY_EPC}/${epc}`);
+  const { data } = await axios.get(`${Path.GET_ASN_BY_EPC} /${epc}`);
   return data;
 };
 const getAssetsDetails = async (payLoad) => {
@@ -170,4 +174,5 @@ export default {
   getAllZone,
   getAssetsBySohWithParam,
   getStockOnHand,
+  getCountedItemsByParams,
 };

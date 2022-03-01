@@ -276,7 +276,7 @@ export class FirstReport extends Component {
         asset_EPC: item?.EPCID || "----",
         Department: item?.assetDetail?.department || "----",
         Asset_Location: item?.assetDetail?.location || "----",
-        Inventory_Date: new Date(item?.assetDetail?.inventoryDate).toLocaleString('en-Us', "Asia/Muscat") || "----",
+        Inventory_Date: item?.assetDetail?.inventoryDate || "----",
         Modification_Date: new Date(item?.assetDetail?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
         Asset_Status: item?.assetDetail?.assetStatus || "----",
         Asset_Value: item?.assetDetail?.VALUE || "----",
