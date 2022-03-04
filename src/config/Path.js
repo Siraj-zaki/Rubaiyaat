@@ -1,5 +1,5 @@
-const BASE_URL = "https://rubaiyat-asset.herokuapp.com";
-// const BASE_URL = "https://rubaiyat-qa.herokuapp.com";
+// const BASE_URL = "https://rubaiyat-asset.herokuapp.com";
+const BASE_URL = "https://rubaiyat-qa.herokuapp.com";
 // const BASE_URL = 'http://172.16.83.107:5000';
 // const BASE_URL = 'http://localhost:5000'
 // const BASE_URL = "https://7005-103-225-51-7.ngrok.io";
@@ -21,6 +21,8 @@ const Path = {
   EDIT_USER: `${BASE_URL}/user/edit`,
   EDIT_ROLE: `${BASE_URL}/role/edit`,
   GET_ASN: `${BASE_URL}/asn/get`,
+  GET_SOH_BY_PARAMS: `${BASE_URL}/asset/get_asset_with_query`,
+  GET_LOCATIONS: `${BASE_URL}/site/get/zone/anjum`,
   GET_ASN_BY_IBT: `${BASE_URL}/asset/get_Assets_by_asn`,
   GET_BATCH_BY_IBT: `${BASE_URL}/asset/getAssetsByAsn`,
   GET_BATCH: `${BASE_URL}/batch/get`,
@@ -34,7 +36,7 @@ const Path = {
   GET_ASSETS_SITE: `${BASE_URL}/asset/get_Asset_by_site_zone_ref/61b62968c72421b96dd9281b`,
   GET_ASSETS_DETAILS: `${BASE_URL}/assetDetailRoutes/getScans`,
   GET_ASSETS_DETAILS_ASSO: `${BASE_URL}/assetDetailRoutes/getAssociTags`,
-  UPLOAD_DATA: `${BASE_URL}/assetDetailRoutes/update/or/add/assetDetail`,
+  UPLOAD_DATA: `${BASE_URL}/asset/upload_assets`,
   GET_ASSETS_DETAILS_BY_EPC: `${BASE_URL}/assetDetailRoutes/getByEpc`,
   GET_ASSETS_DETAILS_BY_ALL: `${BASE_URL}/assetDetailRoutes/get`,
   GET_STOCK_ON_HAND: `${BASE_URL}/asset/getSoh/and/counted`,

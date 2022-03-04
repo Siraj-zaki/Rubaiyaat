@@ -664,7 +664,7 @@ function ScrollableTabsButtonForce(props) {
                 activeClassName="top-drawer-btn top-drawer-btn-active"
               >
                 <DashboardIcon htmlColor="white" />
-                Table Report
+                Maintenance Report
               </NavLink>
             ) : (
               ""

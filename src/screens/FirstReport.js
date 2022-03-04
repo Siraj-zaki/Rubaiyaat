@@ -107,10 +107,11 @@ export class FirstReport extends Component {
       assetsDetails: assetsDetails.reverse(),
       assetsDetailsNew: assetsDetails.reverse(),
     });
-    console.log(assetsDetails, "assetsDetails");
+
     if (assetsDetails) {
       await this.setState({ loading: false });
-      await this.searchFunction()
+      // await this.searchFunction()
+     
     }
   };
   async componentDidMount() {
@@ -268,30 +269,30 @@ export class FirstReport extends Component {
       //   key: "Asset_Image",
       // },
     ];
-    const data = this.state.assetsDetails.map((item) => {
-      return {
-        Creation_Date: new Date(item?.assetDetail?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
-        Asset_Name: item?.assetDetail?.ownerName || "----",
-        // Asset_Type: item?.assetDetail?.assetType || "----",
-        // Serial_no: item?.assetDetail?.EPCID || "----",
-        asset_EPC: item?.EPCID || "----",
-        Department: item?.assetDetail?.department || "----",
-        Asset_Location: item?.assetDetail?.location || "----",
-        Inventory_Date: item?.assetDetail?.inventoryDate || "----",
-        Modification_Date: new Date(item?.assetDetail?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
-        Asset_Status: item?.assetDetail?.assetStatus || "----",
-        Asset_Value: item?.assetDetail?.VALUE || "----",
-        Site: item?.assetDetail?.SITE || "----",
-        Description: item?.assetDetail?.description || "----",
-        SUB_CATEGORY_CODE: item?.assetDetail?.SUB_CATEGORY_CODE || "----",
-        SUB_CATEGORY_NAME: item?.assetDetail?.SUB_CATEGORY_NAME || "----",
-        CATEGORY_NAME: item?.assetDetail?.CATEGORY_NAME || "----",
-        CATEGORY_CODE: item?.assetDetail?.CATEGORY_CODE || "----",
-        imageLink: `=HYPERLINK(""${item?.assetDetail.imageLink}"",  ""image !"")` || "----",
-        // Asset_Image: item?.assetDetails[0].image,
-      }
-    });
-    console.log(data, "asdfasdf");
+    // const data = this.state.assetsDetails.map((item) => {
+    //   return {
+    //     Creation_Date: new Date(item?.assetDetail?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
+    //     Asset_Name: item?.assetDetail?.ownerName || "----",
+    //     // Asset_Type: item?.assetDetail?.assetType || "----",
+    //     // Serial_no: item?.assetDetail?.EPCID || "----",
+    //     asset_EPC: item?.EPCID || "----",
+    //     Department: item?.assetDetail?.department || "----",
+    //     Asset_Location: item?.assetDetail?.location || "----",
+    //     Inventory_Date: item?.assetDetail?.inventoryDate || "----",
+    //     Modification_Date: new Date(item?.assetDetail?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
+    //     Asset_Status: item?.assetDetail?.assetStatus || "----",
+    //     Asset_Value: item?.assetDetail?.VALUE || "----",
+    //     Site: item?.assetDetail?.SITE || "----",
+    //     Description: item?.assetDetail?.description || "----",
+    //     SUB_CATEGORY_CODE: item?.assetDetail?.SUB_CATEGORY_CODE || "----",
+    //     SUB_CATEGORY_NAME: item?.assetDetail?.SUB_CATEGORY_NAME || "----",
+    //     CATEGORY_NAME: item?.assetDetail?.CATEGORY_NAME || "----",
+    //     CATEGORY_CODE: item?.assetDetail?.CATEGORY_CODE || "----",
+    //     imageLink: `=HYPERLINK(""${item?.assetDetail.imageLink}"",  ""image !"")` || "----",
+    //     // Asset_Image: item?.assetDetails[0].image,
+    //   }
+    // });
+    // console.log(data, "asdfasdf");
     return (
       <React.Fragment>
         <CustomModal data={this.state.QrCode} brcode={true} image={true} open={this.state.openModal} handleClose={() => this.handleClose()} handleClickOpen={() => this.handleClickOpen} />
@@ -351,10 +352,10 @@ export class FirstReport extends Component {
                 </Button>
                 {/* <CSVReader /> */}
                 <IconButton style={{ position: "absolute", right: "90px", cursor: 'pointer' }}>
-                  <CSVLink filename="Asset_Report" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: 60 }} data={data} headers={headers}>
+                  {/* <CSVLink filename="Asset_Report" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: 60 }} data={data} headers={headers}>
                     <SystemUpdateAltIcon fontSize="large" htmlColor="black" />
                     <h1 className="dashboard-heading" style={{ fontSize: '15px' }} >CSV</h1>
-                  </CSVLink>
+                  </CSVLink> */}
                 </IconButton>
               </div>
               <Collapse

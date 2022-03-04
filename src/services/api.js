@@ -128,6 +128,14 @@ const getASNbyEPC = async (epc, operation) => {
   const { data } = await axios.get(`${Path.GET_ASN_BY_EPC} /${epc}`);
   return data;
 };
+const getSohByParams = async (payload) => {
+  const { data } = await axios.get(`${Path.GET_SOH_BY_PARAMS}`, { params: payload });
+  return data;
+};
+const getLocations = async (payload) => {
+  const { data } = await axios.get(`${Path.GET_LOCATIONS}`, payload);
+  return data;
+};
 const getAssetsDetails = async (payLoad) => {
   const { data } = await axios.get(`${Path.GET_ASSETS_DETAILS}`);
   return data;
@@ -141,7 +149,7 @@ const getMovementHistory = async (payLoad) => {
   return data;
 };
 const uploadingData = async (payLoad) => {
-  const { data } = await axios.put(`${Path.UPLOAD_DATA}`, payLoad);
+  const { data } = await axios.post(`${Path.UPLOAD_DATA}`, payLoad);
   return data;
 };
 export default {
@@ -179,5 +187,8 @@ export default {
   getAssetsBySohWithParam,
   getStockOnHand,
   getCountedItemsByParams,
-  getZoneBySite
+  getZoneBySite,
+  getSohByParams,
+  getLocations,
+
 };

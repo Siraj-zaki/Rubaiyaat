@@ -30,6 +30,9 @@ import { toast } from "react-toastify";
 import CSVReader from "../components/CsvUploader";
 import Barcode from 'react-barcode'
 import ItemMasterTable from "../components/ItemMasterTable";
+import { FilterFunction } from "../components/filterFunction";
+import Filters from "../components/Filters";
+import _ from 'lodash'
 const { RangePicker } = DatePicker;
 export class ItemMasterReport extends Component {
     state = {
@@ -52,14 +55,117 @@ export class ItemMasterReport extends Component {
         creation_date: '',
         modification_date: '',
         image: '',
+        sitesOption: [{ label: "all", value: '' }],
+        zoneOption: [{ label: "all", value: '' }],
+        departmentOption: [{ label: "all", value: '' }],
+        site_Value: '',
+        zone_Value: '',
+        department_Value: '',
+        assetEPC_Value: '',
+        Odoo_Tag_Value: '',
+        ownerName_Value: '',
+        description_Value: '',
+        assetStatus_Value: '',
+        creationDate_Value: '',
+        modificationDate_Value: '',
+        locations: [],
+        locationsDepartments: [],
     };
+    async componentDidMount() {
+        this.setState({ loading: true })
+        const locations = await api.getLocations()
+        let sites = locations?.result?.map((item => { return { label: item.site_name, value: item._id } }))
+        if (locations) {
+            console.log(sites?.reverse());
+            console.log(locations);
+            this.setState({ loading: false, sitesOption: this.state.sitesOption.concat(sites), locations: locations.result })
+        }
+    }
+    //////////////////////new handlers
+    site_changeHandler = (e) => {
+        console.log(e?.value);
+        this.setState({ site_Value: e })
+        let departs = this.state.locations.map((site => site?.departments.filter((department => department.site.includes(e?.value)))))
+        departs = _.filter(departs, _.size)
+        departs = departs[0] ? departs[0] : departs
+        console.log(departs);
+        let departments = departs?.map((item => { return { label: item?.departement_name, value: item?._id } }))
+        departments = [...departments, { label: 'all', value: '' }]
+        console.log(departments);
+        this.setState({ departmentOption: departments, locationsDepartments: departs })
+        console.log(departments);
+    }
+    department_changeHandler = (e) => {
+        console.log(e?.value);
+        this.setState({ department_Value: e })
+        let zone = this.state.locationsDepartments?.map((department => department?.zones?.filter((zone => zone.departement.includes(e?.value)))))
+        zone = _.filter(zone, _.size)
+        zone = zone[0] ? zone[0] : zone
+        // zone = zone.length > 0 ? zone : [{ label: 'all', value: '' }]
+        let zones = zone?.map((item => { return { label: item.zone_name, value: item._id } }))
+        // zones = zones.length > 0 ? zones : [{ label: 'all', value: '' }]
+        console.log(zones);
+        zones = [...zones, { label: 'all', value: '' }]
+        console.log(zones);
+        this.setState({ zoneOption: zones })
+        console.log(zones);
+    }
+    zone_changeHandler = (e) => {
+        console.log(e?.value);
+        this.setState({ zone_Value: e })
+    }
 
+    assetEPC_changeHandler = (e) => {
+        console.log(e.target.value);
+        this.setState({ assetEPC_Value: e.target.value })
+    }
+    Odoo_Tag_changeHandler = (e) => {
+        console.log(e.target.value);
+        this.setState({ Odoo_Tag_Value: e.target.value })
+    }
+    ownerName_changeHandler = (e) => {
+        console.log(e.target.value);
+        this.setState({ ownerName_Value: e.target.value })
+    }
+    description_changeHandler = (e) => {
+        console.log(e.target.value);
+        this.setState({ description_Value: e.target.value })
+    }
+    assetStatus_changeHandler = (e) => {
+        console.log(e.target.value);
+        this.setState({ assetStatus_Value: e.target.value })
+    }
+    creationDate_changeHandler = (e) => {
+        console.log(e);
+        this.setState({ creationDate_Value: e })
+    }
+    modificationDate_changeHandler = (e) => {
+        console.log(e);
+        this.setState({ modificationDate_Value: e })
+    }
     onSubmitEvent = () => {
         console.log("User");
     };
-    searchFunction = async () => {
+    searchFunction = () => {
         // e.preventDefault();
-        await this.setState({ assetsDetails: this.dateFilter() });
+        this.setState({
+            assetsDetails: FilterFunction({
+                data: this.state.assetsDetailsNew,
+                filters: {
+                    site_Value: this.state.site_Value?.label === 'all' ? '' : this.state.site_Value?.label,
+                    zone_Value: this.state.zone_Value?.label === 'all' ? '' : this.state.zone_Value?.label,
+                    department_Value: this.state.department_Value.label === 'all' ? '' : this.state.department_Value.label,
+                    assetEPC_Value: this.state.assetEPC_Value || '',
+                    Odoo_Tag_Value: this.state.Odoo_Tag_Value || '',
+                    ownerName_Value: this.state.ownerName_Value || '',
+                    description_Value: this.state.description_Value || '',
+                    assetStatus_Value: this.state.assetStatus_Value || '',
+                    createdAt: this.state.creationDate_Value || '',
+                    updatedAt: this.state.modificationDate_Value || '',
+                    // zoneFilter: ''
+                }
+            })
+        });
     };
     dateCompareCreation = (sDate, eDate) => {
         let { creation_date } = this.state;
@@ -87,37 +193,18 @@ export class ItemMasterReport extends Component {
         if (sDiff >= 0 && eDiff <= 0) return true;
         return false;
     };
-    dateFilter = () => {
-        return this.state.assetsDetailsNew.filter(
-            (x) =>
-                this.state.creation_date === '' ?
-                    x?.ownerName?.includes(this.state?.asset_name)
-                    &&
-                    x?.EPCID?.includes(this.state?.epc)
-                    &&
-                    x?.assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
-                    :
-                    this.state.modification_date === '' ?
-                        x?.ownerName?.includes(this.state?.asset_name)
-                        &&
-                        x?.EPCID?.includes(this.state?.epc)
-                        &&
-                        x?.assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
-                        &&
-                        this.dateCompareUpdated(x?.updatedAt, x?.updatedAt)
-                        :
-                        x?.ownerName?.includes(this.state?.asset_name)
-                        &&
-                        x?.EPCID?.includes(this.state?.epc)
-                        &&
-                        x?.assetStatus.toLowerCase().includes(this.state.asset_status.toLowerCase())
-        );
-    };
     runFunction = async () => {
         this.setState({ loading: true });
-
-        const assetRoutes = await api.getAssetsByAll();
-
+        const assetRoutes = await api.getSohByParams({
+            siteId: this.state.site_Value?.value || null,
+            zoneId: this.state.zone_Value?.value || null,
+            departementId: this.state.department_Value?.value || null,
+            description: this.state.description_Value || null,
+            ownerName: this.state.ownerName_Value || null,
+            asset_EPC: this.state.assetEPC_Value || null,
+            serialNumber: this.state.Odoo_Tag_Value || null,
+            assetValue: this.state.assetStatus_Value || null,
+        })
         console.log(assetRoutes, "assetsDetails");
         await this.setState({
             assetsDetails: assetRoutes,
@@ -126,46 +213,30 @@ export class ItemMasterReport extends Component {
 
         if (assetRoutes) {
             await this.setState({ loading: false });
-            await this.searchFunction()
+            console.log(assetRoutes.filter((item => item?.asset_EPC.includes("E2000016170F02380880C293"))), "assetsDetails");
+            // this.setState({
+            //     assetsDetails: FilterFunction({
+            //         data: this.state.assetsDetailsNew,
+            //         filters: {
+            //             site_Value: this.state.site_Value?.label === 'all' ? '' : this.state.site_Value?.label,
+            //             zone_Value: this.state.zone_Value?.label === 'all' ? '' : this.state.zone_Value?.label,
+            //             department_Value: this.state.department_Value.label === 'all' ? '' : this.state.department_Value.label,
+            //             assetEPC_Value: this.state.assetEPC_Value || '',
+            //             Odoo_Tag_Value: this.state.Odoo_Tag_Value || '',
+            //             ownerName_Value: this.state.ownerName_Value || '',
+            //             description_Value: this.state.description_Value || '',
+            //             assetStatus_Value: this.state.assetStatus_Value || '',
+            //             createdAt: this.state.creationDate_Value || '',
+            //             updatedAt: this.state.modificationDate_Value || '',
+            //             // zoneFilter: ''
+            //         }
+            //     })
+            // })
+
+            // await this.searchFunction()
         }
     };
 
-    async componentDidMount() {
-        // let data = this.imagetoBase64()
-
-        // setTimeout(() => {
-        //   console.log(data,'data');
-        //   console.log(this.state.image);
-        // }, 3000);
-    }
-    imagetoBase64 = () => {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "https://images.unsplash.com/photo-1600857062241-98e5dba7f214?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=498&q=80", true);
-        xhr.responseType = "blob";
-        xhr.onload = function (e) {
-            console.log(this.response);
-            var reader = new FileReader();
-            reader.onload = function (event) {
-                var res = event.target.result;
-                console.log(res)
-            }
-            var file = this.response;
-            reader.readAsDataURL(file)
-        };
-        xhr.send()
-    }
-    getBase64FromUrl = async (url) => {
-        const data = await fetch(url);
-        const blob = await data.blob();
-        return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(blob);
-            reader.onloadend = () => {
-                const base64data = reader.result;
-                resolve(base64data);
-            }
-        });
-    }
     handleClickOpen = (device) => {
         this.setState({ openModal: true })
         // console.log(device);
@@ -174,22 +245,7 @@ export class ItemMasterReport extends Component {
     handleClose = () => {
         this.setState({ openModal: false })
     }
-    csvUploader = (e) => {
-        console.log(e.target.files[0]);
-        const files = e.target.files;
-        console.log(files);
-        if (files) {
 
-            Papa.parse(files[0], {
-                header: true,
-                complete: results => {
-                    console.log(results.data)
-                },
-            })
-        } else {
-            return toast.error("Please Upload Csv")
-        }
-    }
 
 
     render() {
@@ -211,92 +267,101 @@ export class ItemMasterReport extends Component {
         };
         const headers = [
             {
-                label: "CATEGORY_CODE",
-                key: "CATEGORY_CODE",
+                label: "createdAt",
+                key: "createdAt",
             },
             {
-                label: "CATEGORY_NAME",
-                key: "CATEGORY_NAME",
+                label: "ownerName",
+                key: "ownerName",
             },
             {
-                label: "DEPRECIATION",
-                key: "DEPRECIATION",
+                label: "asset_EPC",
+                key: "asset_EPC",
             },
             {
-                label: "EPCID",
-                key: "EPCID",
+                label: "serialNumber",
+                key: "serialNumber",
             },
             {
-                label: "NBV",
-                key: "NBV",
+                label: "departementId",
+                key: "departementId",
             },
             {
-                label: "REMARKS",
-                key: "REMARKS",
-            },
-            {
-                label: "SITE",
-                key: "SITE",
-            },
-            {
-                label: "SUB_CATEGORY_CODE",
-                key: "SUB_CATEGORY_CODE",
-            },
-            {
-                label: "SUB_CATEGORY_NAME",
-                key: "SUB_CATEGORY_NAME",
-            },
-            {
-                label: "VALUE",
-                key: "VALUE",
-            },
-            {
-                label: "assetStatus",
-                key: "assetStatus",
-            },
-            // {
-            //     label: "assetType",
-            //     key: "assetType",
-            // },
-            {
-                label: "department",
-                key: "department",
-            },
-            {
-                label: "description",
-                key: "description",
-            },
-            {
-                label: "inventoryDate",
-                key: "inventoryDate",
+                label: "zoneId",
+                key: "zoneId",
             },
             {
                 label: "location",
                 key: "location",
             },
             {
-                label: "ownerName",
-                key: "ownerName",
+                label: "inventoryDate",
+                key: "inventoryDate",
+            },
+            {
+                label: "updatedAt",
+                key: "updatedAt",
+            },
+            {
+                label: "assetStatus",
+                key: "assetStatus",
+            },
+            {
+                label: "assetValue",
+                key: "assetValue",
+            },
+            {
+                label: "siteId",
+                key: "siteId",
+            },
+            {
+                label: "description",
+                key: "description",
+            },
+            {
+                label: "sub_category_code",
+                key: "sub_category_code",
+            },
+            {
+                label: "sub_category_name",
+                key: "sub_category_name",
+            },
+            {
+                label: "category_code",
+                key: "category_code",
+            },
+            {
+                label: "category_name",
+                key: "category_name",
+            },
+            {
+                label: "imageLink",
+                key: "imageLink",
             },
         ];
-        const data = this.state.assetsDetails.map((item) =>
-            // return {
-            //     createdAt: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
-            //     ownerName: item?.ownerName || "----",
-            //     assetType: item?.assetType || "----",
-            //     RFID_Tag: item?.EPCIDID || "----",
-            //     department: item?.department || "----",
-            //     location: item?.location || "----",
-            //     inventoryDate: new Date(item?.inventoryDate).toLocaleString('en-Us', "Asia/Muscat") || "----",
-            //     updatedAt: new Date(item?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
-            //     assetStatus: item?.assetStatus || "----",
-            //     assetValue: item?.assetValue || "----",
-            //     site: item?.SITE || "----",
-            //     description: item?.description || "----",
-            //     // Asset_Image: item?.image,
-            // }
-            item
-        );
+        const data = this.state.assetsDetails.map((item) => {
+            return {
+                createdAt: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
+                ownerName: item?.ownerName || "----",
+                asset_EPC: item?.asset_EPC || "----",
+                serialNumber: item?.serialNumber || "----",
+                departementId: item?.departementId?.departement_name || "----",
+                zoneId: item?.zoneId?.zone_name || "----",
+                location: item?.location || "----",
+                inventoryDate: new Date(item?.inventoryDate).toLocaleString('en-Us', "Asia/Muscat") || "----",
+                updatedAt: new Date(item?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
+                assetStatus: item?.assetStatus || "----",
+                assetValue: item?.assetValue || "----",
+                siteId: item?.siteId?.site_name || "----",
+                description: item?.description || "----",
+                sub_category_code: item?.sub_category_code || "----",
+                sub_category_name: item?.sub_category_name || "----",
+                category_code: item?.category_code || "----",
+                category_name: item?.category_name || "----",
+                imageLink: item?.imageLink || "----",
+                // Asset_Image: item?.image,
+            }
+        })
         console.log(data, "asdfasdf");
         return (
             <React.Fragment>
@@ -320,6 +385,7 @@ export class ItemMasterReport extends Component {
                                     top: 0,
                                 }}
                             >
+
                                 <ClipLoader
                                     color={"white"}
                                     loading={this.state.loading}
@@ -355,6 +421,15 @@ export class ItemMasterReport extends Component {
                                 >
                                     Run
                                 </Button>
+                                <Button
+                                    onClick={() => this.searchFunction()}
+                                    type="submit"
+                                    color={"secondary"}
+                                    variant="contained"
+                                    style={{ position: "absolute", right: "190px" }}
+                                >
+                                    Search
+                                </Button>
                                 {/* <CSVReader /> */}
                                 <IconButton style={{ position: "absolute", right: "90px", cursor: 'pointer' }}>
                                     <CSVLink filename="Item Master Report" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: 60 }} data={data} headers={headers}>
@@ -369,42 +444,41 @@ export class ItemMasterReport extends Component {
                                 unmountOnExit
                                 style={{ width: "100%" }}
                             >
-                                <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', backgroundColor: 'transparent', minHeight: 50, marginTop: 10, position: 'relative' }}>
-                                    <form style={{ width: '50%', margin: 20, marginBottom: 0, display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 0, flexDirection: 'column' }}  >
-                                        <BasicTextFields
-                                            margin={10}
-                                            placeholder="EPC"
-                                            name="EPC"
-                                            value={this.state.epc}
-                                            onChangeEvent={(e) =>
-                                                this.setState({ epc: e.target.value })
-                                            }
-                                        />
-                                        <BasicTextFields
-                                            margin={10}
-                                            placeholder="Owner Name"
-                                            name="Owner Name"
-                                            value={this.state.asset_name}
-                                            onChangeEvent={(e) =>
-                                                this.setState({ asset_name: e.target.value })
-                                            }
-                                        />
-                                        <BasicTextFields
-                                            margin={10}
-                                            placeholder="Asset Status"
-                                            name="Asset Status"
-                                            value={this.state.asset_status}
-                                            onChangeEvent={(e) =>
-                                                this.setState({ asset_status: e.target.value })
-                                            }
-                                        />
-                                    </form>
-                                    <div style={{ width: '1px', height: '100%', backgroundColor: 'white', position: 'absolute' }}></div>
-                                    <form style={{ width: '50%', margin: 20, marginBottom: 0, display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 0, flexDirection: 'column' }}  >
-                                        <DatePicker value={this.state.creation_date} placeholder={"Creation Date"} className="input-mat-1" style={{ border: '1px solid white', borderRadius: 5, height: 37, marginTop: 10, fontWeight: 'lighter' }} size={'large'} format={"YYYY-MM-DD"} onChange={(e) => this.setState({ creation_date: e })} />
-                                        <DatePicker value={this.state.modification_date} placeholder={"Modification Date"} className="input-mat-1" style={{ border: '1px solid white', borderRadius: 5, height: 37, marginTop: 10, fontWeight: 'lighter' }} size={'large'} format={"YYYY-MM-DD"} onChange={(e) => this.setState({ modification_date: e })} />
-                                    </form>
-                                </div>
+                                <Filters
+                                    site_Value={this.state.site_Value}
+                                    zone_Value={this.state.zone_Value}
+                                    department_Value={this.state.department_Value}
+                                    assetEPC_Value={this.state.assetEPC_Value}
+                                    Odoo_Tag_Value={this.state.Odoo_Tag_Value}
+                                    ownerName_Value={this.state.ownerName_Value}
+                                    description_Value={this.state.description_Value}
+                                    assetStatus_Value={this.state.assetStatus_Value}
+                                    creationDate_Value={this.state.creationDate_Value}
+                                    modificationDate_Value={this.state.modificationDate_Value}
+                                    site_changeHandler={this.site_changeHandler}
+                                    zone_changeHandler={this.zone_changeHandler}
+                                    department_changeHandler={this.department_changeHandler}
+                                    assetEPC_changeHandler={this.assetEPC_changeHandler}
+                                    Odoo_Tag_changeHandler={this.Odoo_Tag_changeHandler}
+                                    ownerName_changeHandler={this.ownerName_changeHandler}
+                                    description_changeHandler={this.description_changeHandler}
+                                    assetStatus_changeHandler={this.assetStatus_changeHandler}
+                                    creationDate_changeHandler={this.creationDate_changeHandler}
+                                    modificationDate_changeHandler={this.modificationDate_changeHandler}
+                                    sitesOption={this.state.sitesOption}
+                                    zoneOption={this.state.zoneOption}
+                                    departmentOption={this.state.departmentOption}
+                                    siteFilter
+                                    zoneFilter
+                                    departmentFilter
+                                    assetEPCFilter
+                                    Odoo_TagFilter
+                                    ownerNameFilter
+                                    descriptionFilter
+                                    assetStatusFilter
+                                    creationDateFilter
+                                    modificationDateFilter
+                                />
                             </Collapse>
                             <div
                                 style={{
@@ -421,7 +495,7 @@ export class ItemMasterReport extends Component {
                   </Button>
                 </CSVLink> */}
                             </div>
-                            <ItemMasterTable openModal={(device) => this.handleClickOpen(device)} asn={this.state.assetsDetails} />
+                            <ItemMasterTable edit openModal={(device) => this.handleClickOpen(device)} asn={this.state.assetsDetails} />
                         </div>
                     </div>
                 </div>

@@ -67,7 +67,7 @@ export class EPCDetail extends Component {
                 <div>
                     <div className="main-dashboard">
                         {
-this.state.loading ? <div style={{ position: 'absolute', display: 'flex', justifyContent: 'center', width: '100%', flexDirection: 'column', alignItems: 'center', alignSelf: 'center', height: '100%', backgroundColor: 'rgba(28, 28, 28, 0.6)', zIndex: 10,left:0,top:0 }}>
+                            this.state.loading ? <div style={{ position: 'absolute', display: 'flex', justifyContent: 'center', width: '100%', flexDirection: 'column', alignItems: 'center', alignSelf: 'center', height: '100%', backgroundColor: 'rgba(28, 28, 28, 0.6)', zIndex: 10, left: 0, top: 0 }}>
                                 <ClipLoader color={'white'} loading={this.state.loading} size={100} />
                             </div> : null
                         }
@@ -85,7 +85,7 @@ this.state.loading ? <div style={{ position: 'absolute', display: 'flex', justif
                             <div style={{ display: 'flex', width: '200px', justifyContent: 'space-between', alignSelf: 'flex-end', margin: '10px' }}>
                                 <Button type="submit" variant="contained">Search</Button>
                             </div> */}
-                            <ViewEPCDetailTable deleteRole={(id) => this.deleteRole(id)} openModal={(permissions) => this.handleClickOpen(permissions)} loader={this.state.loader} zone={this.props.location.state.data.zone} perData={this.props.location.state} ibt={this.state.IBTDetail} />
+                            <ViewEPCDetailTable deleteRole={(id) => this.deleteRole(id)} openModal={(permissions) => this.handleClickOpen(permissions)} loader={this.state.loader} department={this.props.location?.state?.date?.departmentName} zone={this.props.location.state.data.zone} perData={this.props.location.state} ibt={this.state.IBTDetail} />
                         </div>
                     </div>
                 </div>

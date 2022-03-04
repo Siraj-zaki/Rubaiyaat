@@ -18,7 +18,7 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { Button } from '@material-ui/core';
 import moment from 'moment';
-export default function ViewEPCDetailTable({ ibt, perData, loader, openModal, RoleData, deleteRole, zone }) {
+export default function ViewEPCDetailTable({ ibt, perData, loader, openModal, RoleData, deleteRole, zone, department }) {
     console.log(perData, 'asdada');
     const useStyles = makeStyles({
         root: {
@@ -54,6 +54,7 @@ export default function ViewEPCDetailTable({ ibt, perData, loader, openModal, Ro
                             <TableCell align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }}>EPC</TableCell>
                             <TableCell align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }}>Operation</TableCell>
                             {zone ? <TableCell align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }}>Zone</TableCell> : null}
+                            {department ? <TableCell align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }}>Department</TableCell> : null}
                         </TableRow>
                     </TableHead>
                     <TableBody >
@@ -64,6 +65,7 @@ export default function ViewEPCDetailTable({ ibt, perData, loader, openModal, Ro
                                     <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} align="center">{row ? row : '----'}</TableCell>
                                     <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} align="center">{ibt[0] ? ibt[0].operation : '----'}</TableCell>
                                     {zone ? <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} align="center">{zone}</TableCell> : null}
+                                    {department ? <TableCell style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} align="center">{department}</TableCell> : null}
                                 </TableRow>
                             </React.Fragment>
                         )) : null}

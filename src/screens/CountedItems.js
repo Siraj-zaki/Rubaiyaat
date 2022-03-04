@@ -28,7 +28,10 @@ import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
 import { DatePicker, Radio, Space, Checkbox, Divider } from 'antd';
 import { toast } from "react-toastify";
 import CountedTable from "../components/CountedTable";
+import { FilterFunction } from "../components/filterFunction";
+import Filters from "../components/Filters";
 import _ from 'lodash'
+import ItemMasterTable from "../components/ItemMasterTable";
 const CheckboxGroup = Checkbox.Group;
 const plainOptions = ['Unders', 'Overs', "Matched"];
 const defaultCheckedList = [];
@@ -66,18 +69,95 @@ export class CountedItems extends Component {
         site: '',
         counted: [],
         allSoh: [],
+        sitesOption: [{ label: "all", value: '' }],
+        zoneOption: [{ label: "all", value: '' }],
+        departmentOption: [{ label: "all", value: '' }],
+        site_Value: '',
+        zone_Value: '',
+        department_Value: '',
+        assetEPC_Value: '',
+        Odoo_Tag_Value: '',
+        ownerName_Value: '',
+        description_Value: '',
+        assetStatus_Value: '',
+        creationDate_Value: '',
+        modificationDate_Value: '',
+        locations: [],
+        locationsDepartments: [],
     };
     async componentDidMount() {
-        this.setState({ loading: true });
-        const sites = await api.getAllSite()
-        const zones = await api.getAllZone()
-        this.setState({ zones, sites })
-        console.log(sites, 'sites');
-        console.log(zones, 'zones');
-        if (sites && zones) {
-            this.setState({ loading: false });
+        this.setState({ loading: true })
+        const locations = await api.getLocations()
+        let sites = locations?.result?.map((item => { return { label: item.site_name, value: item._id } }))
+        if (locations) {
+            console.log(sites?.reverse());
+            console.log(locations);
+            this.setState({ loading: false, sitesOption: this.state.sitesOption.concat(sites), locations: locations.result })
         }
     }
+    //////////////////////////////
+    site_changeHandler = (e) => {
+        console.log(e?.value);
+        this.setState({ site_Value: e })
+        let departs = this.state.locations.map((site => site?.departments.filter((department => department.site.includes(e?.value)))))
+        departs = _.filter(departs, _.size)
+        departs = departs[0] ? departs[0] : departs
+        console.log(departs);
+        let departments = departs?.map((item => { return { label: item?.departement_name, value: item?._id } }))
+        departments = [...departments, { label: 'all', value: '' }]
+        console.log(departments);
+        this.setState({ departmentOption: departments, locationsDepartments: departs })
+        console.log(departments);
+    }
+    department_changeHandler = (e) => {
+        console.log(e?.value);
+        this.setState({ department_Value: e })
+        let zone = this.state.locationsDepartments?.map((department => department?.zones?.filter((zone => zone.departement.includes(e?.value)))))
+        zone = _.filter(zone, _.size)
+        zone = zone[0] ? zone[0] : zone
+        // zone = zone.length > 0 ? zone : [{ label: 'all', value: '' }]
+        let zones = zone?.map((item => { return { label: item.zone_name, value: item._id } }))
+        // zones = zones.length > 0 ? zones : [{ label: 'all', value: '' }]
+        console.log(zones);
+        zones = [...zones, { label: 'all', value: '' }]
+        console.log(zones);
+        this.setState({ zoneOption: zones })
+        console.log(zones);
+    }
+    zone_changeHandler = (e) => {
+        console.log(e?.value);
+        this.setState({ zone_Value: e })
+    }
+
+    assetEPC_changeHandler = (e) => {
+        console.log(e.target.value);
+        this.setState({ assetEPC_Value: e.target.value })
+    }
+    Odoo_Tag_changeHandler = (e) => {
+        console.log(e.target.value);
+        this.setState({ Odoo_Tag_Value: e.target.value })
+    }
+    ownerName_changeHandler = (e) => {
+        console.log(e.target.value);
+        this.setState({ ownerName_Value: e.target.value })
+    }
+    description_changeHandler = (e) => {
+        console.log(e.target.value);
+        this.setState({ description_Value: e.target.value })
+    }
+    assetStatus_changeHandler = (e) => {
+        console.log(e.target.value);
+        this.setState({ assetStatus_Value: e.target.value })
+    }
+    creationDate_changeHandler = (e) => {
+        console.log(e);
+        this.setState({ creationDate_Value: e })
+    }
+    modificationDate_changeHandler = (e) => {
+        console.log(e);
+        this.setState({ modificationDate_Value: e })
+    }
+    //////////////////////////////////
     onChange = list => {
         this.setState({ checkedList: list });
         this.setState({ indeterminate: !!list.length && list.length < plainOptions.length });
@@ -94,9 +174,30 @@ export class CountedItems extends Component {
     onSubmitEvent = () => {
         console.log("User");
     };
-    searchFunction = async () => {
+    searchFunction = () => {
 
-        await this.setState({ assetsDetails: this.dateFilter() });
+        this.setState({
+            assetsDetails:
+                FilterFunction({
+                    data: this.state.assetsDetailsNew,
+                    filters: {
+                        site_Value: this.state.site_Value?.label === 'all' ? '' : this.state.site_Value?.label,
+                        zone_Value: this.state.zone_Value?.label === 'all' ? '' : this.state.zone_Value?.label,
+                        department_Value: this.state.department_Value.label === 'all' ? '' : this.state.department_Value.label,
+                        assetEPC_Value: this.state.assetEPC_Value || '',
+                        Odoo_Tag_Value: this.state.Odoo_Tag_Value || '',
+                        ownerName_Value: this.state.ownerName_Value || '',
+                        description_Value: this.state.description_Value || '',
+                        assetStatus_Value: this.state.assetStatus_Value || '',
+                        createdAt: this.state.creationDate_Value || '',
+                        updatedAt: this.state.modificationDate_Value || '',
+                        // onlyDepartment: this.state.site_Value?.label === 'all' ? '' : this.state.site_Value?.label,
+                        // onlySite: this.state.zone_Value?.label === 'all' ? '' : this.state.zone_Value?.label,
+                        // onlyZone: this.state.department_Value.label === 'all' ? '' : this.state.department_Value.label,
+                        // zoneFilter: ''
+                    }
+                })
+        });
     };
     dateCompareCreation = (sDate, eDate) => {
         let { creation_date } = this.state;
@@ -141,18 +242,19 @@ export class CountedItems extends Component {
     }
     runFunction = async () => {
         this.setState({ loading: true });
-        // if (this.state.assetsDetails === true) {
-        const CountedItems = await api.getCountedItemsByParams(this.state.site === '' ? this.state.sites[0]?._id : this.state.site?.value, this.state.zone === '' ? this.state.zones[0]?._id : this.state.zone?.value);
-        const assetBySOH = await api.getAssetsBySohWithParam(this.state.site === '' ? this.state.sites[0]?._id : this.state.site?.value, this.state.zone === '' ? this.state.zones[0]?._id : this.state.zone?.value);
-        // const assetBySOH = await api.getAssetsBySoh();
-        if (CountedItems && assetBySOH) {
-            let newArray = []
-            newArray = await newArray.concat(CountedItems, assetBySOH)
-            await this.setState({ assetsDetails: newArray, assetsDetailsNew: newArray })
-            this.runFunctionSearch(CountedItems, assetBySOH)
-            this.setState({ loading: false });
+        if (this.state.site_Value && this.state.zoneOption === '') {
+            return toast.error("Please Select Zite and Zone")
+        } else {
+            const CountedItems = await api.getCountedItemsByParams(this.state.site_Value?.value, this.state.zone_Value?.value);
+            const assetBySOH = await api.getAssetsBySohWithParam(this.state.site_Value?.value, this.state.zone_Value?.value);
+            if (CountedItems && assetBySOH) {
+                let newArray = []
+                newArray = await newArray.concat(CountedItems, assetBySOH)
+                await this.setState({ assetsDetails: newArray, assetsDetailsNew: newArray })
+                this.runFunctionSearch(CountedItems, assetBySOH)
+                this.setState({ loading: false });
+            }
         }
-        // }
     }
     matchedFunction = () => {
         let newData = this.state.assetsDetailsNew?.filter((item =>
@@ -265,8 +367,16 @@ export class CountedItems extends Component {
                 key: "asset_EPC",
             },
             {
-                label: "department",
-                key: "department",
+                label: "serialNumber",
+                key: "serialNumber",
+            },
+            {
+                label: "departementId",
+                key: "departementId",
+            },
+            {
+                label: "zoneId",
+                key: "zoneId",
             },
             {
                 label: "location",
@@ -285,93 +395,65 @@ export class CountedItems extends Component {
                 key: "assetStatus",
             },
             {
-                label: "VALUE",
-                key: "VALUE",
+                label: "assetValue",
+                key: "assetValue",
             },
             {
-                label: "SITE",
-                key: "SITE",
+                label: "siteId",
+                key: "siteId",
             },
             {
                 label: "description",
                 key: "description",
             },
             {
-                label: "SUB_CATEGORY_CODE",
-                key: "SUB_CATEGORY_CODE",
+                label: "sub_category_code",
+                key: "sub_category_code",
             },
             {
-                label: "SUB_CATEGORY_NAME",
-                key: "SUB_CATEGORY_NAME",
+                label: "sub_category_name",
+                key: "sub_category_name",
             },
-
+            {
+                label: "category_code",
+                key: "category_code",
+            },
+            {
+                label: "category_name",
+                key: "category_name",
+            },
+            {
+                label: "imageLink",
+                key: "imageLink",
+            },
         ];
         let arr = []
-        const data = this.state.assetsDetails !== true ? this.state.assetsDetails.map((item) => {
-            return {
-                createdAt: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
-                ownerName: item?.asset_name?.ownerName || "----",
-                // assetType: item?.asset_name?.assetType || "----",
-                asset_EPC: item?.asset_EPC || "----",
-                department: item?.asset_name?.department || "----",
-                location: item?.asset_name?.location || "----",
-                inventoryDate: item?.asset_name?.inventoryDate || "----",
-                updatedAt: new Date(item?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
-                assetStatus: item?.asset_name?.assetStatus || "----",
-                VALUE: item?.asset_name?.VALUE || "----",
-                SITE: item?.asset_name?.SITE || "----",
-                description: item?.asset_name?.description || "----",
-                SUB_CATEGORY_CODE: item?.asset_name?.SUB_CATEGORY_CODE || "----",
-                SUB_CATEGORY_NAME: item?.asset_name?.SUB_CATEGORY_NAME || "----",
-                CATEGORY_NAME: item?.asset_name?.SUB_CATEGORY_NAME || "----",
-                CATEGORY_CODE: item?.asset_name?.SUB_CATEGORY_CODE || "----",
-                // Asset_Image: item?.asset_name?.image,
-            }
-        }) : arr
-        const customStyles = {
-            control: (base, state) => ({
-                ...base,
-                background: "transparent",
-                backgroundColor: 'transparent',
-                height: 33,
-                marginTop: 10,
 
-            }),
-            menu: base => ({
-                ...base,
-                // override border radius to match the box
-                borderRadius: 0,
-                // kill the gap
-                marginTop: 0,
-                background: 'transparent'
-            }),
-            menuList: base => ({
-                ...base,
-                // kill the white space on first and last option
-                padding: 0,
-                background: 'gray'
 
-            }),
-            option: provided => ({
-                ...provided,
-                color: 'black',
-                zIndex: 312312312312312
-            }),
-            singleValue: (provided, state) => {
-                const opacity = state.isDisabled ? 0.5 : 1;
-                const transition = 'opacity 300ms';
-
-                return { ...provided, opacity, transition, color: "white" };
-            },
-        };
-
-        let sites = this.state?.sites?.map((item => {
-            return { label: item?.site_name, value: item?._id }
-        }))
-
-        const zones = this.state?.zones?.map((item => {
-            return { label: item?.zone_name, value: item?._id }
-        }))
+        const data = this.state.assetsDetails !== true ?
+            this.state.assetsDetails.map((item) => {
+                return {
+                    createdAt: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
+                    ownerName: item?.ownerName || "----",
+                    asset_EPC: item?.asset_EPC || "----",
+                    serialNumber: item?.serialNumber || "----",
+                    departementId: item?.departementId?.departement_name || "----",
+                    zoneId: item?.zoneId?.zone_name || "----",
+                    location: item?.location || "----",
+                    inventoryDate: new Date(item?.inventoryDate).toLocaleString('en-Us', "Asia/Muscat") || "----",
+                    updatedAt: new Date(item?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
+                    assetStatus: item?.assetStatus || "----",
+                    assetValue: item?.assetValue || "----",
+                    siteId: item?.siteId?.site_name || "----",
+                    description: item?.description || "----",
+                    sub_category_code: item?.sub_category_code || "----",
+                    sub_category_name: item?.sub_category_name || "----",
+                    category_code: item?.category_code || "----",
+                    category_name: item?.category_name || "----",
+                    imageLink: item?.imageLink || "----",
+                    // Asset_Image: item?.image,
+                }
+            }) : arr
         return (
             <React.Fragment>
                 <CustomModal data={this.state.QrCode} brcode={true} image={true} open={this.state.openModal} handleClose={() => this.handleClose()} handleClickOpen={() => this.handleClickOpen} />
@@ -453,7 +535,7 @@ export class CountedItems extends Component {
                                 style={{ width: "100%" }}
                             >
 
-                                <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', backgroundColor: 'transparent', minHeight: 50, marginTop: 10, position: 'relative' }}>
+                                {/* <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', backgroundColor: 'transparent', minHeight: 50, marginTop: 10, position: 'relative' }}>
                                     <form style={{ width: '50%', margin: 20, marginBottom: 0, display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 0, flexDirection: 'column' }}  >
                                         <Select
                                             value={this.state.site}
@@ -485,7 +567,7 @@ export class CountedItems extends Component {
                                     </form>
                                     <div style={{ width: '1px', height: '100%', backgroundColor: 'white', position: 'absolute' }}></div>
                                     <form style={{ width: '50%', margin: 20, marginBottom: 0, display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 0, flexDirection: 'column' }}  >
-                                        {/* <CheckboxGroup options={plainOptions} value={this.state.checkedList} onChange={this.onChange} /> */}
+
                                         <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
                                             <Button color={"primary"} variant="contained" onClick={() => this.matchedFunction()} >Matched</Button>
                                             <Button color={"primary"} variant="contained" onClick={() => this.oversFunction()} >Overs</Button>
@@ -494,7 +576,48 @@ export class CountedItems extends Component {
                                         <DatePicker value={this.state.creation_date} placeholder={"Creation Date"} className="input-mat-1" style={{ border: '1px solid white', borderRadius: 5, height: 37, marginTop: 10, fontWeight: 'lighter' }} size={'large'} format={"YYYY-MM-DD"} onChange={(e) => this.setState({ creation_date: e })} />
                                         <DatePicker value={this.state.modification_date} placeholder={"Modification Date"} className="input-mat-1" style={{ border: '1px solid white', borderRadius: 5, height: 37, marginTop: 10, fontWeight: 'lighter' }} size={'large'} format={"YYYY-MM-DD"} onChange={(e) => this.setState({ modification_date: e })} />
                                     </form>
-                                </div>
+                                </div> */}
+                                <Filters
+                                    site_Value={this.state.site_Value}
+                                    zone_Value={this.state.zone_Value}
+                                    department_Value={this.state.department_Value}
+                                    assetEPC_Value={this.state.assetEPC_Value}
+                                    Odoo_Tag_Value={this.state.Odoo_Tag_Value}
+                                    ownerName_Value={this.state.ownerName_Value}
+                                    description_Value={this.state.description_Value}
+                                    assetStatus_Value={this.state.assetStatus_Value}
+                                    creationDate_Value={this.state.creationDate_Value}
+                                    modificationDate_Value={this.state.modificationDate_Value}
+                                    site_changeHandler={this.site_changeHandler}
+                                    zone_changeHandler={this.zone_changeHandler}
+                                    department_changeHandler={this.department_changeHandler}
+                                    assetEPC_changeHandler={this.assetEPC_changeHandler}
+                                    Odoo_Tag_changeHandler={this.Odoo_Tag_changeHandler}
+                                    ownerName_changeHandler={this.ownerName_changeHandler}
+                                    description_changeHandler={this.description_changeHandler}
+                                    assetStatus_changeHandler={this.assetStatus_changeHandler}
+                                    creationDate_changeHandler={this.creationDate_changeHandler}
+                                    modificationDate_changeHandler={this.modificationDate_changeHandler}
+                                    sitesOption={this.state.sitesOption}
+                                    zoneOption={this.state.zoneOption}
+                                    departmentOption={this.state.departmentOption}
+                                    siteFilter
+                                    zoneFilter
+                                    departmentFilter
+                                    assetEPCFilter
+                                    Odoo_TagFilter
+                                    ownerNameFilter
+                                    descriptionFilter
+                                    assetStatusFilter
+                                    creationDateFilter
+                                    modificationDateFilter
+                                >
+                                    <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+                                        <Button color={"primary"} variant="contained" onClick={() => this.matchedFunction()} >Matched</Button>
+                                        <Button color={"primary"} variant="contained" onClick={() => this.oversFunction()} >Overs</Button>
+                                        <Button color={"primary"} variant="contained" onClick={() => this.undersFunction()} >Unders</Button>
+                                    </div>
+                                </Filters>
                             </Collapse>
                             <div
                                 style={{
@@ -506,7 +629,8 @@ export class CountedItems extends Component {
                                 }}
                             >
                             </div>
-                            <CountedTable openModal={(device) => this.handleClickOpen(device)} asn={this.state.assetsDetails} />
+                            {/* <CountedTable openModal={(device) => this.handleClickOpen(device)} asn={this.state.assetsDetails} /> */}
+                            <ItemMasterTable openModal={(device) => this.handleClickOpen(device)} asn={this.state.assetsDetails} />
                         </div>
                     </div>
                 </div>
