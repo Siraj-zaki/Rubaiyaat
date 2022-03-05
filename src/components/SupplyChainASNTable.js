@@ -37,12 +37,16 @@ function Row(props) {
         <React.Fragment>
             <TableRow className={classes.root}>
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{row.asn ? row.asn : "----"}</TableCell>
-                <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{row.destinationZone ? row.destinationZone?.zone_name : '----'}</TableCell>
-                <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{row.destination ? row.destination.site_name : '----'}</TableCell>
-                <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center"><Link to={{ pathname: "/EPCDetail", state: { row: { operation: 'receiving', asn: row._id }, data: { zone: row.destinationZone &&  row.destinationZone?.zone_name } } }}>{row.received_items ? row.received_items.qt : '----'}</Link></TableCell>
+                <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{row?.siteId?.site_name}</TableCell>
+                <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{row?.departementId?.departement_name}</TableCell>
+                <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{row?.zoneId?.zone_name}</TableCell>
+                <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center"><Link to={{ pathname: "/EPCDetail", state: { row: { operation: 'receiving', asn: row._id }, data: { zone: row.destinationZone && row.destinationZone?.zone_name } } }}>{row.received_items ? row.received_items.qt : '----'}</Link></TableCell>
+                <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{row?.siteId?.site_name}</TableCell>
+                <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{row?.destinationDepartement}</TableCell>
+                <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{row?.destinationZone}</TableCell>
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{row.operation_name ? row.operation_name : "----"}</TableCell>
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{row.received_items ? new Date(row.received_items.date).toLocaleString('en-Us', "Asia/Muscat") : "----"}</TableCell>
-                <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{row.received_items ? row.received_items.remarks  : "----"}</TableCell>
+                <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{row.received_items ? row.received_items.remarks : "----"}</TableCell>
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{row.zoneId ? row.zoneId.zone_name : '----'}</TableCell>
             </TableRow>
         </React.Fragment>
@@ -80,9 +84,13 @@ export default function SupplyChainASNTable({ asn }) {
                     <TableHead style={{ backgroundColor: "#263238" }}  >
                         <TableRow >
                             <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">IBT</TableCell>
-                            <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Source</TableCell>
-                            <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Destination</TableCell>
+                            <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Source(Site)</TableCell>
+                            <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Source(Department)</TableCell>
+                            <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Source(Zone)</TableCell>
                             <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Received Items</TableCell>
+                            <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Destination(Site)</TableCell>
+                            <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Destination(Department)</TableCell>
+                            <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Destination(Zone)</TableCell>
                             <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Status</TableCell>
                             <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Receiving Date</TableCell>
                             <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Receiving Remarks</TableCell>

@@ -164,6 +164,14 @@ export class itemMasterUpload extends Component {
                 header: true,
                 complete: results => {
                     console.log(results.data)
+                    // let filtered = results.data?.filter((item => {
+                    //     item.asset_EPC !== "",
+                    //     item.ser !== "",
+                    //     item.asset_EPC !== "",
+                    //     item.asset_EPC !== "",
+                    //     item.asset_EPC !== "",
+                    //     item.asset_EPC !== "",
+                    // }))
                     this.setState({
                         assetsDetails: results.data.map((item =>
                             // return {

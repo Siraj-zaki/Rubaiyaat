@@ -58,9 +58,9 @@ export class ItemMasterReport extends Component {
         sitesOption: [{ label: "all", value: '' }],
         zoneOption: [{ label: "all", value: '' }],
         departmentOption: [{ label: "all", value: '' }],
-        site_Value: '',
-        zone_Value: '',
-        department_Value: '',
+        site_Value: [],
+        zone_Value: [],
+        department_Value: [],
         assetEPC_Value: '',
         Odoo_Tag_Value: '',
         ownerName_Value: '',
@@ -83,25 +83,37 @@ export class ItemMasterReport extends Component {
     }
     //////////////////////new handlers
     site_changeHandler = (e) => {
-        console.log(e?.value);
+        // console.log(e, 'values');
         this.setState({ site_Value: e })
-        let departs = this.state.locations.map((site => site?.departments.filter((department => department.site.includes(e?.value)))))
+        let departs = this.state.locations.map((site => site?.departments.filter((department => e.find((val => department.site.includes(val?.value)))))))
+        // console.log(departs, 'beforeFilter');
         departs = _.filter(departs, _.size)
-        departs = departs[0] ? departs[0] : departs
-        console.log(departs);
+        let merge = []
+        for (let index = 0; index < departs.length; index++) {
+            merge = merge.concat(departs[index])
+            // console.log(merge, 'afterFilter-loop');
+        }
+        // console.log(merge);
+        departs = merge
+        // console.log(departs, 'afterFilter');
         let departments = departs?.map((item => { return { label: item?.departement_name, value: item?._id } }))
         departments = [...departments, { label: 'all', value: '' }]
         console.log(departments);
         this.setState({ departmentOption: departments, locationsDepartments: departs })
-        console.log(departments);
+        // console.log(departments, "departments");
     }
     department_changeHandler = (e) => {
         console.log(e?.value);
         this.setState({ department_Value: e })
-        let zone = this.state.locationsDepartments?.map((department => department?.zones?.filter((zone => zone.departement.includes(e?.value)))))
+        let zone = this.state.locationsDepartments?.map((department => department?.zones?.filter((zone => zone.departement.includes(e.map((data => data?.value)))))))
         zone = _.filter(zone, _.size)
-        zone = zone[0] ? zone[0] : zone
-        // zone = zone.length > 0 ? zone : [{ label: 'all', value: '' }]
+        let merge = []
+        for (let index = 0; index < zone.length; index++) {
+            merge = merge.concat(zone[index])
+            // console.log(merge, 'afterFilter-loop');
+        }
+        // console.log(merge);
+        zone = merge
         let zones = zone?.map((item => { return { label: item.zone_name, value: item._id } }))
         // zones = zones.length > 0 ? zones : [{ label: 'all', value: '' }]
         console.log(zones);
@@ -148,13 +160,14 @@ export class ItemMasterReport extends Component {
     };
     searchFunction = () => {
         // e.preventDefault();
+
         this.setState({
             assetsDetails: FilterFunction({
                 data: this.state.assetsDetailsNew,
                 filters: {
-                    site_Value: this.state.site_Value?.label === 'all' ? '' : this.state.site_Value?.label,
-                    zone_Value: this.state.zone_Value?.label === 'all' ? '' : this.state.zone_Value?.label,
-                    department_Value: this.state.department_Value.label === 'all' ? '' : this.state.department_Value.label,
+                    site_Value: this.state.site_Value[0]?.label === 'all' ? [{ label: '' }] : this.state.site_Value,
+                    zone_Value: this.state.zone_Value[0]?.label === 'all' ? [{ label: '' }] : this.state.zone_Value?.label,
+                    department_Value: this.state.department_Value[0]?.label === 'all' ? [{ label: '' }] : this.state.department_Value.label,
                     assetEPC_Value: this.state.assetEPC_Value || '',
                     Odoo_Tag_Value: this.state.Odoo_Tag_Value || '',
                     ownerName_Value: this.state.ownerName_Value || '',
@@ -194,11 +207,15 @@ export class ItemMasterReport extends Component {
         return false;
     };
     runFunction = async () => {
+        let sites = this.state.site_Value?.some((item => item.label === 'all'))
+        let zones = this.state.zone_Value?.some((item => item.label === 'all'))
+        let depaets = this.state.department_Value?.some((item => item.label === 'all'))
+        console.log(sites);
         this.setState({ loading: true });
         const assetRoutes = await api.getSohByParams({
-            siteId: this.state.site_Value?.value || null,
-            zoneId: this.state.zone_Value?.value || null,
-            departementId: this.state.department_Value?.value || null,
+            siteId: sites ? null : this.state.site_Value?.map((item => item.value)),
+            zoneId: zones ? this.state.zone_Value?.map((item => item.value)) : null,
+            departementId: depaets ? this.state.department_Value?.map((item => item.value)) : null,
             description: this.state.description_Value || null,
             ownerName: this.state.ownerName_Value || null,
             asset_EPC: this.state.assetEPC_Value || null,
@@ -214,26 +231,6 @@ export class ItemMasterReport extends Component {
         if (assetRoutes) {
             await this.setState({ loading: false });
             console.log(assetRoutes.filter((item => item?.asset_EPC.includes("E2000016170F02380880C293"))), "assetsDetails");
-            // this.setState({
-            //     assetsDetails: FilterFunction({
-            //         data: this.state.assetsDetailsNew,
-            //         filters: {
-            //             site_Value: this.state.site_Value?.label === 'all' ? '' : this.state.site_Value?.label,
-            //             zone_Value: this.state.zone_Value?.label === 'all' ? '' : this.state.zone_Value?.label,
-            //             department_Value: this.state.department_Value.label === 'all' ? '' : this.state.department_Value.label,
-            //             assetEPC_Value: this.state.assetEPC_Value || '',
-            //             Odoo_Tag_Value: this.state.Odoo_Tag_Value || '',
-            //             ownerName_Value: this.state.ownerName_Value || '',
-            //             description_Value: this.state.description_Value || '',
-            //             assetStatus_Value: this.state.assetStatus_Value || '',
-            //             createdAt: this.state.creationDate_Value || '',
-            //             updatedAt: this.state.modificationDate_Value || '',
-            //             // zoneFilter: ''
-            //         }
-            //     })
-            // })
-
-            // await this.searchFunction()
         }
     };
 
@@ -362,7 +359,7 @@ export class ItemMasterReport extends Component {
                 // Asset_Image: item?.image,
             }
         })
-        console.log(data, "asdfasdf");
+        console.log(this.state.assetsDetails, "asdfasdf");
         return (
             <React.Fragment>
                 <CustomModal data={this.state.QrCode} brcode={true} image={true} open={this.state.openModal} handleClose={() => this.handleClose()} handleClickOpen={() => this.handleClickOpen} />

@@ -47,6 +47,7 @@ export default function Filters({
             backgroundColor: 'transparent',
             height: 33,
             marginTop: 10,
+            color:'white',
             // zIndex: 312312312312312
 
         }),
@@ -57,7 +58,7 @@ export default function Filters({
             // kill the gap
             marginTop: 0,
             background: 'transparent',
-            zIndex: 312312312312312
+            zIndex: 312312312312312,
         }),
         menuList: base => ({
             ...base,
@@ -67,9 +68,22 @@ export default function Filters({
             zIndex: 312312312312312
 
         }),
-        option: provided => ({
+        multiValueRemove: base => ({
+            ...base,
+            color: 'black'
+        }),
+        input: base => ({
+            ...base,
+            color:'white',
+        }),
+        menuList: base => ({
+            ...base,
+            backgroundColor: 'black'
+        }),
+
+        option: (provided,state) => ({
             ...provided,
-            color: 'black',
+            color: state.isFocused ? "black" : 'white',
             zIndex: 312312312312312
         }),
         singleValue: (provided, state) => {
@@ -89,8 +103,9 @@ export default function Filters({
                         value={site_Value}
                         onChange={site_changeHandler}
                         options={sitesOption}
+                        isMulti={true}
                         isSearchable={true}
-                        placeholder={site_Value || "Site"}
+                        placeholder={"Site"}
                         className="last-scan-select-2"
                         styles={customStyles}
                     />}
@@ -99,9 +114,10 @@ export default function Filters({
                     <Select
                         value={department_Value}
                         onChange={department_changeHandler}
+                        isMulti={true}
                         options={departmentOption}
                         isSearchable={true}
-                        placeholder={department_Value || "Department"}
+                        placeholder={"Department"}
                         className="last-scan-select-2"
                         styles={customStyles}
                     />
@@ -112,8 +128,9 @@ export default function Filters({
                         value={zone_Value}
                         onChange={zone_changeHandler}
                         options={zoneOption}
+                        isMulti={true}
                         isSearchable={true}
-                        placeholder={zone_Value || "Zone"}
+                        placeholder={"Zone"}
                         className="last-scan-select-2"
                         styles={customStyles}
                     />

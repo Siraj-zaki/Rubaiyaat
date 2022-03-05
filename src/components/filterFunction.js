@@ -16,11 +16,11 @@ const formatDate = (date) => {
 export const FilterFunction = (params) => {
     let data =
         params?.data?.filter(item =>
-            (!params?.filters?.site_Value ? true : item?.siteId?.site_name.includes(params?.filters?.site_Value))
+            (!params?.filters?.site_Value ? true : params?.filters?.site_Value.find((element => item?.siteId?.site_name.includes(element.label))))
             &&
-            (!params?.filters?.zone_Value ? true : item?.zoneId?.zone_name.includes(params?.filters?.zone_Value))
+            (!params?.filters?.zone_Value ? true : params?.filters?.zone_Value.find((element => item?.zoneId?.zone_name.includes(element.label))))
             &&
-            (!params?.filters?.department_Value ? true : item?.departementId?.departement_name.includes(params?.filters?.department_Value))
+            (!params?.filters?.department_Value ? true : params?.filters?.department_Value.find((element => item?.departementId?.departement_name.includes(element.label))))
             &&
             (!params?.filters?.assetEPC_Value ? true : item?.asset_EPC.includes(params?.filters?.assetEPC_Value))
             &&
