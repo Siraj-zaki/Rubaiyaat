@@ -337,9 +337,9 @@ export class CountedItems extends Component {
                     ownerName: this.state.ownerName_Value || null,
                     asset_EPC: this.state.assetEPC_Value || null,
                     serialNumber: this.state.Odoo_Tag_Value || null,
-                    assetValue: this.state.assetStatus_Value || null,
+                    // assetValu: this.state.assetStatus_Value || null,
                     createdAt: this.state.creationDate_Value || null,
-                    assetValue: this.state.assetStatus_Value || null,
+                    assetStatus: this.state.assetStatus_Value || null,
                 }
             );
             // const assetBySOH = await api.getAssetsBySohWithParam(this.state.site_Value?.value, this.state.zone_Value?.value);
@@ -579,7 +579,7 @@ export class CountedItems extends Component {
                                 </IconButton>
                                 <PeopleIcon htmlColor="black" className="ml-4 mr-4" />
                                 <h1 className="dashboard-heading">Counted Item (Report)</h1>
-                                <Button
+                                {/* <Button
                                     onClick={() => this.searchFunction()}
                                     type="submit"
                                     color={"secondary"}
@@ -587,7 +587,7 @@ export class CountedItems extends Component {
                                     style={{ position: "absolute", right: "90px" }}
                                 >
                                     Search
-                                </Button>
+                                </Button> */}
                                 <Button
                                     onClick={() => this.runFunction()}
                                     type="submit"

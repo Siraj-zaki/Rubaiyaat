@@ -269,8 +269,8 @@ export class ItemMasterReport extends Component {
             asset_EPC: this.state.assetEPC_Value || null,
             serialNumber: this.state.Odoo_Tag_Value || null,
             assetValue: this.state.assetStatus_Value || null,
-            createdAt: this.state.creationDate_Value || null,
-            assetValue: this.state.assetStatus_Value || null,
+            // createdAt: this.state.creationDate_Value || null,
+            // assetValue: this.state.assetStatus_Value || null,
         })
         console.log(assetRoutes, "assetsDetails");
         await this.setState({
@@ -473,7 +473,7 @@ export class ItemMasterReport extends Component {
                                 >
                                     Run
                                 </Button>
-                                <Button
+                                {/* <Button
                                     onClick={() => this.searchFunction()}
                                     type="submit"
                                     color={"secondary"}
@@ -481,7 +481,7 @@ export class ItemMasterReport extends Component {
                                     style={{ position: "absolute", right: "190px" }}
                                 >
                                     Search
-                                </Button>
+                                </Button> */}
                                 {/* <CSVReader /> */}
                                 <IconButton style={{ position: "absolute", right: "90px", cursor: 'pointer' }}>
                                     <CSVLink filename="Item Master Report" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: 60 }} data={data} headers={headers}>

@@ -270,7 +270,7 @@ export class ItemMasterReport extends Component {
       description: this.state.description_Value || null,
       ownerName: this.state.ownerName_Value || null,
       asset_EPC: this.state.assetEPC_Value || null,
-      assetValue: this.state.assetStatus_Value || null,
+      assetStatus: this.state.assetStatus_Value || null,
     })
     console.log(assetRoutes, "assetsDetails");
     await this.setState({
@@ -535,7 +535,7 @@ export class ItemMasterReport extends Component {
                   </Button>
                 </CSVLink> */}
               </div>
-              <ItemMasterTable  openModal={(device) => this.handleClickOpen(device)} asn={this.state.assetsDetails} />
+              <ItemMasterTable openModal={(device) => this.handleClickOpen(device)} asn={this.state.assetsDetails} />
             </div>
           </div>
         </div>

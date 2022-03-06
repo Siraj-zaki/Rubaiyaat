@@ -259,7 +259,7 @@ function ScrollableTabsButtonForce(props) {
           ""
         )}
 
-        {permissions.includes("Dashboard") ? (
+        {/* {permissions.includes("Dashboard") ? (
           <NavLink to="/Dashboard">
             <button
               onClick={() => Btn5()}
@@ -272,7 +272,7 @@ function ScrollableTabsButtonForce(props) {
           </NavLink>
         ) : (
           ""
-        )}
+        )} */}
         {/* {window.location.href.split('/').reverse()[0] === "MapReport" ? */}
         <NavLink to="/Dashboard">
           <button
@@ -341,7 +341,7 @@ function ScrollableTabsButtonForce(props) {
           ""
         )}
         {permissions.includes("Reports") ? (
-          <NavLink to="/Reports/FirstReport">
+          <NavLink to="/Reports/ThirdReport">
             <button
               onClick={() => Btn9()}
               className={`top-drawer-btn top-drawer-btn-${ActiveBtn8}`}
@@ -580,7 +580,7 @@ function ScrollableTabsButtonForce(props) {
             ) : (
               ""
             )}
-            {permissions.includes("Dashboard_Count") ? (
+            {/* {permissions.includes("Dashboard_Count") ? (
               <NavLink
                 exact
                 to="/Count/CountDashboard"
@@ -592,7 +592,7 @@ function ScrollableTabsButtonForce(props) {
               </NavLink>
             ) : (
               ""
-            )}
+            )} */}
             {/* {permissions.includes("Dashboard_Admin") ? (
               <NavLink
                 exact

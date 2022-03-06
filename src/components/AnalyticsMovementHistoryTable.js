@@ -21,7 +21,7 @@ import { Button } from '@material-ui/core';
 import moment from 'moment';
 const useRowStyles = makeStyles({
     root: {
-        backgroundColor: 'rgba(92, 92, 92, 1)',
+        backgroundColor: 'black',
         '& > *': {
             borderBottom: 'unset',
         },
@@ -111,27 +111,27 @@ export default function AnalyticsMovementHistoryTable({ data }) {
 
                     <TableContainer key={epc} >
                         {/* <h1 style={{ color: "white", margin: 10, fontSize: 15 }}>ASN: {asn}</h1> */}
-                        
+
                         {/* <Button variant="contained" color="primary" style={{ padding: 10, margin: 10 }} > */}
                         <TableCell
-                                    colSpan={3}
-                                        style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center"
-                                    >
-                                     EPC:  {epc}
-                                    </TableCell>
+                            colSpan={3}
+                            style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center"
+                        >
+                            EPC:  {epc}
+                        </TableCell>
                         {/* </Button> */}
                         <Table size="small" aria-label="collapsible table">
                             <TableHead   >
-                                <TableRow >
+                                <TableRow style={{ backgroundColor: '#263238' }} >
                                     <TableCell
                                         style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center"
                                     >
-                                       Created Date
+                                        Created Date
                                     </TableCell>
                                     <TableCell
                                         style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center"
                                     >
-                                       Updated Date
+                                        Updated Date
                                     </TableCell>
                                     <TableCell
                                         style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center"
