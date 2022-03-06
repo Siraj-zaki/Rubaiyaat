@@ -164,30 +164,12 @@ export class itemMasterUpload extends Component {
                 header: true,
                 complete: results => {
                     console.log(results.data)
-                    // let filtered = results.data?.filter((item => {
-                    //     item.asset_EPC !== "",
-                    //     item.ser !== "",
-                    //     item.asset_EPC !== "",
-                    //     item.asset_EPC !== "",
-                    //     item.asset_EPC !== "",
-                    //     item.asset_EPC !== "",
-                    // }))
+
+                    let filterd = results.data
+                    // obj[Object.keys(obj)[0]]
+                    filterd = filterd.filter(item => item[Object.keys(item)[0]] !== '')
                     this.setState({
-                        assetsDetails: results.data.map((item =>
-                            // return {
-                            //     createdAt: item.createdAt,
-                            //     ownerName: item.ownerName,
-                            //     assetType: item.assetType,
-                            //     EPC: item.EPC,
-                            //     department: item.department,
-                            //     location: item.location,
-                            //     inventoryDate: item.inventoryDate,
-                            //     updatedAt: item.updatedAt,
-                            //     updatedAt: item.updatedAt,
-                            //     updatedAt: item.updatedAt,
-                            //     updatedAt: item.updatedAt,
-                            //     updatedAt: item.updatedAt,
-                            // }
+                        assetsDetails: filterd.map((item =>
                             item
                         ))
                     })

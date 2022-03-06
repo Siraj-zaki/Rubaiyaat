@@ -617,7 +617,7 @@ function ScrollableTabsButtonForce(props) {
               justifyContent: "flex-start",
             }}
           >
-            {permissions.includes("Associated_Items") ? (
+            {/* {permissions.includes("Associated_Items") ? (
               <NavLink
                 exact
                 to="/Reports/FirstReport"
@@ -629,7 +629,7 @@ function ScrollableTabsButtonForce(props) {
               </NavLink>
             ) : (
               ""
-            )}
+            )} */}
             {permissions.includes("Associated_Items") ? (
               <NavLink
                 exact

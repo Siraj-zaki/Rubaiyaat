@@ -1,26 +1,40 @@
-import { Button, IconButton } from "@material-ui/core";
-import Collapse from "@material-ui/core/Collapse";
-import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+import React, { Component } from "react";
+import Card from "../components/Card";
+import TransferWithinAStationIcon from "@material-ui/icons/TransferWithinAStation";
 import PeopleIcon from "@material-ui/icons/People";
-import { DatePicker } from 'antd';
-import _ from 'lodash';
+import "../css/Dashboard.css";
+import ActivityCard from "../components/ActivityCard";
+// import StickyHeadTable from '../components/Table';
+import CollapsibleTable from "../components/Table";
+import BasicTextFields from "../components/Input";
+import { Button, Typography, IconButton } from "@material-ui/core";
+import StickyHeadTable from "../components/StoreInformationTable";
+import Select from "react-select";
+import Logo from "../assets/logo.png";
+import CustomModal from "../components/CustomModal";
+import CountInventoryTable from "../components/CountInventoryTable";
+import TransferCancelationTable from "../components/TransferCancelationTable";
+import api from "../services/api";
+import SupplyChainASNTable from "../components/SupplyChainASNTable";
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+import Collapse from "@material-ui/core/Collapse";
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+import ClipLoader from "react-spinners/ClipLoader";
 import moment from "moment";
+import Papa from "papaparse";
+import FirstReportTable from "../components/FirstReportTable";
 import { CSVLink } from "react-csv";
 import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
-import Papa from "papaparse";
-import React, { Component } from "react";
-import ClipLoader from "react-spinners/ClipLoader";
+import { DatePicker, Radio, Space } from 'antd';
 import { toast } from "react-toastify";
-import CustomModal from "../components/CustomModal";
+import CSVReader from "../components/CsvUploader";
+import Barcode from 'react-barcode'
+import ItemMasterTable from "../components/ItemMasterTable";
 import { FilterFunction } from "../components/filterFunction";
 import Filters from "../components/Filters";
-import ItemMasterTable from "../components/ItemMasterTable";
-import "../css/Dashboard.css";
-import api from "../services/api";
-import Select from 'react-select'
+import _ from 'lodash'
 const { RangePicker } = DatePicker;
-export class ThirdReport extends Component {
+export class ItemMasterReport extends Component {
   state = {
     location: "",
     ASN: [],
@@ -44,9 +58,9 @@ export class ThirdReport extends Component {
     sitesOption: [{ label: "all", value: '' }],
     zoneOption: [{ label: "all", value: '' }],
     departmentOption: [{ label: "all", value: '' }],
-    site_Value: '',
-    zone_Value: '',
-    department_Value: '',
+    site_Value: [],
+    zone_Value: [],
+    department_Value: [],
     assetEPC_Value: '',
     Odoo_Tag_Value: '',
     ownerName_Value: '',
@@ -54,11 +68,48 @@ export class ThirdReport extends Component {
     assetStatus_Value: '',
     creationDate_Value: '',
     modificationDate_Value: '',
+    categoryCode_Value: [],
+    categoryName_Value: [],
+    subCategoryCode_Value: [],
+    subCategoryName_Value: [],
     locations: [],
     locationsDepartments: [],
-    maintenanceTime: '',
+    categoryCodeOptions: [],
+    categoryNameOptions: [],
+    subCategoryCodeOptions: [],
+    subCategoryNameOptions: [],
+    mainTime: 30,
+
+
   };
+  mainTimeHandler = (e) => {
+    console.log(Number(e.target.value));
+    this.setState({ mainTime: Number(e.target.value) })
+  }
   async componentDidMount() {
+    const filters = await api.getFilters()
+    if (filters) {
+      let data = filters?.filters
+      let categoryCodeOptions = data?.category_code?.map(item => {
+        return { label: item, value: item }
+      })
+      let categoryNameOptions = data?.category_name?.map(item => {
+        return { label: item, value: item }
+      })
+      let subCategoryCodeOptions = data?.sub_category_code?.map(item => {
+        return { label: item, value: item }
+      })
+      let subCategoryNameOptions = data?.sub_category_name?.map(item => {
+        return { label: item, value: item }
+      })
+      this.setState({
+        categoryCodeOptions,
+        categoryNameOptions,
+        subCategoryCodeOptions,
+        subCategoryNameOptions,
+      })
+    }
+    console.log(filters, 'filters');
     this.setState({ loading: true })
     const locations = await api.getLocations()
     let sites = locations?.result?.map((item => { return { label: item.site_name, value: item._id } }))
@@ -70,25 +121,37 @@ export class ThirdReport extends Component {
   }
   //////////////////////new handlers
   site_changeHandler = (e) => {
-    console.log(e?.value);
+    // console.log(e, 'values');
     this.setState({ site_Value: e })
-    let departs = this.state.locations.map((site => site?.departments.filter((department => department.site.includes(e?.value)))))
+    let departs = this.state.locations.map((site => site?.departments.filter((department => e.find((val => department.site.includes(val?.value)))))))
+    // console.log(departs, 'beforeFilter');
     departs = _.filter(departs, _.size)
-    departs = departs[0] ? departs[0] : departs
-    console.log(departs);
+    let merge = []
+    for (let index = 0; index < departs.length; index++) {
+      merge = merge.concat(departs[index])
+      // console.log(merge, 'afterFilter-loop');
+    }
+    // console.log(merge);
+    departs = merge
+    // console.log(departs, 'afterFilter');
     let departments = departs?.map((item => { return { label: item?.departement_name, value: item?._id } }))
     departments = [...departments, { label: 'all', value: '' }]
     console.log(departments);
     this.setState({ departmentOption: departments, locationsDepartments: departs })
-    console.log(departments);
+    // console.log(departments, "departments");
   }
   department_changeHandler = (e) => {
-    console.log(e?.value);
+    console.log(e);
     this.setState({ department_Value: e })
-    let zone = this.state.locationsDepartments?.map((department => department?.zones?.filter((zone => zone.departement.includes(e?.value)))))
+    let zone = this.state.locationsDepartments?.map((department => department?.zones?.filter((zone => zone.departement.includes(e.map((data => data?.value)))))))
     zone = _.filter(zone, _.size)
-    zone = zone[0] ? zone[0] : zone
-    // zone = zone.length > 0 ? zone : [{ label: 'all', value: '' }]
+    let merge = []
+    for (let index = 0; index < zone.length; index++) {
+      merge = merge.concat(zone[index])
+      // console.log(merge, 'afterFilter-loop');
+    }
+    // console.log(merge);
+    zone = merge
     let zones = zone?.map((item => { return { label: item.zone_name, value: item._id } }))
     // zones = zones.length > 0 ? zones : [{ label: 'all', value: '' }]
     console.log(zones);
@@ -98,8 +161,24 @@ export class ThirdReport extends Component {
     console.log(zones);
   }
   zone_changeHandler = (e) => {
-    console.log(e?.value);
+    console.log(e);
     this.setState({ zone_Value: e })
+  }
+  categoryCode_changeHandler = (e) => {
+    console.log(e);
+    this.setState({ categoryCode_Value: e })
+  }
+  categoryName_changeHandler = (e) => {
+    console.log(e);
+    this.setState({ categoryName_Value: e })
+  }
+  subCategoryCode_changeHandler = (e) => {
+    console.log(e);
+    this.setState({ subCategoryCode_Value: e })
+  }
+  subCategoryName_changeHandler = (e) => {
+    console.log(e);
+    this.setState({ subCategoryName_Value: e })
   }
 
   assetEPC_changeHandler = (e) => {
@@ -130,27 +209,26 @@ export class ThirdReport extends Component {
     console.log(e);
     this.setState({ modificationDate_Value: e })
   }
-  maintenanceTime_changeHandler = (e) => {
-    console.log(e?.value);
-    this.setState({ maintenanceTime: e })
-  }
   onSubmitEvent = () => {
     console.log("User");
   };
   searchFunction = () => {
-    // e.preventDefault();
+    let newARR = []
+    newARR = [...newARR, this.state.assetsDetailsNew.filter((item => {
+      const then = new Date(item?.maintenanceDate)
+
+      const now = new Date();
+      const msBetweenDates = Math.abs(then.getTime() - now.getTime());
+
+      // 👇️ convert ms to days                 hour   min  sec   ms
+      const daysBetweenDates = msBetweenDates / (24 * 60 * 60 * 1000);
+      if (daysBetweenDates < this.state.mainTime) {
+        return item
+      }
+    }))]
+    console.log(newARR);
     this.setState({
-      assetsDetails: FilterFunction({
-        data: this.state.assetsDetailsNew,
-        filters: {
-          site_Value: this.state.site_Value?.label === 'all' ? '' : this.state.site_Value?.label,
-          zone_Value: this.state.zone_Value?.label === 'all' ? '' : this.state.zone_Value?.label,
-          department_Value: this.state.department_Value.label === 'all' ? '' : this.state.department_Value.label,
-          assetEPC_Value: this.state.assetEPC_Value || '',
-          createdAt: this.state.creationDate_Value || '',
-          // zoneFilter: ''
-        }
-      })
+      assetsDetails: newARR[0]
     });
   };
   dateCompareCreation = (sDate, eDate) => {
@@ -180,15 +258,18 @@ export class ThirdReport extends Component {
     return false;
   };
   runFunction = async () => {
+    let sites = this.state.site_Value?.some((item => item.label === 'all'))
+    let zones = this.state.zone_Value?.some((item => item.label === 'all'))
+    let depaets = this.state.department_Value?.some((item => item.label === 'all'))
+    console.log(sites);
     this.setState({ loading: true });
     const assetRoutes = await api.getSohByParams({
-      siteId: this.state.site_Value?.value || null,
-      zoneId: this.state.zone_Value?.value || null,
-      departementId: this.state.department_Value?.value || null,
+      siteId: sites ? null : this.state.site_Value?.map((item => item.value)),
+      zoneId: zones ? null : this.state.zone_Value?.map((item => item.value)),
+      departementId: depaets ? null : this.state.department_Value?.map((item => item.value)),
       description: this.state.description_Value || null,
       ownerName: this.state.ownerName_Value || null,
       asset_EPC: this.state.assetEPC_Value || null,
-      serialNumber: this.state.Odoo_Tag_Value || null,
       assetValue: this.state.assetStatus_Value || null,
     })
     console.log(assetRoutes, "assetsDetails");
@@ -199,30 +280,10 @@ export class ThirdReport extends Component {
 
     if (assetRoutes) {
       await this.setState({ loading: false });
-      console.log(assetRoutes.map((item => item?.maintenanceDate)), "assetsDetails");
-      // this.setState({
-      //     assetsDetails: FilterFunction({
-      //         data: this.state.assetsDetailsNew,
-      //         filters: {
-      //             site_Value: this.state.site_Value?.label === 'all' ? '' : this.state.site_Value?.label,
-      //             zone_Value: this.state.zone_Value?.label === 'all' ? '' : this.state.zone_Value?.label,
-      //             department_Value: this.state.department_Value.label === 'all' ? '' : this.state.department_Value.label,
-      //             assetEPC_Value: this.state.assetEPC_Value || '',
-      //             Odoo_Tag_Value: this.state.Odoo_Tag_Value || '',
-      //             ownerName_Value: this.state.ownerName_Value || '',
-      //             description_Value: this.state.description_Value || '',
-      //             assetStatus_Value: this.state.assetStatus_Value || '',
-      //             createdAt: this.state.creationDate_Value || '',
-      //             updatedAt: this.state.modificationDate_Value || '',
-      //             // zoneFilter: ''
-      //         }
-      //     })
-      // })
-
-      // await this.searchFunction()
+      this.searchFunction()
+      // console.log(assetRoutes.filter((item => item?.asset_EPC.includes("E2000016170F02380880C293"))), "assetsDetails");
     }
   };
-
 
   handleClickOpen = (device) => {
     this.setState({ openModal: true })
@@ -232,60 +293,9 @@ export class ThirdReport extends Component {
   handleClose = () => {
     this.setState({ openModal: false })
   }
-  csvUploader = (e) => {
-    console.log(e.target.files[0]);
-    const files = e.target.files;
-    console.log(files);
-    if (files) {
-
-      Papa.parse(files[0], {
-        header: true,
-        complete: results => {
-          console.log(results.data)
-        },
-      })
-    } else {
-      return toast.error("Please Upload Csv")
-    }
-  }
-
-
   render() {
-    const maintenanceOptions = [
-      { label: 5, value: 5 },
-      { label: 10, value: 10 },
-      { label: 15, value: 15 },
-      { label: 20, value: 20 },
-      { label: 25, value: 25 },
-      { label: 30, value: 30 },
-    ]
 
-    const customStyles = {
-      control: (base, state) => ({
-        ...base,
-        marginTop: 10,
-        backgroundColor: "transparent",
-        color: 'black',
-      }),
-      menu: (base) => ({
-        ...base,
-        zIndex: 30, color: 'black',
-      }),
-      singleValue: (provided, state) => {
-        const opacity = state.isDisabled ? 0.5 : 1;
-        const transition = "opacity 300ms";
-        return { ...provided, opacity, transition, color: "white" };
-      },
-    };
     const headers = [
-      {
-        label: "createdAt",
-        key: "createdAt",
-      },
-      {
-        label: "ownerName",
-        key: "ownerName",
-      },
       {
         label: "asset_EPC",
         key: "asset_EPC",
@@ -295,85 +305,98 @@ export class ThirdReport extends Component {
         key: "serialNumber",
       },
       {
-        label: "departementId",
-        key: "departementId",
+        label: "SITE",
+        key: "site",
       },
       {
-        label: "zoneId",
-        key: "zoneId",
+        label: "CATEGORY_CODE",
+        key: "category_code",
       },
       {
-        label: "location",
-        key: "location",
+        label: "CATEGORY_NAME",
+        key: "category_name",
       },
       {
-        label: "inventoryDate",
-        key: "inventoryDate",
+        label: "SUB_CATEGORY_CODE",
+        key: "sub_category_code",
       },
       {
-        label: "updatedAt",
-        key: "updatedAt",
+        label: "SUB_CATEGORY_NAME",
+        key: "sub_category_name",
       },
       {
-        label: "assetStatus",
-        key: "assetStatus",
+        label: "departement",
+        key: "departement_name",
       },
       {
-        label: "assetValue",
-        key: "assetValue",
+        label: "zone",
+        key: "zone",
       },
       {
-        label: "siteId",
-        key: "siteId",
+        label: "ownerName",
+        key: "ownerName",
       },
       {
         label: "description",
         key: "description",
       },
       {
-        label: "sub_category_code",
-        key: "sub_category_code",
+        label: "assetStatus",
+        key: "assetStatus",
       },
       {
-        label: "sub_category_name",
-        key: "sub_category_name",
+        label: "ACQUISITION_DATE",
+        key: "ACQUISITION_DATE",
       },
       {
-        label: "category_code",
-        key: "category_code",
+        label: "createdAt",
+        key: "createdAt",
       },
       {
-        label: "category_name",
-        key: "category_name",
+        label: "updatedAt",
+        key: "updatedAt",
       },
       {
-        label: "imageLink",
-        key: "imageLink",
+        label: "DEPRECIATION",
+        key: "DEPRECIATION",
+      },
+      {
+        label: "NBV",
+        key: "NBV",
+      },
+      {
+        label: "REMARKS",
+        key: "REMARKS",
+      },
+      {
+        label: "maintenanceDate",
+        key: "maintenanceDate",
       },
     ];
     const data = this.state.assetsDetails.map((item) => {
       return {
-        createdAt: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
-        ownerName: item?.ownerName || "----",
         asset_EPC: item?.asset_EPC || "----",
         serialNumber: item?.serialNumber || "----",
-        departementId: item?.departementId?.departement_name || "----",
-        zoneId: item?.zoneId?.zone_name || "----",
-        location: item?.location || "----",
-        inventoryDate: new Date(item?.inventoryDate).toLocaleString('en-Us', "Asia/Muscat") || "----",
-        updatedAt: new Date(item?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
-        assetStatus: item?.assetStatus || "----",
-        assetValue: item?.assetValue || "----",
-        siteId: item?.siteId?.site_name || "----",
-        description: item?.description || "----",
-        sub_category_code: item?.sub_category_code || "----",
-        sub_category_name: item?.sub_category_name || "----",
+        site: item?.siteId?.site_name || "----",
         category_code: item?.category_code || "----",
         category_name: item?.category_name || "----",
-        imageLink: item?.imageLink || "----",
-        // Asset_Image: item?.image,
+        sub_category_code: item?.sub_category_code || "----",
+        sub_category_name: item?.sub_category_name || "----",
+        departement_name: item?.departementId?.departement_name || "----",
+        zone: item?.zoneId?.zone_name || "----",
+        ownerName: item?.ownerName || "----",
+        description: item?.description || "----",
+        assetStatus: item?.assetStatus || "----",
+        ACQUISITION_DATE: item?.ACQUISITION_DATE || "----",
+        createdAt: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || '----',
+        updatedAt: new Date(item?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
+        DEPRECIATION: item?.DEPRECIATION || "----",
+        NBV: item?.NBV || "----",
+        REMARKS: item?.REMARKS || "----",
+        maintenanceDate: item?.maintenanceDate || "----",
       }
     })
+    console.log(this.state.assetsDetails, "asdfasdf");
     return (
       <React.Fragment>
         <CustomModal data={this.state.QrCode} brcode={true} image={true} open={this.state.openModal} handleClose={() => this.handleClose()} handleClickOpen={() => this.handleClickOpen} />
@@ -422,7 +445,7 @@ export class ThirdReport extends Component {
                   )}
                 </IconButton>
                 <PeopleIcon htmlColor="black" className="ml-4 mr-4" />
-                <h1 className="dashboard-heading">Item Master (Report)</h1>
+                <h1 className="dashboard-heading">Maintenance (Report)</h1>
                 <Button
                   onClick={() => this.runFunction()}
                   type="submit"
@@ -432,7 +455,7 @@ export class ThirdReport extends Component {
                 >
                   Run
                 </Button>
-                <Button
+                {/* <Button
                   onClick={() => this.searchFunction()}
                   type="submit"
                   color={"secondary"}
@@ -440,10 +463,10 @@ export class ThirdReport extends Component {
                   style={{ position: "absolute", right: "190px" }}
                 >
                   Search
-                </Button>
+                </Button> */}
                 {/* <CSVReader /> */}
                 <IconButton style={{ position: "absolute", right: "90px", cursor: 'pointer' }}>
-                  <CSVLink filename="Item Master Report" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: 60 }} data={data} headers={headers}>
+                  <CSVLink filename="Maintenance Report" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: 60 }} data={data} headers={headers}>
                     <SystemUpdateAltIcon fontSize="large" htmlColor="black" />
                     <h1 className="dashboard-heading" style={{ fontSize: '15px' }} >CSV</h1>
                   </CSVLink>
@@ -460,12 +483,22 @@ export class ThirdReport extends Component {
                   zone_Value={this.state.zone_Value}
                   department_Value={this.state.department_Value}
                   assetEPC_Value={this.state.assetEPC_Value}
+                  Odoo_Tag_Value={this.state.Odoo_Tag_Value}
+                  ownerName_Value={this.state.ownerName_Value}
+                  description_Value={this.state.description_Value}
+                  assetStatus_Value={this.state.assetStatus_Value}
                   creationDate_Value={this.state.creationDate_Value}
+                  modificationDate_Value={this.state.modificationDate_Value}
                   site_changeHandler={this.site_changeHandler}
                   zone_changeHandler={this.zone_changeHandler}
                   department_changeHandler={this.department_changeHandler}
                   assetEPC_changeHandler={this.assetEPC_changeHandler}
+                  Odoo_Tag_changeHandler={this.Odoo_Tag_changeHandler}
+                  ownerName_changeHandler={this.ownerName_changeHandler}
+                  description_changeHandler={this.description_changeHandler}
+                  assetStatus_changeHandler={this.assetStatus_changeHandler}
                   creationDate_changeHandler={this.creationDate_changeHandler}
+                  modificationDate_changeHandler={this.modificationDate_changeHandler}
                   sitesOption={this.state.sitesOption}
                   zoneOption={this.state.zoneOption}
                   departmentOption={this.state.departmentOption}
@@ -473,16 +506,17 @@ export class ThirdReport extends Component {
                   zoneFilter
                   departmentFilter
                   assetEPCFilter
-                  creationDateFilter
+                  ownerNameFilter
+                  descriptionFilter
+                  assetStatusFilter
                 >
-                  <Select
-                    value={this.state.maintenanceTime}
-                    onChange={this.maintenanceTime_changeHandler}
-                    options={maintenanceOptions}
-                    isSearchable={true}
-                    placeholder={this.state.maintenanceTime || "Zero"}
-                    className="last-scan-select-2"
-                    styles={customStyles}
+                  <BasicTextFields
+                    type={'numeric'}
+                    margin={10}
+                    name="Maintenance Time"
+                    placeholder={"Maintenance Time"}
+                    value={this.state.mainTime}
+                    onChangeEvent={this.mainTimeHandler}
                   />
                 </Filters>
               </Collapse>
@@ -501,7 +535,7 @@ export class ThirdReport extends Component {
                   </Button>
                 </CSVLink> */}
               </div>
-              <ItemMasterTable openModal={(device) => this.handleClickOpen(device)} asn={this.state.assetsDetails} />
+              <ItemMasterTable  openModal={(device) => this.handleClickOpen(device)} asn={this.state.assetsDetails} />
             </div>
           </div>
         </div>
@@ -510,4 +544,4 @@ export class ThirdReport extends Component {
   }
 }
 
-export default ThirdReport;
+export default ItemMasterReport;

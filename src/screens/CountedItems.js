@@ -72,9 +72,9 @@ export class CountedItems extends Component {
         sitesOption: [{ label: "all", value: '' }],
         zoneOption: [{ label: "all", value: '' }],
         departmentOption: [{ label: "all", value: '' }],
-        site_Value: '',
-        zone_Value: '',
-        department_Value: '',
+        site_Value: [],
+        zone_Value: [],
+        department_Value: [],
         assetEPC_Value: '',
         Odoo_Tag_Value: '',
         ownerName_Value: '',
@@ -84,9 +84,39 @@ export class CountedItems extends Component {
         modificationDate_Value: '',
         locations: [],
         locationsDepartments: [],
+        categoryCode_Value: [],
+        categoryName_Value: [],
+        subCategoryCode_Value: [],
+        subCategoryName_Value: [],
+        categoryCodeOptions: [],
+        categoryNameOptions: [],
+        subCategoryCodeOptions: [],
+        subCategoryNameOptions: [],
     };
     async componentDidMount() {
         this.setState({ loading: true })
+        const filters = await api.getFilters()
+        if (filters) {
+            let data = filters?.filters
+            let categoryCodeOptions = data?.category_code?.map(item => {
+                return { label: item, value: item }
+            })
+            let categoryNameOptions = data?.category_name?.map(item => {
+                return { label: item, value: item }
+            })
+            let subCategoryCodeOptions = data?.sub_category_code?.map(item => {
+                return { label: item, value: item }
+            })
+            let subCategoryNameOptions = data?.sub_category_name?.map(item => {
+                return { label: item, value: item }
+            })
+            this.setState({
+                categoryCodeOptions,
+                categoryNameOptions,
+                subCategoryCodeOptions,
+                subCategoryNameOptions,
+            })
+        }
         const locations = await api.getLocations()
         let sites = locations?.result?.map((item => { return { label: item.site_name, value: item._id } }))
         if (locations) {
@@ -97,25 +127,37 @@ export class CountedItems extends Component {
     }
     //////////////////////////////
     site_changeHandler = (e) => {
-        console.log(e?.value);
+        // console.log(e, 'values');
         this.setState({ site_Value: e })
-        let departs = this.state.locations.map((site => site?.departments.filter((department => department.site.includes(e?.value)))))
+        let departs = this.state.locations.map((site => site?.departments.filter((department => e.find((val => department.site.includes(val?.value)))))))
+        // console.log(departs, 'beforeFilter');
         departs = _.filter(departs, _.size)
-        departs = departs[0] ? departs[0] : departs
-        console.log(departs);
+        let merge = []
+        for (let index = 0; index < departs.length; index++) {
+            merge = merge.concat(departs[index])
+            // console.log(merge, 'afterFilter-loop');
+        }
+        // console.log(merge);
+        departs = merge
+        // console.log(departs, 'afterFilter');
         let departments = departs?.map((item => { return { label: item?.departement_name, value: item?._id } }))
         departments = [...departments, { label: 'all', value: '' }]
         console.log(departments);
         this.setState({ departmentOption: departments, locationsDepartments: departs })
-        console.log(departments);
+        // console.log(departments, "departments");
     }
     department_changeHandler = (e) => {
-        console.log(e?.value);
+        console.log(e);
         this.setState({ department_Value: e })
-        let zone = this.state.locationsDepartments?.map((department => department?.zones?.filter((zone => zone.departement.includes(e?.value)))))
+        let zone = this.state.locationsDepartments?.map((department => department?.zones?.filter((zone => zone.departement.includes(e.map((data => data?.value)))))))
         zone = _.filter(zone, _.size)
-        zone = zone[0] ? zone[0] : zone
-        // zone = zone.length > 0 ? zone : [{ label: 'all', value: '' }]
+        let merge = []
+        for (let index = 0; index < zone.length; index++) {
+            merge = merge.concat(zone[index])
+            // console.log(merge, 'afterFilter-loop');
+        }
+        // console.log(merge);
+        zone = merge
         let zones = zone?.map((item => { return { label: item.zone_name, value: item._id } }))
         // zones = zones.length > 0 ? zones : [{ label: 'all', value: '' }]
         console.log(zones);
@@ -125,8 +167,24 @@ export class CountedItems extends Component {
         console.log(zones);
     }
     zone_changeHandler = (e) => {
-        console.log(e?.value);
+        console.log(e);
         this.setState({ zone_Value: e })
+    }
+    categoryCode_changeHandler = (e) => {
+        console.log(e);
+        this.setState({ categoryCode_Value: e })
+    }
+    categoryName_changeHandler = (e) => {
+        console.log(e);
+        this.setState({ categoryName_Value: e })
+    }
+    subCategoryCode_changeHandler = (e) => {
+        console.log(e);
+        this.setState({ subCategoryCode_Value: e })
+    }
+    subCategoryName_changeHandler = (e) => {
+        console.log(e);
+        this.setState({ subCategoryName_Value: e })
     }
 
     assetEPC_changeHandler = (e) => {
@@ -175,25 +233,21 @@ export class CountedItems extends Component {
         console.log("User");
     };
     searchFunction = () => {
-
         this.setState({
             assetsDetails:
                 FilterFunction({
                     data: this.state.assetsDetailsNew,
                     filters: {
-                        site_Value: this.state.site_Value?.label === 'all' ? '' : this.state.site_Value?.label,
-                        zone_Value: this.state.zone_Value?.label === 'all' ? '' : this.state.zone_Value?.label,
-                        department_Value: this.state.department_Value.label === 'all' ? '' : this.state.department_Value.label,
-                        assetEPC_Value: this.state.assetEPC_Value || '',
-                        Odoo_Tag_Value: this.state.Odoo_Tag_Value || '',
-                        ownerName_Value: this.state.ownerName_Value || '',
-                        description_Value: this.state.description_Value || '',
-                        assetStatus_Value: this.state.assetStatus_Value || '',
+                        // site_Value: this.state.site_Value[0]?.label === 'all' ? [{ label: '' }] : this.state.site_Value,
+                        // zone_Value: this.state.zone_Value[0]?.label === 'all' ? [{ label: '' }] : this.state.zone_Value,
+                        // department_Value: this.state.department_Value[0]?.label === 'all' ? [{ label: '' }] : this.state.department_Value,
+                        // assetEPC_Value: this.state.assetEPC_Value || '',
+                        // Odoo_Tag_Value: this.state.Odoo_Tag_Value || '',
+                        // ownerName_Value: this.state.ownerName_Value || '',
+                        // description_Value: this.state.description_Value || '',
+                        // assetStatus_Value: this.state.assetStatus_Value || '',
                         createdAt: this.state.creationDate_Value || '',
                         updatedAt: this.state.modificationDate_Value || '',
-                        // onlyDepartment: this.state.site_Value?.label === 'all' ? '' : this.state.site_Value?.label,
-                        // onlySite: this.state.zone_Value?.label === 'all' ? '' : this.state.zone_Value?.label,
-                        // onlyZone: this.state.department_Value.label === 'all' ? '' : this.state.department_Value.label,
                         // zoneFilter: ''
                     }
                 })
@@ -245,8 +299,50 @@ export class CountedItems extends Component {
         if (this.state.site_Value && this.state.zoneOption === '') {
             return toast.error("Please Select Zite and Zone")
         } else {
-            const CountedItems = await api.getCountedItemsByParams(this.state.site_Value?.value, this.state.zone_Value?.value);
-            const assetBySOH = await api.getAssetsBySohWithParam(this.state.site_Value?.value, this.state.zone_Value?.value);
+            let sites = this.state.site_Value?.some((item => item.label === 'all'))
+            let zones = this.state.zone_Value?.some((item => item.label === 'all'))
+            let depaets = this.state.department_Value?.some((item => item.label === 'all'))
+            let category_code = this.state.categoryCode_Value?.some((item => item.label === 'all'))
+            let category_name = this.state.categoryName_Value?.some((item => item.label === 'all'))
+            let sub_category_code = this.state.subCategoryCode_Value?.some((item => item.label === 'all'))
+            let sub_category_name = this.state.subCategoryName_Value?.some((item => item.label === 'all'))
+            console.log(sites);
+            this.setState({ loading: true });
+            const assetBySOH = await api.getSohByParams({
+                siteId: sites ? null : this.state.site_Value?.map((item => item.value)),
+                zoneId: zones ? null : this.state.zone_Value?.map((item => item.value)),
+                departementId: depaets ? null : this.state.department_Value?.map((item => item.value)),
+                category_code: category_code ? null : this.state.categoryCode_Value.map((item => item.value)),
+                category_name: category_name ? null : this.state.categoryName_Value?.map((item => item.value)),
+                sub_category_code: sub_category_code ? null : this.state.subCategoryCode_Value?.map((item => item.value)),
+                sub_category_name: sub_category_name ? null : this.state.subCategoryName_Value?.map((item => item.value)),
+                description: this.state.description_Value || null,
+                ownerName: this.state.ownerName_Value || null,
+                asset_EPC: this.state.assetEPC_Value || null,
+                serialNumber: this.state.Odoo_Tag_Value || null,
+                assetValue: this.state.assetStatus_Value || null,
+                createdAt: this.state.creationDate_Value || null,
+                assetValue: this.state.assetStatus_Value || null,
+            })
+            const CountedItems = await api.getCountedItemsByParams(
+                {
+                    siteId: sites ? null : this.state.site_Value?.map((item => item.value)),
+                    zoneId: zones ? null : this.state.zone_Value?.map((item => item.value)),
+                    departementId: depaets ? null : this.state.department_Value?.map((item => item.value)),
+                    category_code: category_code ? null : this.state.categoryCode_Value.map((item => item.value)),
+                    category_name: category_name ? null : this.state.categoryName_Value?.map((item => item.value)),
+                    sub_category_code: sub_category_code ? null : this.state.subCategoryCode_Value?.map((item => item.value)),
+                    sub_category_name: sub_category_name ? null : this.state.subCategoryName_Value?.map((item => item.value)),
+                    description: this.state.description_Value || null,
+                    ownerName: this.state.ownerName_Value || null,
+                    asset_EPC: this.state.assetEPC_Value || null,
+                    serialNumber: this.state.Odoo_Tag_Value || null,
+                    assetValue: this.state.assetStatus_Value || null,
+                    createdAt: this.state.creationDate_Value || null,
+                    assetValue: this.state.assetStatus_Value || null,
+                }
+            );
+            // const assetBySOH = await api.getAssetsBySohWithParam(this.state.site_Value?.value, this.state.zone_Value?.value);
             if (CountedItems && assetBySOH) {
                 let newArray = []
                 newArray = await newArray.concat(CountedItems, assetBySOH)
@@ -284,49 +380,25 @@ export class CountedItems extends Component {
     runFunctionSearch = async (counted, allSoh) => {
         this.setState({ loading: true });
         let newArray = []
-        // var matched = []
-        // var newData = []
-        // for (var j = 0; j < counted.length; j++) {
-        //     for (var i = 0; i < allSoh.length; i++) {
-        //         if (allSoh[i].asset_EPC === counted[j].asset_EPC) {
-        //             matched.push(allSoh[i])
-        //         }
-        //         else {
-        //             allSoh[i].status = "unders"
-        //             counted[j].status = "overs"
-        //             newData = newData.concat(allSoh, counted)
-        //         }
-        //     }
-        // }
-        // let gropasdf = _.groupBy(newData, 'status')
-        // console.log(gropasdf, 'asd');
         let Solutuion = allSoh.map(f => ({
             ...f,
             Matched: counted.find(item => item?.asset_EPC === f.asset_EPC) ? true : false,
             // MatchedColor: counted.some(item => item?.asset_EPC === f.asset_EPC) ? 'green' : 'gray',
         }));
-
-        console.log(allSoh.filter((item => item.asset_EPC === "E2000016170F00310900BD16")), "soh");
-        console.log(counted.filter((item => item.asset_EPC === "E2000016170F00310900BD16")), "counted");
         let SolutuionTwo = counted.map(f => ({
             ...f,
             OversCounted: allSoh.find(item => item?.asset_EPC === f.asset_EPC) ? false : true,
-            // MatchedColor: allSoh.some(item => item?.asset_EPC !== f.asset_EPC) ? '' : 'red',
         }));
 
         SolutuionTwo = SolutuionTwo.filter((item => item?.OversCounted === true))
         newArray = await newArray.concat(Solutuion, SolutuionTwo)
         newArray = newArray.filter((item => item.Matched === true || item.Matched === false || item.OversCounted === true))
-        // let shuffled = newArray
-        //     .map(value => ({ value, sort: Math.random() }))
-        //     .sort((a, b) => a.sort - b.sort)
-        //     .map(({ value }) => value)
-        // console.log(shuffled, "newArray-new");
         await this.setState({
             assetsDetails: newArray,
             assetsDetailsNew: newArray,
 
         });
+        this.searchFunction()
         this.setState({ loading: false });
     };
     handleClickOpen = (device) => {
@@ -355,14 +427,6 @@ export class CountedItems extends Component {
     render() {
         const headers = [
             {
-                label: "createdAt",
-                key: "createdAt",
-            },
-            {
-                label: "ownerName",
-                key: "ownerName",
-            },
-            {
                 label: "asset_EPC",
                 key: "asset_EPC",
             },
@@ -371,87 +435,100 @@ export class CountedItems extends Component {
                 key: "serialNumber",
             },
             {
-                label: "departementId",
-                key: "departementId",
+                label: "SITE",
+                key: "site",
             },
             {
-                label: "zoneId",
-                key: "zoneId",
+                label: "CATEGORY_CODE",
+                key: "category_code",
             },
             {
-                label: "location",
-                key: "location",
+                label: "CATEGORY_NAME",
+                key: "category_name",
             },
             {
-                label: "inventoryDate",
-                key: "inventoryDate",
+                label: "SUB_CATEGORY_CODE",
+                key: "sub_category_code",
             },
             {
-                label: "updatedAt",
-                key: "updatedAt",
+                label: "SUB_CATEGORY_NAME",
+                key: "sub_category_name",
             },
             {
-                label: "assetStatus",
-                key: "assetStatus",
+                label: "departement",
+                key: "departement_name",
             },
             {
-                label: "assetValue",
-                key: "assetValue",
+                label: "zone",
+                key: "zone",
             },
             {
-                label: "siteId",
-                key: "siteId",
+                label: "ownerName",
+                key: "ownerName",
             },
             {
                 label: "description",
                 key: "description",
             },
             {
-                label: "sub_category_code",
-                key: "sub_category_code",
+                label: "assetStatus",
+                key: "assetStatus",
             },
             {
-                label: "sub_category_name",
-                key: "sub_category_name",
+                label: "ACQUISITION_DATE",
+                key: "ACQUISITION_DATE",
             },
             {
-                label: "category_code",
-                key: "category_code",
+                label: "createdAt",
+                key: "createdAt",
             },
             {
-                label: "category_name",
-                key: "category_name",
+                label: "updatedAt",
+                key: "updatedAt",
             },
             {
-                label: "imageLink",
-                key: "imageLink",
+                label: "DEPRECIATION",
+                key: "DEPRECIATION",
+            },
+            {
+                label: "NBV",
+                key: "NBV",
+            },
+            {
+                label: "REMARKS",
+                key: "REMARKS",
+            },
+            {
+                label: "maintenanceDate",
+                key: "maintenanceDate",
             },
         ];
+
         let arr = []
 
 
         const data = this.state.assetsDetails !== true ?
             this.state.assetsDetails.map((item) => {
                 return {
-                    createdAt: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
-                    ownerName: item?.ownerName || "----",
                     asset_EPC: item?.asset_EPC || "----",
                     serialNumber: item?.serialNumber || "----",
-                    departementId: item?.departementId?.departement_name || "----",
-                    zoneId: item?.zoneId?.zone_name || "----",
-                    location: item?.location || "----",
-                    inventoryDate: new Date(item?.inventoryDate).toLocaleString('en-Us', "Asia/Muscat") || "----",
-                    updatedAt: new Date(item?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
-                    assetStatus: item?.assetStatus || "----",
-                    assetValue: item?.assetValue || "----",
-                    siteId: item?.siteId?.site_name || "----",
-                    description: item?.description || "----",
-                    sub_category_code: item?.sub_category_code || "----",
-                    sub_category_name: item?.sub_category_name || "----",
+                    site: item?.siteId?.site_name || "----",
                     category_code: item?.category_code || "----",
                     category_name: item?.category_name || "----",
-                    imageLink: item?.imageLink || "----",
-                    // Asset_Image: item?.image,
+                    sub_category_code: item?.sub_category_code || "----",
+                    sub_category_name: item?.sub_category_name || "----",
+                    departement_name: item?.departementId?.departement_name || "----",
+                    zone: item?.zoneId?.zone_name || "----",
+                    ownerName: item?.ownerName || "----",
+                    description: item?.description || "----",
+                    assetStatus: item?.assetStatus || "----",
+                    ACQUISITION_DATE: item?.ACQUISITION_DATE || "----",
+                    createdAt: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || '----',
+                    updatedAt: new Date(item?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
+                    DEPRECIATION: item?.DEPRECIATION || "----",
+                    NBV: item?.NBV || "----",
+                    REMARKS: item?.REMARKS || "----",
+                    maintenanceDate: item?.maintenanceDate || "----",
                 }
             }) : arr
         return (
@@ -578,7 +655,7 @@ export class CountedItems extends Component {
                                     </form>
                                 </div> */}
                                 <Filters
-                                    site_Value={this.state.site_Value}
+                                    ite_Value={this.state.site_Value}
                                     zone_Value={this.state.zone_Value}
                                     department_Value={this.state.department_Value}
                                     assetEPC_Value={this.state.assetEPC_Value}
@@ -611,6 +688,22 @@ export class CountedItems extends Component {
                                     assetStatusFilter
                                     creationDateFilter
                                     modificationDateFilter
+                                    categoryCode_changeHandler={this.categoryCode_changeHandler}
+                                    categoryName_changeHandler={this.categoryName_changeHandler}
+                                    subCategoryCode_changeHandler={this.subCategoryCode_changeHandler}
+                                    subCategoryName_changeHandler={this.subCategoryName_changeHandler}
+                                    categoryCodeOption={this.state.categoryCodeOptions}
+                                    categoryNameOption={this.state.categoryNameOptions}
+                                    subCategoryCodeOption={this.state.subCategoryCodeOptions}
+                                    subCategoryNameOption={this.state.subCategoryNameOptions}
+                                    categoryCode_Value={this.state.categoryCode_Value}
+                                    categoryName_Value={this.state.categoryName_Value}
+                                    subCategoryCode_Value={this.state.subCategoryCode_Value}
+                                    subCategoryName_Value={this.state.subCategoryName_Value}
+                                    categoryCodeFilter
+                                    categoryNameFilter
+                                    subCategoryCodeFilter
+                                    subCategoryNameFilter
                                 >
                                     <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
                                         <Button color={"primary"} variant="contained" onClick={() => this.matchedFunction()} >Matched</Button>

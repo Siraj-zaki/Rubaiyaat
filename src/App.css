@@ -321,7 +321,7 @@ th {
   border: none !important
 }
 
-td {
+/* td {
   border: none !important;
   border-left: rgba(255, 255, 255, 0.555) !important;
   font-weight: normal !important;
@@ -329,7 +329,7 @@ td {
 
 th {
   background-color: rgba(45, 49, 58, 0.929) !important;
-}
+} */
 
 .MuiPaper-root {
   background-color: transparent !important;

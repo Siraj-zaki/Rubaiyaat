@@ -14,6 +14,7 @@ const formatDate = (date) => {
     // return console.log([year, month, day].join('-'))
 }
 export const FilterFunction = (params) => {
+
     let data =
         params?.data?.filter(item =>
             (!params?.filters?.site_Value ? true : params?.filters?.site_Value.find((element => item?.siteId?.site_name.includes(element.label))))

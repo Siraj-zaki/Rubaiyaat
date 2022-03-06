@@ -98,6 +98,10 @@ const getAssetsByAll = async (payLoad) => {
   const { data } = await axios.get(`${Path.GET_ASSETS_DETAILS_BY_ALL}`);
   return data;
 };
+const getFilters = async (payLoad) => {
+  const { data } = await axios.get(`${Path.GET_FILTERS}`);
+  return data;
+};
 const getStockOnHand = async (payLoad) => {
   const { data } = await axios.get(`${Path.GET_STOCK_ON_HAND}`);
   return data;
@@ -114,8 +118,8 @@ const getCountedItems = async (payLoad) => {
   const { data } = await axios.get(`${Path.GET_COUNTED_ITEMS}`, payLoad);
   return data;
 };
-const getCountedItemsByParams = async (site, zone) => {
-  const { data } = await axios.get(`${Path.GET_COUNTED_ITEMS_BY_PARAM}/${site}/${zone} `);
+const getCountedItemsByParams = async (payload) => {
+  const { data } = await axios.get(`${Path.GET_COUNTED_ITEMS_BY_PARAM}`, { params: payload });
   return data;
 };
 const EPCDetail = async (asn, operation) => {
@@ -190,5 +194,6 @@ export default {
   getZoneBySite,
   getSohByParams,
   getLocations,
+  getFilters,
 
 };

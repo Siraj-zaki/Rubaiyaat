@@ -27,7 +27,7 @@ const Path = {
   GET_BATCH_BY_IBT: `${BASE_URL}/asset/getAssetsByAsn`,
   GET_BATCH: `${BASE_URL}/batch/get`,
   GET_COUNTED_ITEMS: `${BASE_URL}/countedItems/get`,
-  GET_COUNTED_ITEMS_BY_PARAM: `${BASE_URL}/countedItems/get1`,
+  GET_COUNTED_ITEMS_BY_PARAM: `${BASE_URL}/countedItems/get_with_query`,
   GET_EPC_DETAIL: `${BASE_URL}/activity/get/by/`,
   GET_ASN_BY_EPC: `${BASE_URL}/activity/by/epc`,
   GET_ASSETS_SOH: `${BASE_URL}/asset/getSoh1/62036bc22e18dce8a9fbfa53/620a0772170ade002307b0b3`,
@@ -40,6 +40,7 @@ const Path = {
   GET_ASSETS_DETAILS_BY_EPC: `${BASE_URL}/assetDetailRoutes/getByEpc`,
   GET_ASSETS_DETAILS_BY_ALL: `${BASE_URL}/assetDetailRoutes/get`,
   GET_STOCK_ON_HAND: `${BASE_URL}/asset/getSoh/and/counted`,
+  GET_FILTERS: `${BASE_URL}/assetDetailRoutes/getFilters`,
 };
 
 export { Path };

@@ -8,6 +8,10 @@ export default function Filters({
     zoneFilter,
     departmentFilter,
     assetEPCFilter,
+    categoryCodeFilter,
+    categoryNameFilter,
+    subCategoryCodeFilter,
+    subCategoryNameFilter,
     Odoo_TagFilter,
     ownerNameFilter,
     descriptionFilter,
@@ -37,6 +41,18 @@ export default function Filters({
     assetStatus_changeHandler,
     creationDate_changeHandler,
     modificationDate_changeHandler,
+    categoryCode_changeHandler,
+    categoryName_changeHandler,
+    subCategoryCode_changeHandler,
+    subCategoryName_changeHandler,
+    categoryCodeOption,
+    categoryNameOption,
+    subCategoryCodeOption,
+    subCategoryNameOption,
+    categoryCode_Value,
+    categoryName_Value,
+    subCategoryCode_Value,
+    subCategoryName_Value,
     children
 
 }) {
@@ -47,7 +63,7 @@ export default function Filters({
             backgroundColor: 'transparent',
             height: 33,
             marginTop: 10,
-            color:'white',
+            color: 'white',
             // zIndex: 312312312312312
 
         }),
@@ -74,14 +90,14 @@ export default function Filters({
         }),
         input: base => ({
             ...base,
-            color:'white',
+            color: 'white',
         }),
         menuList: base => ({
             ...base,
             backgroundColor: 'black'
         }),
 
-        option: (provided,state) => ({
+        option: (provided, state) => ({
             ...provided,
             color: state.isFocused ? "black" : 'white',
             zIndex: 312312312312312
@@ -135,6 +151,33 @@ export default function Filters({
                         styles={customStyles}
                     />
                 }
+                {
+                    categoryCodeFilter &&
+                    <Select
+                        value={categoryCode_Value}
+                        onChange={categoryCode_changeHandler}
+                        options={categoryCodeOption}
+                        isMulti={true}
+                        isSearchable={true}
+                        placeholder={"Category Code"}
+                        className="last-scan-select-2"
+                        styles={customStyles}
+                    />
+                }
+                {
+                    categoryNameFilter &&
+                    <Select
+                        value={categoryName_Value}
+                        onChange={categoryName_changeHandler}
+                        options={categoryNameOption}
+                        isMulti={true}
+                        isSearchable={true}
+                        placeholder={"Category Name"}
+                        className="last-scan-select-2"
+                        styles={customStyles}
+                    />
+                }
+
 
                 {
                     descriptionFilter &&
@@ -161,6 +204,32 @@ export default function Filters({
             <div style={{ width: '1px', height: '100%', backgroundColor: 'white', position: 'absolute' }}></div>
             <form style={{ width: '50%', margin: 20, marginBottom: 0, display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 0, flexDirection: 'column' }}  >
                 {children}
+                {
+                    subCategoryCodeFilter &&
+                    <Select
+                        value={subCategoryCode_Value}
+                        onChange={subCategoryCode_changeHandler}
+                        options={subCategoryCodeOption}
+                        isMulti={true}
+                        isSearchable={true}
+                        placeholder={"Sub Category Code"}
+                        className="last-scan-select-2"
+                        styles={customStyles}
+                    />
+                }
+                {
+                    subCategoryNameFilter &&
+                    <Select
+                        value={subCategoryName_Value}
+                        onChange={subCategoryName_changeHandler}
+                        options={subCategoryNameOption}
+                        isMulti={true}
+                        isSearchable={true}
+                        placeholder={"Sub Category Name"}
+                        className="last-scan-select-2"
+                        styles={customStyles}
+                    />
+                }
                 {
                     assetEPCFilter &&
                     <BasicTextFields
