@@ -672,6 +672,32 @@ function ScrollableTabsButtonForce(props) {
             {permissions.includes("Associated_Items") ? (
               <NavLink
                 exact
+                to="/Reports/AssociatedReport"
+                className={`top-drawer-btn top-drawer-btn-${ActiveBtn6}`}
+                activeClassName="top-drawer-btn top-drawer-btn-active"
+              >
+                <DashboardIcon htmlColor="white" />
+                Associated Report
+              </NavLink>
+            ) : (
+              ""
+            )}
+            {permissions.includes("Associated_Items") ? (
+              <NavLink
+                exact
+                to="/Reports/ReTaggingReport"
+                className={`top-drawer-btn top-drawer-btn-${ActiveBtn6}`}
+                activeClassName="top-drawer-btn top-drawer-btn-active"
+              >
+                <DashboardIcon htmlColor="white" />
+                Re Tagging Report
+              </NavLink>
+            ) : (
+              ""
+            )}
+            {permissions.includes("Associated_Items") ? (
+              <NavLink
+                exact
                 to="/Reports/StockOnHand"
                 className={`top-drawer-btn top-drawer-btn-${ActiveBtn6}`}
                 activeClassName="top-drawer-btn top-drawer-btn-active"

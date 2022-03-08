@@ -11,6 +11,8 @@ import TablePagination from '@material-ui/core/TablePagination';
 import { Button, Modal } from '@material-ui/core';
 import BasicTextFields from './Input';
 import { Typography } from 'antd';
+import api from '../services/api';
+import { toast } from 'react-toastify';
 const useRowStyles = makeStyles({
     root: {
         backgroundColor: 'rgba(92, 92, 92, 1)',
@@ -50,7 +52,7 @@ function Row(props) {
         </React.Fragment >
     );
 }
-export default function ItemMasterTable({ asn, openModal, edit }) {
+export default function ItemMasterTable({ asn, openModal, edit, runFunction }) {
     const useStyles = makeStyles({
         root: {
             width: '100%',
@@ -68,10 +70,60 @@ export default function ItemMasterTable({ asn, openModal, edit }) {
     const classes = useStyles();
     const [page, setPage] = React.useState(0);
     const [data, setData] = React.useState([]);
+    const [rowData, setRowData] = React.useState('');
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [state, setState] = React.useState({
+        serialNumber: '',
+        asset_EPC: '',
+        category_code: '',
+        category_name: '',
+        sub_category_code: '',
+        sub_category_name: '',
+        ownerName: '',
+        assetStatus: '',
+        DEPRECIATION: '',
+        NBV: '',
+        REMARKS: '',
+        site: '',
+        zone: '',
+        department: '',
+    })
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
+    const handleChange = (evt) => {
+        console.log(evt.target.value);
+        console.log(evt.target.name);
+        const value = evt.target.value;
+        setState({
+            ...state,
+            [evt.target.name]: value
+        });
+    }
+
+    const handleEditApi = async () => {
+        let editData = {
+            serialNumber: rowData.serialNumber || state.serialNumber,
+            asset_EPC: rowData.asset_EPC || state.asset_EPC,
+            category_code: rowData.category_code || state.category_code,
+            category_name: rowData.category_name || state.category_name,
+            sub_category_code: rowData.sub_category_code || state.sub_category_code,
+            sub_category_name: rowData.sub_category_name || state.sub_category_name,
+            ownerName: rowData.ownerName || state.ownerName,
+            assetStatus: rowData.assetStatus || state.assetStatus,
+            DEPRECIATION: rowData.DEPRECIATION || state.DEPRECIATION,
+            NBV: rowData.NBV || state.NBV,
+            REMARKS: rowData.REMARKS || state.REMARKS,
+        }
+        const apiReq = await api.editSohByParams(editData, rowData?._id).then(res => {
+            setOpen(false)
+            toast.success("Asset Edit SuccessFully")
+            setTimeout(() => {
+                runFunction()
+            }, 500);
+        })
+        console.log(apiReq);
+    }
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
@@ -86,6 +138,10 @@ export default function ItemMasterTable({ asn, openModal, edit }) {
             setPage(0);
         }
     }, [asn]);
+    const editHandler = (row) => {
+        setOpen(!open)
+        setRowData(row)
+    }
 
     const handleClose = () => {
         setOpen(!open)
@@ -96,30 +152,233 @@ export default function ItemMasterTable({ asn, openModal, edit }) {
             <Modal
                 open={open}
                 onClose={handleClose}
+                fullScr
                 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}
             >
-                <div style={{ width: '60%', minHeight: "80%", background: 'lightgray', display: 'flex', justifyContent: 'space-evenly', alignItems: 'space-evenly', flexDirection: 'column' }}>
-                    <div style={{ width: '100%', minHeight: "100%", background: 'lightgray', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
-
-                        <div style={{ minWidth: 300, width: '45%', height: '85%', minHeight: '300px', flexDirection: 'column' }}>
+                <div style={{ width: '80%', height: "80%", background: "#2c2b2b", boxShadow: "0px 1px 5px 1px lightGray", borderRadius: 10, display: 'flex', justifyContent: 'space-evenly', alignItems: 'space-evenly', flexDirection: 'column', overflowY: 'scroll' }}>
+                    <div style={{ width: '100%', minHeight: "80%", display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', overflowY: 'scroll', paddingTop: 300 }}>
+                        <div style={{ minWidth: 300, width: '45%', minHeight: '300px', flexDirection: 'column', paddingBottom: 30, paddingTop: 30 }}>
                             <Typography colo>Current Values</Typography>
                             <BasicTextFields
                                 margin={10}
-                                placeholder="Category"
-                                name="Category"
-                                value={"asset Details"}
-                            // onChangeEvent={(e) =>
-                            //     this.setState({ Item_Category: e.target.value })
-                            // }
+                                disabled={true}
+                                placeholder="Serial Number"
+                                name="Serial Number"
+                                value={rowData.serialNumber}
+                            />
+                            <BasicTextFields
+                                margin={10}
+                                disabled={true}
+                                placeholder="asset_EPC"
+                                name="asset_EPC"
+                                value={rowData.asset_EPC}
+                            />
+                            {/* <BasicTextFields
+                                margin={10}
+                                disabled={true}
+                                placeholder="Site"
+                                name="Site"
+                                value={rowData.siteId?.site_name}
+                            /> */}
+                            <BasicTextFields
+                                margin={10}
+                                disabled={true}
+                                placeholder="category_code"
+                                name="category_code"
+                                value={rowData.category_code}
+                            />
+                            <BasicTextFields
+                                margin={10}
+                                disabled={true}
+                                placeholder="category_name"
+                                name="category_name"
+                                value={rowData.category_name}
+                            />
+                            <BasicTextFields
+                                margin={10}
+                                disabled={true}
+                                placeholder="sub_category_code"
+                                name="sub_category_code"
+                                value={rowData.sub_category_code}
+                            />
+                            <BasicTextFields
+                                margin={10}
+                                disabled={true}
+                                placeholder="sub_category_name"
+                                name="sub_category_name"
+                                value={rowData.sub_category_name}
+                            />
+                            {/* <BasicTextFields
+                                margin={10}
+                                disabled={true}
+                                placeholder="Department"
+                                name="Department"
+                                value={rowData.departementId?.departement_name}
+                            />
+                            <BasicTextFields
+                                margin={10}
+                                disabled={true}
+                                placeholder="Location"
+                                name="Location"
+                                value={rowData.zoneId?.zone_name}
+                            /> */}
+                            <BasicTextFields
+                                margin={10}
+                                disabled={true}
+                                placeholder="ownerName (Custodian)"
+                                name="ownerName (Custodian)"
+                                value={rowData.ownerName}
+                            />
+                            <BasicTextFields
+                                margin={10}
+                                disabled={true}
+                                placeholder="assetStatus"
+                                name="assetStatus"
+                                value={rowData.assetStatus}
+                            />
+                            <BasicTextFields
+                                margin={10}
+                                disabled={true}
+                                placeholder="DEPRECIATION"
+                                name="DEPRECIATION"
+                                value={rowData.DEPRECIATION}
+                            />
+                            <BasicTextFields
+                                margin={10}
+                                disabled={true}
+                                placeholder="NBV"
+                                name="NBV"
+                                value={rowData.NBV}
+                            />
+                            <BasicTextFields
+                                margin={10}
+                                disabled={true}
+                                placeholder="REMARKS"
+                                name="REMARKS"
+                                value={rowData.REMARKS}
                             />
                         </div>
-                        <div style={{ minWidth: 300, width: '45%', height: '85%', minHeight: '300px', flexDirection: 'column' }}>
+                        <div style={{ minWidth: 300, width: '45%', minHeight: '300px', flexDirection: 'column', paddingBottom: 30, paddingTop: 30 }}>
                             <Typography colo>New  Values</Typography>
+                            <BasicTextFields
+                                margin={10}
+                                customName={"serialNumber"}
+                                placeholder="serialNumber"
+                                name="serialNumber"
+                                value={state.serialNumber}
+                                onChangeEvent={(e) => handleChange(e)}
+                            />
+                            <BasicTextFields
+                                margin={10}
+                                onChangeEvent={(e) => handleChange(e)}
+
+                                placeholder="asset_EPC"
+                                name="asset_EPC"
+                                value={state.asset_EPC}
+                            />
+                            {/* <BasicTextFields
+                                margin={10}
+                                onChangeEvent={(e) => handleChange(e)}
+
+                                placeholder="site"
+                                name="site"
+                                value={state.site}
+                            /> */}
+                            <BasicTextFields
+                                margin={10}
+                                onChangeEvent={(e) => handleChange(e)}
+
+                                placeholder="category_code"
+                                name="category_code"
+                                value={state.category_code}
+                            />
+                            <BasicTextFields
+                                margin={10}
+                                onChangeEvent={(e) => handleChange(e)}
+
+                                placeholder="category_name"
+                                name="category_name"
+                                value={state.category_name}
+                            />
+                            <BasicTextFields
+                                margin={10}
+                                onChangeEvent={(e) => handleChange(e)}
+
+                                placeholder="sub_category_code"
+                                name="sub_category_code"
+                                value={state.sub_category_code}
+                            />
+                            <BasicTextFields
+                                margin={10}
+                                onChangeEvent={(e) => handleChange(e)}
+
+                                placeholder="sub_category_name"
+                                name="sub_category_name"
+                                value={state.sub_category_name}
+                            />
+                            {/* <BasicTextFields
+                                margin={10}
+                                onChangeEvent={(e) => handleChange(e)}
+
+                                placeholder="department"
+                                name="department"
+                                value={state.department}
+                            />
+                            <BasicTextFields
+                                margin={10}
+                                onChangeEvent={(e) => handleChange(e)}
+
+                                placeholder="zone"
+                                name="zone"
+                                value={state.zone}
+                            /> */}
+                            <BasicTextFields
+                                margin={10}
+                                onChangeEvent={(e) => handleChange(e)}
+
+                                placeholder="ownerName"
+                                name="ownerName"
+                                value={state.ownerName}
+                            />
+                            <BasicTextFields
+                                margin={10}
+                                onChangeEvent={(e) => handleChange(e)}
+
+                                placeholder="assetStatus"
+                                name="assetStatus"
+                                value={state.assetStatus}
+                            />
+                            <BasicTextFields
+                                margin={10}
+                                onChangeEvent={(e) => handleChange(e)}
+
+                                placeholder="DEPRECIATION"
+                                name="DEPRECIATION"
+                                value={state.DEPRECIATION}
+                            />
+                            <BasicTextFields
+                                margin={10}
+                                onChangeEvent={(e) => handleChange(e)}
+
+                                placeholder="NBV"
+                                name="NBV"
+                                value={state.NBV}
+                            />
+                            <BasicTextFields
+                                margin={10}
+                                onChangeEvent={(e) => handleChange(e)}
+
+                                placeholder="REMARKS"
+                                name="REMARKS"
+                                value={state.REMARKS}
+                            />
                         </div>
                     </div>
-                    <div style={{ width: '100%', display: 'flex', justifyContent: 'space-evenly', minHeight: 150 }}>
-                        sdf
+                    <div style={{ width: '100%', display: 'flex', justifyContent: 'space-evenly', minHeight: 80, marginTop: 10 }}>
+                        <Button style={{ width: '70px', height: '40px' }} variant='contained' onClick={() => handleEditApi()} >Save</Button>
+                        <Button style={{ width: '70px', height: '40px' }} variant='contained' onClick={() => setOpen(!open)} >Cancel</Button>
                     </div>
+
                 </div>
 
             </Modal>
@@ -173,7 +432,7 @@ export default function ItemMasterTable({ asn, openModal, edit }) {
                                                             <Button
                                                                 type="submit"
                                                                 color={"primary"}
-                                                                onClick={() => setOpen(true)}
+                                                                onClick={() => editHandler(row)}
                                                                 variant="contained"
 
                                                             >
@@ -240,7 +499,7 @@ export default function ItemMasterTable({ asn, openModal, edit }) {
                     <div style={{ width: '100%', height: '200px', backgroundColor: 'black', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         <h1>No Data</h1>
                     </div>
-                    }
+                }
             </Paper>
         </>
     );

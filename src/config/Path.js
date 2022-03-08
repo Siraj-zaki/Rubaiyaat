@@ -41,6 +41,7 @@ const Path = {
   GET_ASSETS_DETAILS_BY_ALL: `${BASE_URL}/assetDetailRoutes/get`,
   GET_STOCK_ON_HAND: `${BASE_URL}/asset/getSoh/and/counted`,
   GET_FILTERS: `${BASE_URL}/assetDetailRoutes/getFilters`,
+  EDIT_ASSET_DETAIL: `${BASE_URL}/assetDetailRoutes/edit`,
 };
 
 export { Path };

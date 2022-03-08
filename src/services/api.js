@@ -136,6 +136,10 @@ const getSohByParams = async (payload) => {
   const { data } = await axios.get(`${Path.GET_SOH_BY_PARAMS}`, { params: payload });
   return data;
 };
+const editSohByParams = async (payload, id) => {
+  const { data } = await axios.put(`${Path.EDIT_ASSET_DETAIL}/${id}`, payload);
+  return data;
+};
 const getLocations = async (payload) => {
   const { data } = await axios.get(`${Path.GET_LOCATIONS}`, payload);
   return data;
@@ -195,5 +199,6 @@ export default {
   getSohByParams,
   getLocations,
   getFilters,
+  editSohByParams
 
 };

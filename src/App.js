@@ -67,6 +67,8 @@ import CountedItems from './screens/CountedItems';
 import ItemMasterReport from './screens/ItemMasterReport';
 import DiscrepancyReport from './screens/DiscrepancyReport';
 import StockOnHand from './screens/StockOnHand';
+import AssociatedReport from './screens/AssociatedReport';
+import ReTaggingReport from './screens/ReTaggingReport';
 class App extends React.Component {
   state = {
     open: true,
@@ -174,6 +176,14 @@ class App extends React.Component {
                 : ""}
               {permissions?.includes("Associated_Items") ?
                 <PrivateRoute path={"/Reports/FirstReport"} exact component={FirstReport} />
+                : null
+              }
+              {permissions?.includes("Associated_Items") ?
+                <PrivateRoute path={"/Reports/AssociatedReport"} exact component={AssociatedReport} />
+                : null
+              }
+              {permissions?.includes("Associated_Items") ?
+                <PrivateRoute path={"/Reports/ReTaggingReport"} exact component={ReTaggingReport} />
                 : null
               }
               {permissions?.includes("Associated_Items") ?

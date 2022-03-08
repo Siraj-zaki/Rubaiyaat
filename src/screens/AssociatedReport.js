@@ -34,7 +34,7 @@ import { FilterFunction } from "../components/filterFunction";
 import Filters from "../components/Filters";
 import _ from 'lodash'
 const { RangePicker } = DatePicker;
-export class ItemMasterReport extends Component {
+export class AssociatedReport extends Component {
     state = {
         location: "",
         ASN: [],
@@ -268,7 +268,7 @@ export class ItemMasterReport extends Component {
             ownerName: this.state.ownerName_Value || null,
             asset_EPC: this.state.assetEPC_Value || null,
             serialNumber: this.state.Odoo_Tag_Value || null,
-            assetStatus: this.state.assetStatus_Value || null,
+            assetStatus: "ScanScan",
             // createdAt: this.state.creationDate_Value || null,
             // assetValue: this.state.assetStatus_Value || null,
         })
@@ -463,7 +463,7 @@ export class ItemMasterReport extends Component {
                                     )}
                                 </IconButton>
                                 <PeopleIcon htmlColor="black" className="ml-4 mr-4" />
-                                <h1 className="dashboard-heading">Item Master (Report)</h1>
+                                <h1 className="dashboard-heading">Associated(Report)</h1>
                                 <Button
                                     onClick={() => this.runFunction()}
                                     type="submit"
@@ -484,7 +484,7 @@ export class ItemMasterReport extends Component {
                                 </Button> */}
                                 {/* <CSVReader /> */}
                                 <IconButton style={{ position: "absolute", right: "90px", cursor: 'pointer' }}>
-                                    <CSVLink filename="Item Master Report" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: 60 }} data={data} headers={headers}>
+                                    <CSVLink filename="Associated Report" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: 60 }} data={data} headers={headers}>
                                         <SystemUpdateAltIcon fontSize="large" htmlColor="black" />
                                         <h1 className="dashboard-heading" style={{ fontSize: '15px' }} >CSV</h1>
                                     </CSVLink>
@@ -527,7 +527,7 @@ export class ItemMasterReport extends Component {
                                     Odoo_TagFilter
                                     ownerNameFilter
                                     descriptionFilter
-                                    assetStatusFilter
+                                    // assetStatusFilter
                                     creationDateFilter
                                     modificationDateFilter
                                     categoryCode_changeHandler={this.categoryCode_changeHandler}
@@ -563,7 +563,7 @@ export class ItemMasterReport extends Component {
                   </Button>
                 </CSVLink> */}
                             </div>
-                            <ItemMasterTable runFunction={() => this.runFunction()} edit  openModal={(device) => this.handleClickOpen(device)} asn={this.state.assetsDetails} />
+                            <ItemMasterTable openModal={(device) => this.handleClickOpen(device)} asn={this.state.assetsDetails} />
                         </div>
                     </div>
                 </div>
@@ -572,4 +572,4 @@ export class ItemMasterReport extends Component {
     }
 }
 
-export default ItemMasterReport;
+export default AssociatedReport;
