@@ -268,7 +268,7 @@ export class ReTaggingReport extends Component {
             ownerName: this.state.ownerName_Value || null,
             asset_EPC: this.state.assetEPC_Value || null,
             serialNumber: this.state.Odoo_Tag_Value || null,
-            assetStatus: "ReTagging",
+            assetStatus: "ReTaging",
             // createdAt: this.state.creationDate_Value || null,
             // assetValue: this.state.assetStatus_Value || null,
         })
