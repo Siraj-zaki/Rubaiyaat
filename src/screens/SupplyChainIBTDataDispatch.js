@@ -236,7 +236,7 @@ export class SupplyChainIBTDataDispatch extends Component {
               >
 
               </div>
-              <SupplyChainASNDispatchTable asn={this.state.ASN.filter((item => item.operation_name === 'transfer out'))} />
+              <SupplyChainASNDispatchTable edit runFunction={this.runFunction} asn={this.state.ASN.filter((item => item.operation_name === 'transfer out'))} />
             </div>
           </div>
         </div>

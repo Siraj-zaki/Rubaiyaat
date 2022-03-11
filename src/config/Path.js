@@ -9,6 +9,7 @@ const Path = {
   DELETE_USER: `${BASE_URL}/user/delete`,
   LOGIN: `${BASE_URL}/user/login`,
   GET_ALL_SITE: `${BASE_URL}/site/get`,
+  EDIT_ASN: `${BASE_URL}/asn/edit/status`,
   GET_ALL_ZONE: `${BASE_URL}/zone/get/`,
   ADD_ROLE: `${BASE_URL}/role/add`,
   GET_ROLE: `${BASE_URL}/role/get`,

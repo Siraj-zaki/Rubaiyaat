@@ -12,6 +12,10 @@ const getAllSite = async (payLoad) => {
   const { data } = await axios.get(`${Path.GET_ALL_SITE}`, payLoad);
   return data;
 };
+const editAsn = async (id) => {
+  const { data } = await axios.put(`${Path.EDIT_ASN}/${id}`);
+  return data;
+};
 const getAllZone = async (payLoad) => {
   const { data } = await axios.get(`${Path.GET_ALL_ZONE}`, payLoad);
   return data;
@@ -199,6 +203,7 @@ export default {
   getSohByParams,
   getLocations,
   getFilters,
-  editSohByParams
+  editSohByParams,
+  editAsn
 
 };

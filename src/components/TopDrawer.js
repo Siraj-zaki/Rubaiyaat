@@ -500,7 +500,20 @@ function ScrollableTabsButtonForce(props) {
                 activeClassName="top-drawer-btn top-drawer-btn-active"
               >
                 <StorefrontIcon htmlColor="white" />
-                Dispatch
+                Transfer Out
+              </NavLink>
+            ) : (
+              ""
+            )}
+            {permissions.includes("IN-Store GI") ? (
+              <NavLink
+                exact
+                to="/SupplyChain/SupplyChainIBTDataDispatch"
+                className={`top-drawer-btn top-drawer-btn-${ActiveBtn3}`}
+                activeClassName="top-drawer-btn top-drawer-btn-active"
+              >
+                <StorefrontIcon htmlColor="white" />
+                Transfer Cancelation
               </NavLink>
             ) : (
               ""
