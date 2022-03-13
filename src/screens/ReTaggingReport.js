@@ -315,67 +315,72 @@ export class ReTaggingReport extends Component {
         };
         const headers = [
             {
-                label: "asset_EPC",
+                label: "Photo",
+                key: "imageLink",
+            },
+            {
+                label: "EPC",
                 key: "asset_EPC",
             },
             {
-                label: "serialNumber",
-                key: "serialNumber",
+                label: "Asset Code - M365",
+                key: "category_code",
+            },
+            {
+                label: "Area",
+                key: "category_cod",
             },
             {
                 label: "SITE",
                 key: "site",
             },
             {
-                label: "CATEGORY_CODE",
+                label: "CATEGORY CODE",
                 key: "category_code",
             },
             {
-                label: "CATEGORY_NAME",
+                label: "CATEGORY NAME",
                 key: "category_name",
             },
             {
-                label: "SUB_CATEGORY_CODE",
+                label: "SUB CATEGORY CODE",
                 key: "sub_category_code",
             },
             {
-                label: "SUB_CATEGORY_NAME",
+                label: "SUB CATEGORY NAME",
                 key: "sub_category_name",
             },
+
             {
-                label: "departement",
+                label: "Departement",
                 key: "departement_name",
             },
             {
-                label: "zone",
+                label: "LOCATION",
                 key: "zone",
             },
             {
-                label: "ownerName",
+                label: "Custodian",
                 key: "ownerName",
             },
             {
-                label: "description",
+                label: "Description",
                 key: "description",
             },
             {
-                label: "assetStatus",
+                label: "Serial No.",
+                key: "serialNumber",
+            },
+            {
+                label: "Asset Status",
                 key: "assetStatus",
             },
             {
-                label: "ACQUISITION_DATE",
+                label: "Acquisition Date",
                 key: "ACQUISITION_DATE",
             },
             {
-                label: "createdAt",
-                key: "createdAt",
-            },
-            {
-                label: "updatedAt",
-                key: "updatedAt",
-            },
-            {
-                label: "DEPRECIATION",
+                label: "Depreciation",
                 key: "DEPRECIATION",
             },
             {
@@ -383,37 +388,52 @@ export class ReTaggingReport extends Component {
                 key: "NBV",
             },
             {
+                label: "Creation Date",
+                key: "createdAt",
+            },
+            {
+                label: "Modification Date",
+                key: "updatedAt",
+            },
+            {
                 label: "REMARKS",
                 key: "REMARKS",
             },
             {
-                label: "maintenanceDate",
+                label: "Maintenance",
                 key: "maintenanceDate",
             },
         ];
-        const data = this.state.assetsDetails.map((item) => {
-            return {
-                asset_EPC: item?.asset_EPC || "----",
-                serialNumber: item?.serialNumber || "----",
-                site: item?.siteId?.site_name || "----",
-                category_code: item?.category_code || "----",
-                category_name: item?.category_name || "----",
-                sub_category_code: item?.sub_category_code || "----",
-                sub_category_name: item?.sub_category_name || "----",
-                departement_name: item?.departementId?.departement_name || "----",
-                zone: item?.zoneId?.zone_name || "----",
-                ownerName: item?.ownerName || "----",
-                description: item?.description || "----",
-                assetStatus: item?.assetStatus || "----",
-                ACQUISITION_DATE: item?.ACQUISITION_DATE || "----",
-                createdAt: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || '----',
-                updatedAt: new Date(item?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
-                DEPRECIATION: item?.DEPRECIATION || "----",
-                NBV: item?.NBV || "----",
-                REMARKS: item?.REMARKS || "----",
-                maintenanceDate: item?.maintenanceDate || "----",
-            }
-        })
+       
+        console.log(this.state.assetsDetails, "asdfasdf");
+        let arr = []
+
+
+        const data = this.state.assetsDetails !== true ?
+            this.state.assetsDetails.map((item) => {
+                return {
+                    asset_EPC: item?.asset_EPC || "----",
+                    serialNumber: item?.serialNumber || "----",
+                    site: item?.siteId?.site_name || "----",
+                    category_code: item?.category_code || "----",
+                    category_name: item?.category_name || "----",
+                    sub_category_code: item?.sub_category_code || "----",
+                    sub_category_name: item?.sub_category_name || "----",
+                    departement_name: item?.departementId?.departement_name || "----",
+                    zone: item?.zoneId?.zone_name || "----",
+                    ownerName: item?.ownerName || "----",
+                    description: item?.description || "----",
+                    assetStatus: item?.assetStatus || "----",
+                    ACQUISITION_DATE: item?.ACQUISITION_DATE || "----",
+                    createdAt: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || '----',
+                    updatedAt: new Date(item?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
+                    DEPRECIATION: item?.DEPRECIATION || "----",
+                    NBV: item?.NBV || "----",
+                    REMARKS: item?.REMARKS || "----",
+                    maintenanceDate: item?.maintenanceDate || "----",
+                    imageLink: item?.imageLink || "----",
+                }
+            }) : arr
         console.log(this.state.assetsDetails, "asdfasdf");
         return (
             <React.Fragment>

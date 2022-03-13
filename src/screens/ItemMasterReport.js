@@ -315,67 +315,72 @@ export class ItemMasterReport extends Component {
         };
         const headers = [
             {
-                label: "asset_EPC",
+                label: "Photo",
+                key: "imageLink",
+            },
+            {
+                label: "EPC",
                 key: "asset_EPC",
             },
             {
-                label: "serialNumber",
-                key: "serialNumber",
+                label: "Asset Code - M365",
+                key: "category_code",
+            },
+            {
+                label: "Area",
+                key: "category_cod",
             },
             {
                 label: "SITE",
                 key: "site",
             },
             {
-                label: "CATEGORY_CODE",
+                label: "CATEGORY CODE",
                 key: "category_code",
             },
             {
-                label: "CATEGORY_NAME",
+                label: "CATEGORY NAME",
                 key: "category_name",
             },
             {
-                label: "SUB_CATEGORY_CODE",
+                label: "SUB CATEGORY CODE",
                 key: "sub_category_code",
             },
             {
-                label: "SUB_CATEGORY_NAME",
+                label: "SUB CATEGORY NAME",
                 key: "sub_category_name",
             },
+
             {
-                label: "departement",
+                label: "Departement",
                 key: "departement_name",
             },
             {
-                label: "zone",
+                label: "LOCATION",
                 key: "zone",
             },
             {
-                label: "ownerName",
+                label: "Custodian",
                 key: "ownerName",
             },
             {
-                label: "description",
+                label: "Description",
                 key: "description",
             },
             {
-                label: "assetStatus",
+                label: "Serial No.",
+                key: "serialNumber",
+            },
+            {
+                label: "Asset Status",
                 key: "assetStatus",
             },
             {
-                label: "ACQUISITION_DATE",
+                label: "Acquisition Date",
                 key: "ACQUISITION_DATE",
             },
             {
-                label: "createdAt",
-                key: "createdAt",
-            },
-            {
-                label: "updatedAt",
-                key: "updatedAt",
-            },
-            {
-                label: "DEPRECIATION",
+                label: "Depreciation",
                 key: "DEPRECIATION",
             },
             {
@@ -383,11 +388,19 @@ export class ItemMasterReport extends Component {
                 key: "NBV",
             },
             {
+                label: "Creation Date",
+                key: "createdAt",
+            },
+            {
+                label: "Modification Date",
+                key: "updatedAt",
+            },
+            {
                 label: "REMARKS",
                 key: "REMARKS",
             },
             {
-                label: "maintenanceDate",
+                label: "Maintenance",
                 key: "maintenanceDate",
             },
         ];
@@ -412,6 +425,7 @@ export class ItemMasterReport extends Component {
                 NBV: item?.NBV || "----",
                 REMARKS: item?.REMARKS || "----",
                 maintenanceDate: item?.maintenanceDate || "----",
+                imageLink: item?.imageLink || "----",
             }
         })
         console.log(this.state.assetsDetails, "asdfasdf");
@@ -563,7 +577,7 @@ export class ItemMasterReport extends Component {
                   </Button>
                 </CSVLink> */}
                             </div>
-                            <ItemMasterTable runFunction={() => this.runFunction()} edit  openModal={(device) => this.handleClickOpen(device)} asn={this.state.assetsDetails} />
+                            <ItemMasterTable runFunction={() => this.runFunction()} edit openModal={(device) => this.handleClickOpen(device)} asn={this.state.assetsDetails} />
                         </div>
                     </div>
                 </div>

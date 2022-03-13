@@ -42,25 +42,25 @@ function Row(props) {
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{row?.zoneId?.zone_name}</TableCell>
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center"><Link to={{ pathname: "/EPCDetail", state: { row: { operation: 'receiving', asn: row._id }, data: { zone: row.destinationZone && row.destinationZone?.zone_name } } }}>{row.received_items ? row.received_items.qt : '----'}</Link></TableCell>
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">
-                <Link
-            to={{
-              pathname: "/EPCDetail",
-              state: {
-                row: { operation: "transfer out", asn: row._id },
-                data: {
-                  zone: row?.zoneId?.zone_name,
-                  departmentName: row?.departementId?.departement_name,
-                },
-              },
-            }}
-          >
-            {row.transfer_items?.qt}
-            </Link>
-            </TableCell>
+                    <Link
+                        to={{
+                            pathname: "/EPCDetail",
+                            state: {
+                                row: { operation: "transfer out", asn: row._id },
+                                data: {
+                                    zone: row?.zoneId?.zone_name,
+                                    departmentName: row?.departementId?.departement_name,
+                                },
+                            },
+                        }}
+                    >
+                        {row.transfer_items?.qt}
+                    </Link>
+                </TableCell>
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{row?.destination?.site_name}</TableCell>
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{row?.destinationDepartement?.departement_name}</TableCell>
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{row?.destinationZone?.zone_name}</TableCell>
-                <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{row.operation_name ? row.operation_name : "----"}</TableCell>
+                <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{parseInt(row.transfer_items?.qt, 10) > parseInt(row.received_items.qt, 10) ? "partially recevied " : row.operation_name}</TableCell>
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{row.received_items ? new Date(row.received_items.date).toLocaleString('en-Us', "Asia/Muscat") : "----"}</TableCell>
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{row.received_items ? row.received_items.remarks : "----"}</TableCell>
                 <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, }} align="center">{row.zoneId ? row.zoneId.zone_name : '----'}</TableCell>
@@ -105,8 +105,8 @@ export default function SupplyChainASNTable({ asn }) {
                             <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Source(Zone)</TableCell>
                             <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Received Items</TableCell>
                             <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">
-                Transfer Items
-              </TableCell>
+                                Transfer Items
+                            </TableCell>
                             <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Destination(Site)</TableCell>
                             <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Destination(Department)</TableCell>
                             <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Destination(Zone)</TableCell>
