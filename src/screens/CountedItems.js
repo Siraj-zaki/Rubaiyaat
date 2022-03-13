@@ -670,7 +670,7 @@ export class CountedItems extends Component {
                                     </form>
                                 </div> */}
                                 <Filters
-                                    ite_Value={this.state.site_Value}
+                                    site_Value={this.state.site_Value}
                                     zone_Value={this.state.zone_Value}
                                     department_Value={this.state.department_Value}
                                     assetEPC_Value={this.state.assetEPC_Value}
@@ -738,7 +738,7 @@ export class CountedItems extends Component {
                             >
                             </div>
                             {/* <CountedTable openModal={(device) => this.handleClickOpen(device)} asn={this.state.assetsDetails} /> */}
-                            <ItemMasterTable openModal={(device) => this.handleClickOpen(device)} asn={this.state.assetsDetails !== true ? this.state.assetsDetails?.filter((row => row?.asset_EPC )) : this.state.assetsDetails} />
+                            <ItemMasterTable openModal={(device) => this.handleClickOpen(device)} asn={this.state.assetsDetails !== true ? this.state.assetsDetails?.filter((row => row?.asset_EPC)) : this.state.assetsDetails} />
                         </div>
                     </div>
                 </div>

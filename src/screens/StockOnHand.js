@@ -21,16 +21,23 @@ import Collapse from "@material-ui/core/Collapse";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import ClipLoader from "react-spinners/ClipLoader";
 import moment from "moment";
+import Papa from "papaparse";
+import FirstReportTable from "../components/FirstReportTable";
 import { CSVLink } from "react-csv";
-import SecondReportTable from "../components/SecondReportTable";
-import ThirdReportTable from "../components/ThirdReportTable";
-import { DatePicker, Radio, Space } from 'antd';
 import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
-import StockOnHandTable from "../components/StockOnHandTable";
+import { DatePicker, Radio, Space, Checkbox, Divider } from 'antd';
+import { toast } from "react-toastify";
+import CountedTable from "../components/CountedTable";
+import { FilterFunction } from "../components/filterFunction";
+import Filters from "../components/Filters";
 import _ from 'lodash'
+import ItemMasterTable from "../components/ItemMasterTable";
+import StockOnHandTable from "../components/StockOnHandTable";
+const CheckboxGroup = Checkbox.Group;
+const plainOptions = ['Unders', 'Overs', "Matched"];
+const defaultCheckedList = [];
 const { RangePicker } = DatePicker;
-
-export class StockOnHand extends Component {
+export class CountedItems extends Component {
     state = {
         location: "",
         ASN: [],
@@ -42,784 +49,507 @@ export class StockOnHand extends Component {
         endingDate: "",
         ibt: "",
         allData: [],
-        zone: "",
-        RFID_Date: "",
+        assetsDetails: true,
         remarks: "",
-        SOH: [],
-        Asset_ID: "",
-        Department: "",
-        Item_Category: "",
-        LastTimeDate: "",
-        site: '',
-        Serial_no: "",
+        assetsDetailsNew: [],
+        epc: '',
+        asset_name: '',
+        asset_status: '',
+        creation_date: '',
+        modification_date: '',
+        image: '',
+        checkedList: defaultCheckedList,
+        indeterminate: true,
+        checkAll: false,
+        overs: false,
+        unders: false,
+        matched: false,
         sites: [],
-        groupedData: [],
-        groupedDataNew: [],
-        hardcoreData: [
-            {
-                "site_name": "03 - RMLP",
-                "zone_name": "zone4",
-                "total": 2,
-                "items": [
-                    {
-                        "_id": "621c70b646fd520023a29049",
-                        "asset_name": {
-                            "assetType": "Sack",
-                            "_id": "621a0664713b4ae6f71ca208",
-                            "EPCID": "30340000440C924000000F35",
-                            "CATEGORY_CODE": "201",
-                            "CATEGORY_NAME": "FURNITURE",
-                            "CREATION_DATE": "26-03-17 21:37",
-                            "DEPRECIATION": "",
-                            "MODIFICATION_DATE": "26-03-17 21:37",
-                            "NBV": "",
-                            "REMARKS": "",
-                            "SITE": "06 - QPD",
-                            "SUB_CATEGORY_CODE": "201-005",
-                            "SUB_CATEGORY_NAME": "Shelves",
-                            "VALUE": "",
-                            "__v": 0,
-                            "assetStatus": "Written Off",
-                            "createdAt": "2022-02-26T10:52:20.441Z",
-                            "department": "066231 - (Closed 2017.12.05) Q Store - Mall of Dahran",
-                            "description": "heloo world",
-                            "inventoryDate": "26-03-17 21:37",
-                            "location": "01 - Selling Area",
-                            "ownerName": "Bilal",
-                            "ownerName1": "",
-                            "updatedAt": "2022-02-28T11:28:40.323Z",
-                            "image": null
-                        },
-                        "asset_EPC": "30340000440C924000000F35",
-                        "zoneId": {
-                            "_id": "620a08b4170ade002307b0b6",
-                            "zone_name": "zone4",
-                            "mapViewImage": "NO IMAGE REFERENCE",
-                            "geoJson": "{\"type\":\"Polygon\",\"coordinates\":[[[58.169675,23.584693],[58.169707,23.581585],[58.173334,23.581604],[58.173205,23.584702],[58.169675,23.584693]]]}",
-                            "site": "620a083532a17bdbc2180cf7",
-                            "level": "1",
-                            "__v": 0
-                        },
-                        "asn": "621caf167bdba40023568dd3",
-                        "inputNote": "",
-                        "operation": "receiving",
-                        "siteId": {
-                            "_id": "620a083532a17bdbc2180cf7",
-                            "site_name": "03 - RMLP",
-                            "mapViewImage": "https://i.ibb.co/6s5VQfW/SQCCC-map.png",
-                            "location": "[{\"lat\":23.58108,\"lng\":58.1655},{\"lat\":23.58512,\"lng\":58.173775}]",
-                            "objectType": "site",
-                            "__v": 0
-                        },
-                        "__v": 0,
-                        "createdAt": "2022-02-28T06:50:30.773Z",
-                        "updatedAt": "2022-02-28T11:16:39.810Z"
-                    },
-                    {
-                        "_id": "621caf097bdba40023568dc9",
-                        "asset_name": {
-                            "assetType": "Sack",
-                            "_id": "621a0664713b4ae6f71ca208",
-                            "EPCID": "30340000440C924000000F35",
-                            "CATEGORY_CODE": "201",
-                            "CATEGORY_NAME": "FURNITURE",
-                            "CREATION_DATE": "26-03-17 21:37",
-                            "DEPRECIATION": "",
-                            "MODIFICATION_DATE": "26-03-17 21:37",
-                            "NBV": "",
-                            "REMARKS": "",
-                            "SITE": "06 - QPD",
-                            "SUB_CATEGORY_CODE": "201-005",
-                            "SUB_CATEGORY_NAME": "Shelves",
-                            "VALUE": "",
-                            "__v": 0,
-                            "assetStatus": "Written Off",
-                            "createdAt": "2022-02-26T10:52:20.441Z",
-                            "department": "066231 - (Closed 2017.12.05) Q Store - Mall of Dahran",
-                            "description": "heloo world",
-                            "inventoryDate": "26-03-17 21:37",
-                            "location": "01 - Selling Area",
-                            "ownerName": "Bilal",
-                            "ownerName1": "",
-                            "updatedAt": "2022-02-28T11:28:40.323Z",
-                            "image": null
-                        },
-                        "asset_EPC": "30340000440C924000000F35",
-                        "zoneId": {
-                            "_id": "620a08b4170ade002307b0b6",
-                            "zone_name": "zone4",
-                            "mapViewImage": "NO IMAGE REFERENCE",
-                            "geoJson": "{\"type\":\"Polygon\",\"coordinates\":[[[58.169675,23.584693],[58.169707,23.581585],[58.173334,23.581604],[58.173205,23.584702],[58.169675,23.584693]]]}",
-                            "site": "620a083532a17bdbc2180cf7",
-                            "level": "1",
-                            "__v": 0
-                        },
-                        "asn": "621caf167bdba40023568dd3",
-                        "inputNote": "",
-                        "operation": "receiving",
-                        "siteId": {
-                            "_id": "620a083532a17bdbc2180cf7",
-                            "site_name": "03 - RMLP",
-                            "mapViewImage": "https://i.ibb.co/6s5VQfW/SQCCC-map.png",
-                            "location": "[{\"lat\":23.58108,\"lng\":58.1655},{\"lat\":23.58512,\"lng\":58.173775}]",
-                            "objectType": "site",
-                            "__v": 0
-                        },
-                        "__v": 0,
-                        "createdAt": "2022-02-28T11:16:25.056Z",
-                        "updatedAt": "2022-02-28T11:16:39.810Z"
-                    }
-                ],
-                "matched": 2,
-                "under": 0,
-                "over": 38
-            },
-            {
-                "site_name": "03 - RMLP",
-                "zone_name": "zone3",
-                "total": 1,
-                "items": [
-                    {
-                        "_id": "621d44520472b36c1fe99808",
-                        "asset_name": {
-                            "assetType": "Sack",
-                            "_id": "621a0664713b4ae6f71ca208",
-                            "EPCID": "30340000440C924000000F35",
-                            "CATEGORY_CODE": "201",
-                            "CATEGORY_NAME": "FURNITURE",
-                            "CREATION_DATE": "26-03-17 21:37",
-                            "DEPRECIATION": "",
-                            "MODIFICATION_DATE": "26-03-17 21:37",
-                            "NBV": "",
-                            "REMARKS": "",
-                            "SITE": "06 - QPD",
-                            "SUB_CATEGORY_CODE": "201-005",
-                            "SUB_CATEGORY_NAME": "Shelves",
-                            "VALUE": "",
-                            "__v": 0,
-                            "assetStatus": "Written Off",
-                            "createdAt": "2022-02-26T10:52:20.441Z",
-                            "department": "066231 - (Closed 2017.12.05) Q Store - Mall of Dahran",
-                            "description": "heloo world",
-                            "inventoryDate": "26-03-17 21:37",
-                            "location": "01 - Selling Area",
-                            "ownerName": "Bilal",
-                            "ownerName1": "",
-                            "updatedAt": "2022-02-28T11:28:40.323Z",
-                            "image": null
-                        },
-                        "asset_EPC": "AE1000000110000012097112",
-                        "zoneId": {
-                            "_id": "620a0873170ade002307b0b5",
-                            "zone_name": "zone3",
-                            "mapViewImage": "NO IMAGE REFERENCE",
-                            "geoJson": "{\"type\":\"Polygon\",\"coordinates\":[[[58.166277,23.584755],[58.169249,23.584765],[58.169281,23.581558],[58.166406,23.58147],[58.166277,23.584755]]]}",
-                            "site": "620a083532a17bdbc2180cf7",
-                            "level": "1",
-                            "__v": 0
-                        },
-                        "asn": "621caf167bdba40023568dd3",
-                        "inputNote": "",
-                        "operation": "receiving",
-                        "siteId": {
-                            "_id": "620a083532a17bdbc2180cf7",
-                            "site_name": "03 - RMLP",
-                            "mapViewImage": "https://i.ibb.co/6s5VQfW/SQCCC-map.png",
-                            "location": "[{\"lat\":23.58108,\"lng\":58.1655},{\"lat\":23.58512,\"lng\":58.173775}]",
-                            "objectType": "site",
-                            "__v": 0
-                        },
-                        "__v": 0,
-                        "createdAt": "2022-02-28T11:16:25.056Z",
-                        "updatedAt": "2022-02-28T11:16:39.810Z"
-                    }
-                ],
-                "matched": 1,
-                "under": 0,
-                "over": 0
-            },
-            {
-                "site_name": "03 - ABC",
-                "zone_name": "zone3",
-                "total": 1,
-                "items": [
-                    {
-                        "_id": "621d44520472b36c1fe99808",
-                        "asset_name": {
-                            "assetType": "Sack",
-                            "_id": "621a0664713b4ae6f71ca208",
-                            "EPCID": "30340000440C924000000F35",
-                            "CATEGORY_CODE": "201",
-                            "CATEGORY_NAME": "FURNITURE",
-                            "CREATION_DATE": "26-03-17 21:37",
-                            "DEPRECIATION": "",
-                            "MODIFICATION_DATE": "26-03-17 21:37",
-                            "NBV": "",
-                            "REMARKS": "",
-                            "SITE": "06 - QPD",
-                            "SUB_CATEGORY_CODE": "201-005",
-                            "SUB_CATEGORY_NAME": "Shelves",
-                            "VALUE": "",
-                            "__v": 0,
-                            "assetStatus": "Written Off",
-                            "createdAt": "2022-02-26T10:52:20.441Z",
-                            "department": "066231 - (Closed 2017.12.05) Q Store - Mall of Dahran",
-                            "description": "heloo world",
-                            "inventoryDate": "26-03-17 21:37",
-                            "location": "01 - Selling Area",
-                            "ownerName": "Bilal",
-                            "ownerName1": "",
-                            "updatedAt": "2022-02-28T11:28:40.323Z",
-                            "image": null
-                        },
-                        "asset_EPC": "AE1000000110000012097112",
-                        "zoneId": {
-                            "_id": "620a0873170ade002307b0b5",
-                            "zone_name": "zone3",
-                            "mapViewImage": "NO IMAGE REFERENCE",
-                            "geoJson": "{\"type\":\"Polygon\",\"coordinates\":[[[58.166277,23.584755],[58.169249,23.584765],[58.169281,23.581558],[58.166406,23.58147],[58.166277,23.584755]]]}",
-                            "site": "620a083532a17bdbc2180cf7",
-                            "level": "1",
-                            "__v": 0
-                        },
-                        "asn": "621caf167bdba40023568dd3",
-                        "inputNote": "",
-                        "operation": "receiving",
-                        "siteId": {
-                            "_id": "620a083532a17bdbc2180cf7",
-                            "site_name": "03 - RMLP",
-                            "mapViewImage": "https://i.ibb.co/6s5VQfW/SQCCC-map.png",
-                            "location": "[{\"lat\":23.58108,\"lng\":58.1655},{\"lat\":23.58512,\"lng\":58.173775}]",
-                            "objectType": "site",
-                            "__v": 0
-                        },
-                        "__v": 0,
-                        "createdAt": "2022-02-28T11:16:25.056Z",
-                        "updatedAt": "2022-02-28T11:16:39.810Z"
-                    }
-                ],
-                "matched": 1,
-                "under": 0,
-                "over": 0
-            },
-            {
-                "site_name": "03 - ABC",
-                "zone_name": "zone4",
-                "total": 1,
-                "items": [
-                    {
-                        "_id": "621d44520472b36c1fe99808",
-                        "asset_name": {
-                            "assetType": "Sack",
-                            "_id": "621a0664713b4ae6f71ca208",
-                            "EPCID": "30340000440C924000000F35",
-                            "CATEGORY_CODE": "201",
-                            "CATEGORY_NAME": "FURNITURE",
-                            "CREATION_DATE": "26-03-17 21:37",
-                            "DEPRECIATION": "",
-                            "MODIFICATION_DATE": "26-03-17 21:37",
-                            "NBV": "",
-                            "REMARKS": "",
-                            "SITE": "06 - QPD",
-                            "SUB_CATEGORY_CODE": "201-005",
-                            "SUB_CATEGORY_NAME": "Shelves",
-                            "VALUE": "",
-                            "__v": 0,
-                            "assetStatus": "Written Off",
-                            "createdAt": "2022-02-26T10:52:20.441Z",
-                            "department": "066231 - (Closed 2017.12.05) Q Store - Mall of Dahran",
-                            "description": "heloo world",
-                            "inventoryDate": "26-03-17 21:37",
-                            "location": "01 - Selling Area",
-                            "ownerName": "Bilal",
-                            "ownerName1": "",
-                            "updatedAt": "2022-02-28T11:28:40.323Z",
-                            "image": null
-                        },
-                        "asset_EPC": "AE1000000110000012097112",
-                        "zoneId": {
-                            "_id": "620a0873170ade002307b0b5",
-                            "zone_name": "zone3",
-                            "mapViewImage": "NO IMAGE REFERENCE",
-                            "geoJson": "{\"type\":\"Polygon\",\"coordinates\":[[[58.166277,23.584755],[58.169249,23.584765],[58.169281,23.581558],[58.166406,23.58147],[58.166277,23.584755]]]}",
-                            "site": "620a083532a17bdbc2180cf7",
-                            "level": "1",
-                            "__v": 0
-                        },
-                        "asn": "621caf167bdba40023568dd3",
-                        "inputNote": "",
-                        "operation": "receiving",
-                        "siteId": {
-                            "_id": "620a083532a17bdbc2180cf7",
-                            "site_name": "03 - RMLP",
-                            "mapViewImage": "https://i.ibb.co/6s5VQfW/SQCCC-map.png",
-                            "location": "[{\"lat\":23.58108,\"lng\":58.1655},{\"lat\":23.58512,\"lng\":58.173775}]",
-                            "objectType": "site",
-                            "__v": 0
-                        },
-                        "__v": 0,
-                        "createdAt": "2022-02-28T11:16:25.056Z",
-                        "updatedAt": "2022-02-28T11:16:39.810Z"
-                    }
-                ],
-                "matched": 1,
-                "under": 0,
-                "over": 0
-            }
-        ],
-        hardcoreDataNew: [
-            {
-                "site_name": "03 - RMLP",
-                "zone_name": "zone4",
-                "total": 2,
-                "items": [
-                    {
-                        "_id": "621c70b646fd520023a29049",
-                        "asset_name": {
-                            "assetType": "Sack",
-                            "_id": "621a0664713b4ae6f71ca208",
-                            "EPCID": "30340000440C924000000F35",
-                            "CATEGORY_CODE": "201",
-                            "CATEGORY_NAME": "FURNITURE",
-                            "CREATION_DATE": "26-03-17 21:37",
-                            "DEPRECIATION": "",
-                            "MODIFICATION_DATE": "26-03-17 21:37",
-                            "NBV": "",
-                            "REMARKS": "",
-                            "SITE": "06 - QPD",
-                            "SUB_CATEGORY_CODE": "201-005",
-                            "SUB_CATEGORY_NAME": "Shelves",
-                            "VALUE": "",
-                            "__v": 0,
-                            "assetStatus": "Written Off",
-                            "createdAt": "2022-02-26T10:52:20.441Z",
-                            "department": "066231 - (Closed 2017.12.05) Q Store - Mall of Dahran",
-                            "description": "heloo world",
-                            "inventoryDate": "26-03-17 21:37",
-                            "location": "01 - Selling Area",
-                            "ownerName": "Bilal",
-                            "ownerName1": "",
-                            "updatedAt": "2022-02-28T11:28:40.323Z",
-                            "image": null
-                        },
-                        "asset_EPC": "30340000440C924000000F35",
-                        "zoneId": {
-                            "_id": "620a08b4170ade002307b0b6",
-                            "zone_name": "zone4",
-                            "mapViewImage": "NO IMAGE REFERENCE",
-                            "geoJson": "{\"type\":\"Polygon\",\"coordinates\":[[[58.169675,23.584693],[58.169707,23.581585],[58.173334,23.581604],[58.173205,23.584702],[58.169675,23.584693]]]}",
-                            "site": "620a083532a17bdbc2180cf7",
-                            "level": "1",
-                            "__v": 0
-                        },
-                        "asn": "621caf167bdba40023568dd3",
-                        "inputNote": "",
-                        "operation": "receiving",
-                        "siteId": {
-                            "_id": "620a083532a17bdbc2180cf7",
-                            "site_name": "03 - RMLP",
-                            "mapViewImage": "https://i.ibb.co/6s5VQfW/SQCCC-map.png",
-                            "location": "[{\"lat\":23.58108,\"lng\":58.1655},{\"lat\":23.58512,\"lng\":58.173775}]",
-                            "objectType": "site",
-                            "__v": 0
-                        },
-                        "__v": 0,
-                        "createdAt": "2022-02-28T06:50:30.773Z",
-                        "updatedAt": "2022-02-28T11:16:39.810Z"
-                    },
-                    {
-                        "_id": "621caf097bdba40023568dc9",
-                        "asset_name": {
-                            "assetType": "Sack",
-                            "_id": "621a0664713b4ae6f71ca208",
-                            "EPCID": "30340000440C924000000F35",
-                            "CATEGORY_CODE": "201",
-                            "CATEGORY_NAME": "FURNITURE",
-                            "CREATION_DATE": "26-03-17 21:37",
-                            "DEPRECIATION": "",
-                            "MODIFICATION_DATE": "26-03-17 21:37",
-                            "NBV": "",
-                            "REMARKS": "",
-                            "SITE": "06 - QPD",
-                            "SUB_CATEGORY_CODE": "201-005",
-                            "SUB_CATEGORY_NAME": "Shelves",
-                            "VALUE": "",
-                            "__v": 0,
-                            "assetStatus": "Written Off",
-                            "createdAt": "2022-02-26T10:52:20.441Z",
-                            "department": "066231 - (Closed 2017.12.05) Q Store - Mall of Dahran",
-                            "description": "heloo world",
-                            "inventoryDate": "26-03-17 21:37",
-                            "location": "01 - Selling Area",
-                            "ownerName": "Bilal",
-                            "ownerName1": "",
-                            "updatedAt": "2022-02-28T11:28:40.323Z",
-                            "image": null
-                        },
-                        "asset_EPC": "30340000440C924000000F35",
-                        "zoneId": {
-                            "_id": "620a08b4170ade002307b0b6",
-                            "zone_name": "zone4",
-                            "mapViewImage": "NO IMAGE REFERENCE",
-                            "geoJson": "{\"type\":\"Polygon\",\"coordinates\":[[[58.169675,23.584693],[58.169707,23.581585],[58.173334,23.581604],[58.173205,23.584702],[58.169675,23.584693]]]}",
-                            "site": "620a083532a17bdbc2180cf7",
-                            "level": "1",
-                            "__v": 0
-                        },
-                        "asn": "621caf167bdba40023568dd3",
-                        "inputNote": "",
-                        "operation": "receiving",
-                        "siteId": {
-                            "_id": "620a083532a17bdbc2180cf7",
-                            "site_name": "03 - RMLP",
-                            "mapViewImage": "https://i.ibb.co/6s5VQfW/SQCCC-map.png",
-                            "location": "[{\"lat\":23.58108,\"lng\":58.1655},{\"lat\":23.58512,\"lng\":58.173775}]",
-                            "objectType": "site",
-                            "__v": 0
-                        },
-                        "__v": 0,
-                        "createdAt": "2022-02-28T11:16:25.056Z",
-                        "updatedAt": "2022-02-28T11:16:39.810Z"
-                    }
-                ],
-                "matched": 2,
-                "under": 0,
-                "over": 38
-            },
-            {
-                "site_name": "03 - RMLP",
-                "zone_name": "zone3",
-                "total": 1,
-                "items": [
-                    {
-                        "_id": "621d44520472b36c1fe99808",
-                        "asset_name": {
-                            "assetType": "Sack",
-                            "_id": "621a0664713b4ae6f71ca208",
-                            "EPCID": "30340000440C924000000F35",
-                            "CATEGORY_CODE": "201",
-                            "CATEGORY_NAME": "FURNITURE",
-                            "CREATION_DATE": "26-03-17 21:37",
-                            "DEPRECIATION": "",
-                            "MODIFICATION_DATE": "26-03-17 21:37",
-                            "NBV": "",
-                            "REMARKS": "",
-                            "SITE": "06 - QPD",
-                            "SUB_CATEGORY_CODE": "201-005",
-                            "SUB_CATEGORY_NAME": "Shelves",
-                            "VALUE": "",
-                            "__v": 0,
-                            "assetStatus": "Written Off",
-                            "createdAt": "2022-02-26T10:52:20.441Z",
-                            "department": "066231 - (Closed 2017.12.05) Q Store - Mall of Dahran",
-                            "description": "heloo world",
-                            "inventoryDate": "26-03-17 21:37",
-                            "location": "01 - Selling Area",
-                            "ownerName": "Bilal",
-                            "ownerName1": "",
-                            "updatedAt": "2022-02-28T11:28:40.323Z",
-                            "image": null
-                        },
-                        "asset_EPC": "AE1000000110000012097112",
-                        "zoneId": {
-                            "_id": "620a0873170ade002307b0b5",
-                            "zone_name": "zone3",
-                            "mapViewImage": "NO IMAGE REFERENCE",
-                            "geoJson": "{\"type\":\"Polygon\",\"coordinates\":[[[58.166277,23.584755],[58.169249,23.584765],[58.169281,23.581558],[58.166406,23.58147],[58.166277,23.584755]]]}",
-                            "site": "620a083532a17bdbc2180cf7",
-                            "level": "1",
-                            "__v": 0
-                        },
-                        "asn": "621caf167bdba40023568dd3",
-                        "inputNote": "",
-                        "operation": "receiving",
-                        "siteId": {
-                            "_id": "620a083532a17bdbc2180cf7",
-                            "site_name": "03 - RMLP",
-                            "mapViewImage": "https://i.ibb.co/6s5VQfW/SQCCC-map.png",
-                            "location": "[{\"lat\":23.58108,\"lng\":58.1655},{\"lat\":23.58512,\"lng\":58.173775}]",
-                            "objectType": "site",
-                            "__v": 0
-                        },
-                        "__v": 0,
-                        "createdAt": "2022-02-28T11:16:25.056Z",
-                        "updatedAt": "2022-02-28T11:16:39.810Z"
-                    }
-                ],
-                "matched": 1,
-                "under": 0,
-                "over": 0
-            },
-            {
-                "site_name": "03 - ABC",
-                "zone_name": "zone3",
-                "total": 1,
-                "items": [
-                    {
-                        "_id": "621d44520472b36c1fe99808",
-                        "asset_name": {
-                            "assetType": "Sack",
-                            "_id": "621a0664713b4ae6f71ca208",
-                            "EPCID": "30340000440C924000000F35",
-                            "CATEGORY_CODE": "201",
-                            "CATEGORY_NAME": "FURNITURE",
-                            "CREATION_DATE": "26-03-17 21:37",
-                            "DEPRECIATION": "",
-                            "MODIFICATION_DATE": "26-03-17 21:37",
-                            "NBV": "",
-                            "REMARKS": "",
-                            "SITE": "06 - QPD",
-                            "SUB_CATEGORY_CODE": "201-005",
-                            "SUB_CATEGORY_NAME": "Shelves",
-                            "VALUE": "",
-                            "__v": 0,
-                            "assetStatus": "Written Off",
-                            "createdAt": "2022-02-26T10:52:20.441Z",
-                            "department": "066231 - (Closed 2017.12.05) Q Store - Mall of Dahran",
-                            "description": "heloo world",
-                            "inventoryDate": "26-03-17 21:37",
-                            "location": "01 - Selling Area",
-                            "ownerName": "Bilal",
-                            "ownerName1": "",
-                            "updatedAt": "2022-02-28T11:28:40.323Z",
-                            "image": null
-                        },
-                        "asset_EPC": "AE1000000110000012097112",
-                        "zoneId": {
-                            "_id": "620a0873170ade002307b0b5",
-                            "zone_name": "zone3",
-                            "mapViewImage": "NO IMAGE REFERENCE",
-                            "geoJson": "{\"type\":\"Polygon\",\"coordinates\":[[[58.166277,23.584755],[58.169249,23.584765],[58.169281,23.581558],[58.166406,23.58147],[58.166277,23.584755]]]}",
-                            "site": "620a083532a17bdbc2180cf7",
-                            "level": "1",
-                            "__v": 0
-                        },
-                        "asn": "621caf167bdba40023568dd3",
-                        "inputNote": "",
-                        "operation": "receiving",
-                        "siteId": {
-                            "_id": "620a083532a17bdbc2180cf7",
-                            "site_name": "03 - RMLP",
-                            "mapViewImage": "https://i.ibb.co/6s5VQfW/SQCCC-map.png",
-                            "location": "[{\"lat\":23.58108,\"lng\":58.1655},{\"lat\":23.58512,\"lng\":58.173775}]",
-                            "objectType": "site",
-                            "__v": 0
-                        },
-                        "__v": 0,
-                        "createdAt": "2022-02-28T11:16:25.056Z",
-                        "updatedAt": "2022-02-28T11:16:39.810Z"
-                    }
-                ],
-                "matched": 1,
-                "under": 0,
-                "over": 0
-            },
-            {
-                "site_name": "03 - ABC",
-                "zone_name": "zone4",
-                "total": 1,
-                "items": [
-                    {
-                        "_id": "621d44520472b36c1fe99808",
-                        "asset_name": {
-                            "assetType": "Sack",
-                            "_id": "621a0664713b4ae6f71ca208",
-                            "EPCID": "30340000440C924000000F35",
-                            "CATEGORY_CODE": "201",
-                            "CATEGORY_NAME": "FURNITURE",
-                            "CREATION_DATE": "26-03-17 21:37",
-                            "DEPRECIATION": "",
-                            "MODIFICATION_DATE": "26-03-17 21:37",
-                            "NBV": "",
-                            "REMARKS": "",
-                            "SITE": "06 - QPD",
-                            "SUB_CATEGORY_CODE": "201-005",
-                            "SUB_CATEGORY_NAME": "Shelves",
-                            "VALUE": "",
-                            "__v": 0,
-                            "assetStatus": "Written Off",
-                            "createdAt": "2022-02-26T10:52:20.441Z",
-                            "department": "066231 - (Closed 2017.12.05) Q Store - Mall of Dahran",
-                            "description": "heloo world",
-                            "inventoryDate": "26-03-17 21:37",
-                            "location": "01 - Selling Area",
-                            "ownerName": "Bilal",
-                            "ownerName1": "",
-                            "updatedAt": "2022-02-28T11:28:40.323Z",
-                            "image": null
-                        },
-                        "asset_EPC": "AE1000000110000012097112",
-                        "zoneId": {
-                            "_id": "620a0873170ade002307b0b5",
-                            "zone_name": "zone3",
-                            "mapViewImage": "NO IMAGE REFERENCE",
-                            "geoJson": "{\"type\":\"Polygon\",\"coordinates\":[[[58.166277,23.584755],[58.169249,23.584765],[58.169281,23.581558],[58.166406,23.58147],[58.166277,23.584755]]]}",
-                            "site": "620a083532a17bdbc2180cf7",
-                            "level": "1",
-                            "__v": 0
-                        },
-                        "asn": "621caf167bdba40023568dd3",
-                        "inputNote": "",
-                        "operation": "receiving",
-                        "siteId": {
-                            "_id": "620a083532a17bdbc2180cf7",
-                            "site_name": "03 - RMLP",
-                            "mapViewImage": "https://i.ibb.co/6s5VQfW/SQCCC-map.png",
-                            "location": "[{\"lat\":23.58108,\"lng\":58.1655},{\"lat\":23.58512,\"lng\":58.173775}]",
-                            "objectType": "site",
-                            "__v": 0
-                        },
-                        "__v": 0,
-                        "createdAt": "2022-02-28T11:16:25.056Z",
-                        "updatedAt": "2022-02-28T11:16:39.810Z"
-                    }
-                ],
-                "matched": 1,
-                "under": 0,
-                "over": 0
-            }
-        ],
+        zones: [],
+        zone: '',
+        site: '',
+        counted: [],
+        allSoh: [],
+        sitesOption: [{ label: "all", value: '' }],
+        zoneOption: [{ label: "all", value: '' }],
+        departmentOption: [{ label: "all", value: '' }],
+        site_Value: [],
+        zone_Value: [],
+        department_Value: [],
+        assetEPC_Value: '',
+        Odoo_Tag_Value: '',
+        ownerName_Value: '',
+        description_Value: '',
+        assetStatus_Value: '',
+        creationDate_Value: '',
+        modificationDate_Value: '',
+        locations: [],
+        locationsDepartments: [],
+        categoryCode_Value: [],
+        categoryName_Value: [],
+        subCategoryCode_Value: [],
+        subCategoryName_Value: [],
+        categoryCodeOptions: [],
+        categoryNameOptions: [],
+        subCategoryCodeOptions: [],
+        subCategoryNameOptions: [],
+    };
+    async componentDidMount() {
+        this.setState({ loading: true })
+        const filters = await api.getFilters()
+        if (filters) {
+            let data = filters?.filters
+            let categoryCodeOptions = data?.category_code?.map(item => {
+                return { label: item, value: item }
+            })
+            let categoryNameOptions = data?.category_name?.map(item => {
+                return { label: item, value: item }
+            })
+            let subCategoryCodeOptions = data?.sub_category_code?.map(item => {
+                return { label: item, value: item }
+            })
+            let subCategoryNameOptions = data?.sub_category_name?.map(item => {
+                return { label: item, value: item }
+            })
+            this.setState({
+                categoryCodeOptions,
+                categoryNameOptions,
+                subCategoryCodeOptions,
+                subCategoryNameOptions,
+            })
+        }
+        const locations = await api.getLocations()
+        let sites = locations?.result?.map((item => { return { label: item.site_name, value: item._id } }))
+        if (locations) {
+            console.log(sites?.reverse());
+            console.log(locations);
+            this.setState({ loading: false, sitesOption: this.state.sitesOption.concat(sites), locations: locations.result })
+        }
+    }
+    //////////////////////////////
+    site_changeHandler = (e) => {
+        // console.log(e, 'values');
+        this.setState({ site_Value: e })
+        let departs = this.state.locations.map((site => site?.departments.filter((department => e.find((val => department.site.includes(val?.value)))))))
+        // console.log(departs, 'beforeFilter');
+        departs = _.filter(departs, _.size)
+        let merge = []
+        for (let index = 0; index < departs.length; index++) {
+            merge = merge.concat(departs[index])
+            // console.log(merge, 'afterFilter-loop');
+        }
+        // console.log(merge);
+        departs = merge
+        // console.log(departs, 'afterFilter');
+        let departments = departs?.map((item => { return { label: item?.departement_name, value: item?._id } }))
+        departments = [...departments, { label: 'all', value: '' }]
+        console.log(departments);
+        this.setState({ departmentOption: departments, locationsDepartments: departs })
+        // console.log(departments, "departments");
+    }
+    department_changeHandler = (e) => {
+        console.log(e);
+        this.setState({ department_Value: e })
+        let zone = this.state.locationsDepartments?.map((department => department?.zones?.filter((zone => zone.departement.includes(e.map((data => data?.value)))))))
+        zone = _.filter(zone, _.size)
+        let merge = []
+        for (let index = 0; index < zone.length; index++) {
+            merge = merge.concat(zone[index])
+            // console.log(merge, 'afterFilter-loop');
+        }
+        // console.log(merge);
+        zone = merge
+        let zones = zone?.map((item => { return { label: item.zone_name, value: item._id } }))
+        // zones = zones.length > 0 ? zones : [{ label: 'all', value: '' }]
+        console.log(zones);
+        zones = [...zones, { label: 'all', value: '' }]
+        console.log(zones);
+        this.setState({ zoneOption: zones })
+        console.log(zones);
+    }
+    zone_changeHandler = (e) => {
+        console.log(e);
+        this.setState({ zone_Value: e })
+    }
+    categoryCode_changeHandler = (e) => {
+        console.log(e);
+        this.setState({ categoryCode_Value: e })
+    }
+    categoryName_changeHandler = (e) => {
+        console.log(e);
+        this.setState({ categoryName_Value: e })
+    }
+    subCategoryCode_changeHandler = (e) => {
+        console.log(e);
+        this.setState({ subCategoryCode_Value: e })
+    }
+    subCategoryName_changeHandler = (e) => {
+        console.log(e);
+        this.setState({ subCategoryName_Value: e })
+    }
+
+    assetEPC_changeHandler = (e) => {
+        console.log(e.target.value);
+        this.setState({ assetEPC_Value: e.target.value })
+    }
+    Odoo_Tag_changeHandler = (e) => {
+        console.log(e.target.value);
+        this.setState({ Odoo_Tag_Value: e.target.value })
+    }
+    ownerName_changeHandler = (e) => {
+        console.log(e.target.value);
+        this.setState({ ownerName_Value: e.target.value })
+    }
+    description_changeHandler = (e) => {
+        console.log(e.target.value);
+        this.setState({ description_Value: e.target.value })
+    }
+    assetStatus_changeHandler = (e) => {
+        console.log(e.target.value);
+        this.setState({ assetStatus_Value: e.target.value })
+    }
+    creationDate_changeHandler = (e) => {
+        console.log(e);
+        this.setState({ creationDate_Value: e })
+    }
+    modificationDate_changeHandler = (e) => {
+        console.log(e);
+        this.setState({ modificationDate_Value: e })
+    }
+    //////////////////////////////////
+    onChange = list => {
+        this.setState({ checkedList: list });
+        this.setState({ indeterminate: !!list.length && list.length < plainOptions.length });
+        this.setState({ checkAll: list.length === plainOptions.length });
+    };
+
+    onCheckAllChange = e => {
+        this.setState({ checkedList: e.target.checked ? plainOptions : [] })
+        this.setState({ indeterminate: false });
+        this.setState({ checkAll: e.target.checked });
+
     };
 
     onSubmitEvent = () => {
         console.log("User");
     };
     searchFunction = () => {
-        this.setState({ groupedData: this.dateFilter() });
-        // console.log(this.state.allData.map((item) => item?.asset_name));
+        this.setState({
+            assetsDetails:
+                FilterFunction({
+                    data: this.state.assetsDetailsNew,
+                    filters: {
+                        // site_Value: this.state.site_Value[0]?.label === 'all' ? [{ label: '' }] : this.state.site_Value,
+                        // zone_Value: this.state.zone_Value[0]?.label === 'all' ? [{ label: '' }] : this.state.zone_Value,
+                        // department_Value: this.state.department_Value[0]?.label === 'all' ? [{ label: '' }] : this.state.department_Value,
+                        // assetEPC_Value: this.state.assetEPC_Value || '',
+                        // Odoo_Tag_Value: this.state.Odoo_Tag_Value || '',
+                        // ownerName_Value: this.state.ownerName_Value || '',
+                        // description_Value: this.state.description_Value || '',
+                        // assetStatus_Value: this.state.assetStatus_Value || '',
+                        createdAt: this.state.creationDate_Value || '',
+                        updatedAt: this.state.modificationDate_Value || '',
+                        // zoneFilter: ''
+                    }
+                })
+        });
     };
-    dateCompare = (sDate, eDate) => {
-        let { LastTimeDate } = this.state;
-        let endingDate = this.state.LastTimeDate;
-        if (!LastTimeDate && !endingDate) {
+    dateCompareCreation = (sDate, eDate) => {
+        let { creation_date } = this.state;
+        let endingDate = this.state.creation_date;
+        if (!creation_date && !endingDate) {
             return true;
         }
-        LastTimeDate = moment(LastTimeDate);
-        // endingDate = moment(endingDate)
-        let sDiff = moment(sDate).diff(LastTimeDate, "days");
+        creation_date = moment(creation_date);
+        let sDiff = moment(sDate).diff(creation_date, "days");
         let eDiff = !eDate ? -1 : moment(eDate).diff(endingDate, "days");
         if (sDiff >= 0 && eDiff <= 0) return true;
         return false;
     };
-    handleChangeSite = (e) => {
-        this.setState({ site: e })
-        console.log(e);
-    }
+    dateCompareUpdated = (sDate, eDate) => {
+        let { modification_date } = this.state;
+        let endingDate = this.state.modification_date;
+        if (!modification_date && !endingDate) {
+            return true;
+        }
+        modification_date = moment(modification_date);
+        let sDiff = moment(sDate).diff(modification_date, "days");
+        let eDiff = !eDate ? -1 : moment(eDate).diff(endingDate, "days");
+        if (sDiff >= 0 && eDiff <= 0) return true;
+        return false;
+    };
     dateFilter = () => {
-        return this.state.groupedDataNew.filter(
+        return this.state.assetsDetailsNew.filter(
             (x) =>
-                x?.site_name?.includes(
-                    this.state.site === '' ? '' : this.state.site?.value
-                )
+                x?.asset_EPC?.includes(this.state?.epc)
+            // x?.asset_name?.assetStatus.includes(this.state.asset_status)
+            // &&
+            // this.dateCompareCreation(x?.createdAt, x?.createdAt)
+            // &&
+            // this.dateCompareUpdated(x?.updatedAt, x?.updatedAt)
         );
     };
-    async componentDidMount() {
-        const sites = await api.getAllSite()
-        this.setState({ sites })
+    shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
     }
     runFunction = async () => {
         this.setState({ loading: true });
-        const SOH = await api.getStockOnHand();
-        // let filtering = ASN.filter((item => item.operation_name === "receiving"))
-        this.setState({ SOH: SOH, allData: SOH });
-        console.log(SOH, "asdfsdafasdf");
-        if (SOH) {
-            this.setState({ loading: false });
-            var grouped = _.mapValues(_.groupBy(this.state.SOH, 'site_name'),
-                clist => clist.map(singleSite => singleSite));
-            let groupedData = Object.entries(grouped).map(([key, value]) => {
-                return { site_name: key, data: value }
+        if (this.state.site_Value && this.state.zoneOption === '') {
+            return toast.error("Please Select Zite and Zone")
+        } else {
+            let sites = this.state.site_Value?.some((item => item.label === 'all'))
+            let zones = this.state.zone_Value?.some((item => item.label === 'all'))
+            let depaets = this.state.department_Value?.some((item => item.label === 'all'))
+            let category_code = this.state.categoryCode_Value?.some((item => item.label === 'all'))
+            let category_name = this.state.categoryName_Value?.some((item => item.label === 'all'))
+            let sub_category_code = this.state.subCategoryCode_Value?.some((item => item.label === 'all'))
+            let sub_category_name = this.state.subCategoryName_Value?.some((item => item.label === 'all'))
+            console.log(sites);
+            this.setState({ loading: true });
+            const assetBySOH = await api.getSohByParams({
+                siteId: sites ? null : this.state.site_Value?.map((item => item.value)),
+                zoneId: zones ? null : this.state.zone_Value?.map((item => item.value)),
+                departementId: depaets ? null : this.state.department_Value?.map((item => item.value)),
+                category_code: category_code ? null : this.state.categoryCode_Value.map((item => item.value)),
+                category_name: category_name ? null : this.state.categoryName_Value?.map((item => item.value)),
+                sub_category_code: sub_category_code ? null : this.state.subCategoryCode_Value?.map((item => item.value)),
+                sub_category_name: sub_category_name ? null : this.state.subCategoryName_Value?.map((item => item.value)),
+                description: this.state.description_Value || null,
+                ownerName: this.state.ownerName_Value || null,
+                asset_EPC: this.state.assetEPC_Value || null,
+                serialNumber: this.state.Odoo_Tag_Value || null,
+                assetValue: this.state.assetStatus_Value || null,
+                createdAt: this.state.creationDate_Value || null,
+                assetValue: this.state.assetStatus_Value || null,
             })
-            console.log(groupedData);
-            this.setState({ groupedData: groupedData, groupedDataNew: groupedData })
-            this.searchFunction()
+            const CountedItems = await api.getCountedItemsByParams(
+                {
+                    siteId: sites ? null : this.state.site_Value?.map((item => item.value)),
+                    zoneId: zones ? null : this.state.zone_Value?.map((item => item.value)),
+                    departementId: depaets ? null : this.state.department_Value?.map((item => item.value)),
+                    category_code: category_code ? null : this.state.categoryCode_Value.map((item => item.value)),
+                    category_name: category_name ? null : this.state.categoryName_Value?.map((item => item.value)),
+                    sub_category_code: sub_category_code ? null : this.state.subCategoryCode_Value?.map((item => item.value)),
+                    sub_category_name: sub_category_name ? null : this.state.subCategoryName_Value?.map((item => item.value)),
+                    description: this.state.description_Value || null,
+                    ownerName: this.state.ownerName_Value || null,
+                    asset_EPC: this.state.assetEPC_Value || null,
+                    serialNumber: this.state.Odoo_Tag_Value || null,
+                    // assetValu: this.state.assetStatus_Value || null,
+                    createdAt: this.state.creationDate_Value || null,
+                    assetStatus: this.state.assetStatus_Value || null,
+                }
+            );
+            // const assetBySOH = await api.getAssetsBySohWithParam(this.state.site_Value?.value, this.state.zone_Value?.value);
+            if (CountedItems && assetBySOH) {
+                let newArray = []
+                newArray = await newArray.concat(CountedItems, assetBySOH)
+                await this.setState({ assetsDetails: newArray, assetsDetailsNew: newArray })
+                this.runFunctionSearch(CountedItems, assetBySOH)
+                this.setState({ loading: false });
+            }
         }
+    }
+    matchedFunction = () => {
+        let newData = this.state.assetsDetailsNew?.filter((item =>
+            item.Matched === true
+        ))
+        this.setState({
+            assetsDetails: newData,
+        });
+    }
+    oversFunction = () => {
+        let newData = this.state.assetsDetailsNew?.filter((item =>
+            item.OversCounted == true
+        ))
+        this.setState({
+            assetsDetails: newData,
+        });
+    }
+    undersFunction = () => {
+        let newData = this.state.assetsDetailsNew?.filter((item =>
+            item.Matched === false
+        ))
+        this.setState({
+            assetsDetails: newData,
+        });
+    }
+
+    runFunctionSearch = async (counted, allSoh) => {
+        this.setState({ loading: true });
+        let newArray = []
+        let Solutuion = allSoh.map(f => ({
+            ...f,
+            Matched: counted.find(item => item?.asset_EPC === f.asset_EPC) ? true : false,
+            // MatchedColor: counted.some(item => item?.asset_EPC === f.asset_EPC) ? 'green' : 'gray',
+        }));
+        let SolutuionTwo = counted.map(f => ({
+            ...f,
+            OversCounted: allSoh.find(item => item?.asset_EPC === f.asset_EPC) ? false : true,
+        }));
+
+        SolutuionTwo = SolutuionTwo.filter((item => item?.OversCounted === true))
+        newArray = await newArray.concat(Solutuion, SolutuionTwo)
+        newArray = newArray.filter((item => item.Matched === true || item.Matched === false || item.OversCounted === true))
+        await this.setState({
+            assetsDetails: newArray,
+            assetsDetailsNew: newArray,
+
+        });
+        this.searchFunction()
+        this.setState({ loading: false });
     };
+    handleClickOpen = (device) => {
+        this.setState({ openModal: true })
+        this.setState({ QrCode: device })
+    }
+    handleClose = () => {
+        this.setState({ openModal: false })
+    }
+    handleChangeZone = (e) => {
+        this.setState({ zone: e })
+    }
+    handleChangeSite = async (e) => {
+        this.setState({ loading: true })
+        this.setState({ site: e })
+        let { value } = e
+        const zones = await api.getZoneBySite(value)
+        if (zones) {
+            this.setState({ zones })
+            this.setState({ loading: false })
+            console.log(value);
+
+        }
+    }
+
     render() {
-        const customStyles = {
-            control: (base, state) => ({
-                ...base,
-                background: "transparent",
-                backgroundColor: 'transparent',
-                height: 33,
-                marginTop: 10,
-
-            }),
-            menu: base => ({
-                ...base,
-                // override border radius to match the box
-                borderRadius: 0,
-                // kill the gap
-                marginTop: 0,
-                background: 'transparent'
-            }),
-            menuList: base => ({
-                ...base,
-                // kill the white space on first and last option
-                padding: 0,
-                background: 'gray'
-
-            }),
-            option: provided => ({
-                ...provided,
-                color: 'black',
-                zIndex: 312312312312312
-            }),
-            singleValue: (provided, state) => {
-                const opacity = state.isDisabled ? 0.5 : 1;
-                const transition = 'opacity 300ms';
-
-                return { ...provided, opacity, transition, color: "white" };
-            },
-        };
         const headers = [
             {
-                label: "site_name",
-                key: "site_name",
+                label: "Photo",
+                key: "imageLink",
             },
             {
-                label: "zone_name",
-                key: "zone_name",
+                label: "EPC",
+                key: "asset_EPC",
             },
             {
-                label: "matched",
-                key: "matched",
+                label: "Asset Code - M365",
+                key: "category_code",
             },
             {
-                label: "over",
-                key: "over",
+                label: "Area",
+                key: "category_cod",
             },
             {
-                label: "under",
-                key: "under",
+                label: "SITE",
+                key: "site",
+            },
+            {
+                label: "CATEGORY CODE",
+                key: "category_code",
+            },
+            {
+                label: "CATEGORY NAME",
+                key: "category_name",
+            },
+            {
+                label: "SUB CATEGORY CODE",
+                key: "sub_category_code",
+            },
+            {
+                label: "SUB CATEGORY NAME",
+                key: "sub_category_name",
+            },
+
+            {
+                label: "Departement",
+                key: "departement_name",
+            },
+            {
+                label: "LOCATION",
+                key: "zone",
+            },
+            {
+                label: "Custodian",
+                key: "ownerName",
+            },
+            {
+                label: "Description",
+                key: "description",
+            },
+            {
+                label: "Serial No.",
+                key: "serialNumber",
+            },
+            {
+                label: "Asset Status",
+                key: "assetStatus",
+            },
+            {
+                label: "Acquisition Date",
+                key: "ACQUISITION_DATE",
+            },
+            {
+                label: "Depreciation",
+                key: "DEPRECIATION",
+            },
+            {
+                label: "NBV",
+                key: "NBV",
+            },
+            {
+                label: "Creation Date",
+                key: "createdAt",
+            },
+            {
+                label: "Modification Date",
+                key: "updatedAt",
+            },
+            {
+                label: "REMARKS",
+                key: "REMARKS",
+            },
+            {
+                label: "Maintenance",
+                key: "maintenanceDate",
             },
         ];
-        let sites = this.state.sites.map((item => {
-            return { label: item?.site_name, value: item?.site_name }
-        }))
-        sites = [{ label: "all sites", value: '' }, ...sites]
 
-        const data = this.state.hardcoreData
-            .map((item) => {
+        console.log(this.state.assetsDetails, "asdfasdf");
+        let arr = []
+
+
+        const data = this.state.assetsDetails !== true ?
+            this.state.assetsDetails.map((item) => {
                 return {
-                    site_name: item?.site_name,
-                    zone_name: item?.zone_name,
-                    matched: item?.matched,
-                    over: item?.over,
-                    under: item?.under,
-
+                    asset_EPC: item?.asset_EPC || "----",
+                    serialNumber: item?.serialNumber || "----",
+                    site: item?.siteId?.site_name || "----",
+                    category_code: item?.category_code || "----",
+                    category_name: item?.category_name || "----",
+                    sub_category_code: item?.sub_category_code || "----",
+                    sub_category_name: item?.sub_category_name || "----",
+                    departement_name: item?.departementId?.departement_name || "----",
+                    zone: item?.zoneId?.zone_name || "----",
+                    ownerName: item?.ownerName || "----",
+                    description: item?.description || "----",
+                    assetStatus: item?.assetStatus || "----",
+                    ACQUISITION_DATE: item?.ACQUISITION_DATE || "----",
+                    createdAt: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || '----',
+                    updatedAt: new Date(item?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
+                    DEPRECIATION: item?.DEPRECIATION || "----",
+                    NBV: item?.NBV || "----",
+                    REMARKS: item?.REMARKS || "----",
+                    maintenanceDate: item?.maintenanceDate || "----",
+                    imageLink: item?.imageLink || "----",
                 }
-            });
-
+            }) : arr
         return (
             <React.Fragment>
-                <CustomModal
-                    image
-                    open={this.state.openModal}
-                    handleClose={() => this.handleClose()}
-                    handleClickOpen={() => this.handleClickOpen}
-                    data={Logo}
-                />
+                <CustomModal data={this.state.QrCode} brcode={true} image={true} open={this.state.openModal} handleClose={() => this.handleClose()} handleClickOpen={() => this.handleClickOpen} />
                 <div>
                     <div className="main-dashboard">
                         {this.state.loading ? (
@@ -864,7 +594,16 @@ export class StockOnHand extends Component {
                                     )}
                                 </IconButton>
                                 <PeopleIcon htmlColor="black" className="ml-4 mr-4" />
-                                <h1 className="dashboard-heading">Stock Count  (Report)</h1>
+                                <h1 className="dashboard-heading">Stock on Hand</h1>
+                                {/* <Button
+                                    onClick={() => this.searchFunction()}
+                                    type="submit"
+                                    color={"secondary"}
+                                    variant="contained"
+                                    style={{ position: "absolute", right: "90px" }}
+                                >
+                                    Search
+                                </Button> */}
                                 <Button
                                     onClick={() => this.runFunction()}
                                     type="submit"
@@ -874,11 +613,12 @@ export class StockOnHand extends Component {
                                 >
                                     Run
                                 </Button>
-                                <IconButton style={{ position: "absolute", right: "90px", cursor: 'pointer' }}>
-                                    <CSVLink filename="Stock_Count" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: 60 }} data={data} headers={headers}>
+                                {/* <CSVReader /> */}
+                                <IconButton style={{ position: "absolute", right: "170px", cursor: 'pointer' }}>
+                                    {/* <CSVLink filename="Counted Report" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: 60 }} data={data} headers={headers}>
                                         <SystemUpdateAltIcon fontSize="large" htmlColor="black" />
                                         <h1 className="dashboard-heading" style={{ fontSize: '15px' }} >CSV</h1>
-                                    </CSVLink>
+                                    </CSVLink> */}
                                 </IconButton>
                             </div>
                             <Collapse
@@ -887,22 +627,47 @@ export class StockOnHand extends Component {
                                 unmountOnExit
                                 style={{ width: "100%" }}
                             >
-                                <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', backgroundColor: 'transparent', minHeight: 50, marginTop: 10, position: 'relative' }}>
-                                    <form style={{ width: '50%', margin: 20, marginBottom: 0, display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 0, flexDirection: 'column' }}  >
-                                        <Select
-                                            value={this.state.site}
-                                            onChange={(e) => this.handleChangeSite(e)}
-                                            options={sites}
-                                            isSearchable={true}
-                                            placeholder={"Site"}
-                                            className="last-scan-select-2"
-                                            styles={customStyles}
-                                        />
-                                    </form>
-                                    <div style={{ width: '1px', height: '100%', backgroundColor: 'white', position: 'absolute' }}></div>
-                                    <form style={{ width: '50%', margin: 20, marginBottom: 0, display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 0, flexDirection: 'column' }}  >
-                                    </form>
-                                </div>
+                                <Filters
+                                    site_Value={this.state.site_Value}
+                                    zone_Value={this.state.zone_Value}
+                                    department_Value={this.state.department_Value}
+                                    assetEPC_Value={this.state.assetEPC_Value}
+                                    Odoo_Tag_Value={this.state.Odoo_Tag_Value}
+                                    ownerName_Value={this.state.ownerName_Value}
+                                    description_Value={this.state.description_Value}
+                                    assetStatus_Value={this.state.assetStatus_Value}
+                                    creationDate_Value={this.state.creationDate_Value}
+                                    modificationDate_Value={this.state.modificationDate_Value}
+                                    site_changeHandler={this.site_changeHandler}
+                                    zone_changeHandler={this.zone_changeHandler}
+                                    department_changeHandler={this.department_changeHandler}
+                                    assetEPC_changeHandler={this.assetEPC_changeHandler}
+                                    Odoo_Tag_changeHandler={this.Odoo_Tag_changeHandler}
+                                    ownerName_changeHandler={this.ownerName_changeHandler}
+                                    description_changeHandler={this.description_changeHandler}
+                                    assetStatus_changeHandler={this.assetStatus_changeHandler}
+                                    creationDate_changeHandler={this.creationDate_changeHandler}
+                                    modificationDate_changeHandler={this.modificationDate_changeHandler}
+                                    sitesOption={this.state.sitesOption}
+                                    zoneOption={this.state.zoneOption}
+                                    departmentOption={this.state.departmentOption}
+                                    siteFilter
+                                    zoneFilter
+                                    departmentFilter
+                                    categoryCode_changeHandler={this.categoryCode_changeHandler}
+                                    categoryName_changeHandler={this.categoryName_changeHandler}
+                                    subCategoryCode_changeHandler={this.subCategoryCode_changeHandler}
+                                    subCategoryName_changeHandler={this.subCategoryName_changeHandler}
+                                    categoryCodeOption={this.state.categoryCodeOptions}
+                                    categoryNameOption={this.state.categoryNameOptions}
+                                    subCategoryCodeOption={this.state.subCategoryCodeOptions}
+                                    subCategoryNameOption={this.state.subCategoryNameOptions}
+                                    categoryCode_Value={this.state.categoryCode_Value}
+                                    categoryName_Value={this.state.categoryName_Value}
+                                    subCategoryCode_Value={this.state.subCategoryCode_Value}
+                                    subCategoryName_Value={this.state.subCategoryName_Value}
+                                >
+                                </Filters>
                             </Collapse>
                             <div
                                 style={{
@@ -913,15 +678,25 @@ export class StockOnHand extends Component {
                                     margin: "10px",
                                 }}
                             >
-
                             </div>
-                            <StockOnHandTable asn={this.state.groupedData} />
+                            {/* <CountedTable openModal={(device) => this.handleClickOpen(device)} asn={this.state.assetsDetails} /> */}
+                            <StockOnHandTable
+                                matched={this.state.assetsDetailsNew?.filter((item =>
+                                    item.Matched === true
+                                )).length}
+                                overs={this.state.assetsDetailsNew?.filter((item =>
+                                    item.OversCounted == true
+                                )).length}
+                                unders={this.state.assetsDetailsNew?.filter((item =>
+                                    item.Matched === false
+                                )).length}
+                                openModal={(device) => this.handleClickOpen(device)} asn={this.state.assetsDetails !== true ? this.state.assetsDetails?.filter((row => row?.asset_EPC)) : this.state.assetsDetails} />
                         </div>
                     </div>
                 </div>
-            </React.Fragment>
+            </React.Fragment >
         );
     }
 }
 
-export default StockOnHand;
+export default CountedItems;
