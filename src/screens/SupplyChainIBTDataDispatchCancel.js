@@ -18,7 +18,7 @@ import SupplyChainASNDispatchTable from "../components/SupplyChainASNDispatchTab
 import moment from "moment";
 import { DatePicker, Radio, Space } from "antd";
 const { RangePicker } = DatePicker;
-export class SupplyChainIBTDataDispatch extends Component {
+export class SupplyChainIBTDataDispatchCancel extends Component {
   state = {
     location: "",
     ASN: [],
@@ -236,7 +236,7 @@ export class SupplyChainIBTDataDispatch extends Component {
               >
 
               </div>
-              <SupplyChainASNDispatchTable  runFunction={this.runFunction} asn={this.state.ASN.filter((item => item.operation_name === 'transfer out'))} />
+              <SupplyChainASNDispatchTable edit  runFunction={this.runFunction} asn={this.state.ASN.filter((item => item.operation_name === 'transfer out'))} />
             </div>
           </div>
         </div>
@@ -245,4 +245,4 @@ export class SupplyChainIBTDataDispatch extends Component {
   }
 }
 
-export default SupplyChainIBTDataDispatch;
+export default SupplyChainIBTDataDispatchCancel;

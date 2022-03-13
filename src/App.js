@@ -69,6 +69,7 @@ import DiscrepancyReport from './screens/DiscrepancyReport';
 import StockOnHand from './screens/StockOnHand';
 import AssociatedReport from './screens/AssociatedReport';
 import ReTaggingReport from './screens/ReTaggingReport';
+import SupplyChainIBTDataDispatchCancel from './screens/SupplyChainIBTDataDispatchCancel';
 class App extends React.Component {
   state = {
     open: true,
@@ -125,6 +126,7 @@ class App extends React.Component {
                   <PrivateRoute path={"/SupplyChain/SupplyChainIBTData"} exact component={SupplyChainIBTData} />
                   <PrivateRoute path={"/SupplyChain/SupplyChainIBTDataPacking"} exact component={SupplyChainIBTDataPacking} />
                   <PrivateRoute path={"/SupplyChain/SupplyChainIBTDataDispatch"} exact component={SupplyChainIBTDataDispatch} />
+                  <PrivateRoute path={"/SupplyChain/SupplyChainIBTDataDispatchCancel"} exact component={SupplyChainIBTDataDispatchCancel} />
                   <PrivateRoute path={"/SupplyChain/SupplyChainGoodSummary"} exact component={SupplyChainGoodSummary} />
                   <PrivateRoute path={"/SupplyChain/SupplyChainStoreSummary"} exact component={SupplyChainStoreSummary} />
                   <PrivateRoute path={"/SupplyChain/SupplyChainWarehouseSummary"} exact component={SupplyChainWarehouseSummary} />

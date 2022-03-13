@@ -508,7 +508,7 @@ function ScrollableTabsButtonForce(props) {
             {permissions.includes("IN-Store GI") ? (
               <NavLink
                 exact
-                to="/SupplyChain/SupplyChainIBTDataDispatch"
+                to="/SupplyChain/SupplyChainIBTDataDispatchCancel"
                 className={`top-drawer-btn top-drawer-btn-${ActiveBtn3}`}
                 activeClassName="top-drawer-btn top-drawer-btn-active"
               >
