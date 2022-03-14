@@ -88,6 +88,20 @@ export default function ItemMasterTable({ asn, openModal, edit, runFunction }) {
         zone: '',
         department: '',
     })
+    const formatDate = (date) => {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2)
+            month = '0' + month;
+        if (day.length < 2)
+            day = '0' + day;
+
+        return [year, month, day].join('-');
+        // return console.log([year, month, day].join('-'))
+    }
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -470,7 +484,7 @@ export default function ItemMasterTable({ asn, openModal, edit, runFunction }) {
                                                     <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.DEPRECIATION || "----"}</TableCell>
                                                     <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.NBV || "----"}</TableCell>
                                                     <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{row?.REMARKS || "----"}</TableCell>
-                                                    <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{new Date(row?.maintenanceDate).toLocaleString('en-Us', "Asia/Muscat") || "----"}</TableCell>
+                                                    <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{formatDate(row?.maintenanceDate) === 'NaN-NaN-NaN' ? "----" : formatDate(row?.maintenanceDate)}</TableCell>
                                                     <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">
                                                         <Button style={{ minWidth: 20, height: 20 }} onClick={() => openModal(row?.asset_EPC)} variant="contained" className="m-1" color="primary"  >EPC Barcode</Button>
                                                     </TableCell>
