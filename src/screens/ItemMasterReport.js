@@ -33,6 +33,7 @@ import ItemMasterTable from "../components/ItemMasterTable";
 import { FilterFunction } from "../components/filterFunction";
 import Filters from "../components/Filters";
 import _ from 'lodash'
+import axios from "axios";
 const { RangePicker } = DatePicker;
 export class ItemMasterReport extends Component {
     state = {
@@ -81,6 +82,7 @@ export class ItemMasterReport extends Component {
 
     };
     async componentDidMount() {
+      
         const filters = await api.getFilters()
         if (filters) {
             let data = filters?.filters

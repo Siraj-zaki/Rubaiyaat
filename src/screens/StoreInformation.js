@@ -151,8 +151,8 @@ export class StoreInformation extends Component {
 
                             <div style={{ display: 'flex', width: '200px', justifyContent: 'space-between', alignSelf: 'flex-end', margin: '10px' }}>
                                 {/* <Button type="submit" variant="contained" onClick={(e) => this.searchFunction(e)}>Search</Button> */}
-                                <NavLink to={'/StoreInformation/EditStoreInformation'}>
-                                    <Button variant="contained" type='button' color="secondary">Add Stores</Button>
+                                <NavLink to={'/Site/AddSite'}>
+                                    <Button variant="contained" type='button' color="secondary">Add Sites</Button>
                                 </NavLink>
                             </div>
                             <StickyHeadTable Site={this.state.Site} openModal={() => this.handleClickOpen()} />

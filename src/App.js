@@ -70,6 +70,9 @@ import StockOnHand from './screens/StockOnHand';
 import AssociatedReport from './screens/AssociatedReport';
 import ReTaggingReport from './screens/ReTaggingReport';
 import SupplyChainIBTDataDispatchCancel from './screens/SupplyChainIBTDataDispatchCancel';
+import AddSite from './screens/AddSite';
+import AddZone from './screens/AddZone';
+import AddDepartment from './screens/AddDepartment';
 class App extends React.Component {
   state = {
     open: true,
@@ -164,6 +167,9 @@ class App extends React.Component {
                   <PrivateRoute path={"/Roles/EditRoles"} exact component={EditRoles} />
                   <PrivateRoute path={"/Roles/AddRole"} exact component={AddRole} />
                   <PrivateRoute path={"/User/AddUser"} exact component={AddUser} />
+                  <PrivateRoute path={"/Site/AddSite"} exact component={AddSite} />
+                  <PrivateRoute path={"/Zone/AddZone"} exact component={AddZone} />
+                  <PrivateRoute path={"/Department/AddDepartment"} exact component={AddDepartment} />
                   <PrivateRoute path={"/Devices/AddDevice"} exact component={AddDevice} />
                 </React.Fragment>
                 : ""}

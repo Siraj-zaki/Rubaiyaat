@@ -15,7 +15,10 @@ const useStyles = makeStyles({
         width: '100%',
     },
     container: {
-        maxHeight: 640,
+        maxHeight: 440,
+    },
+    backgroundColorfix: {
+        backgroundColor: "#263238",
     },
 });
 

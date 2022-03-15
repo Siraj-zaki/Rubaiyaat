@@ -417,6 +417,30 @@ function ScrollableTabsButtonForce(props) {
             ) : (
               ""
             )}
+            {permissions.includes("Stores") ? (
+              <NavLink
+                to="/Department/AddDepartment"
+                className={`top-drawer-btn top-drawer-btn-${ActiveBtn1}`}
+                activeClassName="top-drawer-btn top-drawer-btn-active"
+              >
+                <DeveloperModeIcon htmlColor="white" />
+                Add Department
+              </NavLink>
+            ) : (
+              ""
+            )}
+            {permissions.includes("Stores") ? (
+              <NavLink
+                to="/Zone/AddZone"
+                className={`top-drawer-btn top-drawer-btn-${ActiveBtn1}`}
+                activeClassName="top-drawer-btn top-drawer-btn-active"
+              >
+                <DeveloperModeIcon htmlColor="white" />
+                Add Zone
+              </NavLink>
+            ) : (
+              ""
+            )}
             {permissions.includes("Roles") ? (
               <NavLink
                 to="/Roles"

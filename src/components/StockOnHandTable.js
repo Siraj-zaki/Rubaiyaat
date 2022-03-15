@@ -52,7 +52,7 @@ function Row(props) {
         </React.Fragment >
     );
 }
-export default function StockOnHandTable({ asn, openModal, edit, runFunction, zoneName, matched, overs, unders }) {
+export default function StockOnHandTable({ mainData }) {
     const useStyles = makeStyles({
         root: {
             width: '100%',
@@ -101,29 +101,7 @@ export default function StockOnHandTable({ asn, openModal, edit, runFunction, zo
         });
     }
 
-    const handleEditApi = async () => {
-        let editData = {
-            serialNumber: rowData.serialNumber || state.serialNumber,
-            asset_EPC: rowData.asset_EPC || state.asset_EPC,
-            category_code: rowData.category_code || state.category_code,
-            category_name: rowData.category_name || state.category_name,
-            sub_category_code: rowData.sub_category_code || state.sub_category_code,
-            sub_category_name: rowData.sub_category_name || state.sub_category_name,
-            ownerName: rowData.ownerName || state.ownerName,
-            assetStatus: rowData.assetStatus || state.assetStatus,
-            DEPRECIATION: rowData.DEPRECIATION || state.DEPRECIATION,
-            NBV: rowData.NBV || state.NBV,
-            REMARKS: rowData.REMARKS || state.REMARKS,
-        }
-        const apiReq = await api.editSohByParams(editData, rowData?._id).then(res => {
-            setOpen(false)
-            toast.success("Asset Edit SuccessFully")
-            setTimeout(() => {
-                runFunction()
-            }, 500);
-        })
-        console.log(apiReq);
-    }
+
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
@@ -140,48 +118,87 @@ export default function StockOnHandTable({ asn, openModal, edit, runFunction, zo
     return (
 
         <Paper className={classes.root}  >
-            {!!asn.length ?
-                <React.Fragment>
-                    <TableContainer  >
-                        <Table size="small" aria-label="collapsible table">
-                            <TableHead style={{ backgroundColor: "#263238" }}  >
-                                <TableRow  >
-                                    {/* <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Zone Name</TableCell> */}
-                                    {/* <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Creation_Date</TableCell> */}
-                                    <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Matched</TableCell>
-                                    <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Overs</TableCell>
-                                    <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, }} size="small">Unders </TableCell>
-
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {/* {asn.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-                            <Row openModal={(device) => openModal(device)} key={row.Odoo_Tag} row={row} />
-                        ))} */}
-
-                                <TableRow hover role="checkbox" tabIndex={-1} >
-                                    <React.Fragment>
-                                        {/* <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{zoneName}</TableCell> */}
-                                        <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{matched || 0}</TableCell>
-                                        <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{overs || 0}</TableCell>
-                                        <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, minWidth: "200px", }} align="center">{unders || 0}</TableCell>
-                                    </React.Fragment>
-                                </TableRow>
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    <TablePagination
-                        rowsPerPageOptions={[10, 25, 100]}
-                        component="div"
-                        count={1}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                        className={classes.backgroundColorfix}
-                        style={{ backgroundColor: "#263238", color: 'white' }}
-                    />
-                </React.Fragment> :
+            <Table size="small" aria-label="collapsible table">
+                <TableHead style={{ backgroundColor: "#263238" }}  >
+                    <TableRow  >
+                        <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, width: "200px", }} size="small">Site </TableCell>
+                        <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, width: "200px", }} size="small"> </TableCell>
+                        <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, width: "200px", }} size="small"> </TableCell>
+                        <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, width: "200px", }} size="small">Matched </TableCell>
+                        <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, width: "200px", }} size="small">Unders </TableCell>
+                        <TableCell colSpan={2} align="center" style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, width: "200px", }} size="small">Overs </TableCell>
+                    </TableRow>
+                </TableHead>
+            </Table>
+            {!!mainData.length ?
+                mainData.map((item =>
+                    <React.Fragment>
+                        <TableContainer  >
+                            <Table size="small" aria-label="collapsible table">
+                                <TableBody>
+                                    <TableRow hover role="checkbox" tabIndex={-1} >
+                                        <React.Fragment>
+                                            <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, width: "200px", }} align="center">{item.site_name}</TableCell>
+                                            <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, width: "200px", }} align="center"></TableCell>
+                                            <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, width: "200px", }} align="center"></TableCell>
+                                            <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, width: "200px", }} align="center">{item.matched || 0}</TableCell>
+                                            <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, width: "200px", }} align="center">{item.under || 0}</TableCell>
+                                            <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, width: "200px", }} align="center">{item.over || 0}</TableCell>
+                                        </React.Fragment>
+                                    </TableRow>
+                                </TableBody>
+                            </Table>
+                            {item.departments.map((ItemTwo =>
+                                <React.Fragment >
+                                    <Table size="small" aria-label="collapsible table">
+                                        <TableBody>
+                                            <TableRow hover role="checkbox" tabIndex={-1} >
+                                                <React.Fragment>
+                                                    <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, width: "200px", }} align="center"></TableCell>
+                                                    <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, width: "200px", }} align="center">{ItemTwo.departement_name}</TableCell>
+                                                    <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, width: "200px", }} align="center"></TableCell>
+                                                    <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, width: "200px", }} align="center">{ItemTwo.matched || 0}</TableCell>
+                                                    <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, width: "200px", }} align="center">{ItemTwo.under || 0}</TableCell>
+                                                    <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, width: "200px", }} align="center">{ItemTwo.over || 0}</TableCell>
+                                                </React.Fragment>
+                                            </TableRow>
+                                        </TableBody>
+                                    </Table>
+                                    {ItemTwo.zones.map((ItemThree =>
+                                        <React.Fragment >
+                                            <Table size="small" aria-label="collapsible table">
+                                                <TableBody>
+                                                    <TableRow hover role="checkbox" tabIndex={-1} >
+                                                        <React.Fragment>
+                                                            <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, width: "200px", }} align="center"></TableCell>
+                                                            <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, width: "200px", }} align="center"></TableCell>
+                                                            <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, width: "200px", }} align="center">{ItemThree.zone_name}</TableCell>
+                                                            <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, width: "200px", }} align="center">{ItemThree.matched || 0}</TableCell>
+                                                            <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, width: "200px", }} align="center">{ItemThree.under || 0}</TableCell>
+                                                            <TableCell colSpan={2} style={{ color: 'white', fontWeight: 'bold', letterSpacing: 1, fontSize: 12, width: "200px", }} align="center">{ItemThree.over || 0}</TableCell>
+                                                        </React.Fragment>
+                                                    </TableRow>
+                                                </TableBody>
+                                            </Table>
+                                        </React.Fragment>
+                                    ))}
+                                </React.Fragment>
+                            ))}
+                        </TableContainer>
+                        {/* <TablePagination
+                            rowsPerPageOptions={[10, 25, 100]}
+                            component="div"
+                            count={mainData.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                            className={classes.backgroundColorfix}
+                            style={{ backgroundColor: "#263238", color: 'white' }}
+                        /> */}
+                    </React.Fragment>
+                ))
+                :
                 <div style={{ width: '100%', height: '200px', backgroundColor: 'black', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <h1>No Data</h1>
                 </div>

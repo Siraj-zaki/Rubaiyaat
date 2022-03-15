@@ -18,6 +18,10 @@ const Path = {
   EDIT_HAND_HELD: `${BASE_URL}/handHeld/edit`,
   DELETE_HAND_HELD: `${BASE_URL}/HandHeld/delete`,
   ADD_USER: `${BASE_URL}/user/signup`,
+  ADD_SITE: `${BASE_URL}/site/add`,
+  ADD_DEPARTMENT: `${BASE_URL}/departement/add`,
+  GET_DEPARTMENT: `${BASE_URL}/departement/get`,
+  ADD_ZONE: `${BASE_URL}/zone/add`,
   DELETE_ROLE: `${BASE_URL}/role/delete`,
   EDIT_USER: `${BASE_URL}/user/edit`,
   EDIT_ROLE: `${BASE_URL}/role/edit`,
@@ -43,6 +47,7 @@ const Path = {
   GET_STOCK_ON_HAND: `${BASE_URL}/asset/getSoh/and/counted`,
   GET_FILTERS: `${BASE_URL}/assetDetailRoutes/getFilters`,
   EDIT_ASSET_DETAIL: `${BASE_URL}/assetDetailRoutes/edit`,
+  DELETE_ASSET_DETAIL: `${BASE_URL}/assetDetailRoutes/delete`,
 };
 
 export { Path };

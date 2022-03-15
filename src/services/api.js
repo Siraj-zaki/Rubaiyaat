@@ -8,6 +8,18 @@ const addUser = async (payLoad) => {
   const { data } = await axios.post(`${Path.ADD_USER}`, payLoad);
   return data;
 };
+const addDepartment = async (payLoad) => {
+  const { data } = await axios.post(`${Path.ADD_DEPARTMENT}`, payLoad);
+  return data;
+};
+const addZone = async (payLoad) => {
+  const { data } = await axios.post(`${Path.ADD_ZONE}`, payLoad);
+  return data;
+};
+const addSite = async (payLoad) => {
+  const { data } = await axios.post(`${Path.ADD_SITE}`, payLoad);
+  return data;
+};
 const getAllSite = async (payLoad) => {
   const { data } = await axios.get(`${Path.GET_ALL_SITE}`, payLoad);
   return data;
@@ -18,6 +30,10 @@ const editAsn = async (id) => {
 };
 const getAllZone = async (payLoad) => {
   const { data } = await axios.get(`${Path.GET_ALL_ZONE}`, payLoad);
+  return data;
+};
+const getAllDepartment = async (payLoad) => {
+  const { data } = await axios.get(`${Path.GET_DEPARTMENT}`, payLoad);
   return data;
 };
 const getZoneBySite = async (payLoad) => {
@@ -144,6 +160,10 @@ const editSohByParams = async (payload, id) => {
   const { data } = await axios.put(`${Path.EDIT_ASSET_DETAIL}/${id}`, payload);
   return data;
 };
+const deleteItemMaster = async (payload, id) => {
+  const { data } = await axios.delete(`${Path.DELETE_ASSET_DETAIL}/${id}`, payload);
+  return data;
+};
 const getLocations = async (payload) => {
   const { data } = await axios.get(`${Path.GET_LOCATIONS}`, payload);
   return data;
@@ -204,6 +224,11 @@ export default {
   getLocations,
   getFilters,
   editSohByParams,
-  editAsn
+  editAsn,
+  addSite,
+  addDepartment,
+  addZone,
+  getAllDepartment,
+  deleteItemMaster,
 
 };

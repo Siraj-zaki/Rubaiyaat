@@ -105,6 +105,10 @@ export default function ItemMasterTable({ asn, openModal, edit, runFunction }) {
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
+    useEffect(() => {
+        let asd = state
+    }, [state])
+
     const handleChange = (evt) => {
         console.log(evt.target.value);
         console.log(evt.target.name);
@@ -113,6 +117,7 @@ export default function ItemMasterTable({ asn, openModal, edit, runFunction }) {
             ...state,
             [evt.target.name]: value
         });
+
     }
 
     const handleEditApi = async () => {
@@ -132,6 +137,16 @@ export default function ItemMasterTable({ asn, openModal, edit, runFunction }) {
         const apiReq = await api.editSohByParams(editData, rowData?._id).then(res => {
             setOpen(false)
             toast.success("Asset Edit SuccessFully")
+            setTimeout(() => {
+                runFunction()
+            }, 500);
+        })
+        console.log(apiReq);
+    }
+    const handleDeleteApi = async () => {
+        const apiReq = await api.deleteItemMaster(data, rowData?._id).then(res => {
+            setOpen(false)
+            toast.success("Asset Deleted SuccessFully")
             setTimeout(() => {
                 runFunction()
             }, 500);
@@ -391,6 +406,7 @@ export default function ItemMasterTable({ asn, openModal, edit, runFunction }) {
                     <div style={{ width: '100%', display: 'flex', justifyContent: 'space-evenly', minHeight: 80, marginTop: 10 }}>
                         <Button style={{ width: '70px', height: '40px' }} variant='contained' onClick={() => handleEditApi()} >Save</Button>
                         <Button style={{ width: '70px', height: '40px' }} variant='contained' onClick={() => setOpen(!open)} >Cancel</Button>
+                        <Button style={{ width: '70px', height: '40px' }} variant='contained'  onClick={() => handleDeleteApi()} >Delete</Button>
                     </div>
 
                 </div>

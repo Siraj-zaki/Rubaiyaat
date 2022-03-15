@@ -33,6 +33,8 @@ import Filters from "../components/Filters";
 import _ from 'lodash'
 import ItemMasterTable from "../components/ItemMasterTable";
 import StockOnHandTable from "../components/StockOnHandTable";
+import axios from "axios";
+import { BASE_URL } from "../config/Path";
 const CheckboxGroup = Checkbox.Group;
 const plainOptions = ['Unders', 'Overs', "Matched"];
 const defaultCheckedList = [];
@@ -93,9 +95,13 @@ export class CountedItems extends Component {
         categoryNameOptions: [],
         subCategoryCodeOptions: [],
         subCategoryNameOptions: [],
+        mainData: []
     };
     async componentDidMount() {
         this.setState({ loading: true })
+        const datadata = await axios.get(`${BASE_URL}/site/detail`)
+        this.setState({ mainData: datadata?.data })
+        console.log(datadata?.data, 'asdf');
         const filters = await api.getFilters()
         if (filters) {
             let data = filters?.filters
@@ -596,15 +602,6 @@ export class CountedItems extends Component {
                                 <PeopleIcon htmlColor="black" className="ml-4 mr-4" />
                                 <h1 className="dashboard-heading">Stock on Hand</h1>
                                 {/* <Button
-                                    onClick={() => this.searchFunction()}
-                                    type="submit"
-                                    color={"secondary"}
-                                    variant="contained"
-                                    style={{ position: "absolute", right: "90px" }}
-                                >
-                                    Search
-                                </Button> */}
-                                <Button
                                     onClick={() => this.runFunction()}
                                     type="submit"
                                     color={"secondary"}
@@ -612,7 +609,7 @@ export class CountedItems extends Component {
                                     style={{ position: "absolute", right: "10px" }}
                                 >
                                     Run
-                                </Button>
+                                </Button> */}
                                 {/* <CSVReader /> */}
                                 <IconButton style={{ position: "absolute", right: "170px", cursor: 'pointer' }}>
                                     {/* <CSVLink filename="Counted Report" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: 60 }} data={data} headers={headers}>
@@ -681,15 +678,7 @@ export class CountedItems extends Component {
                             </div>
                             {/* <CountedTable openModal={(device) => this.handleClickOpen(device)} asn={this.state.assetsDetails} /> */}
                             <StockOnHandTable
-                                matched={this.state.assetsDetailsNew?.filter((item =>
-                                    item.Matched === true
-                                )).length}
-                                overs={this.state.assetsDetailsNew?.filter((item =>
-                                    item.OversCounted == true
-                                )).length}
-                                unders={this.state.assetsDetailsNew?.filter((item =>
-                                    item.Matched === false
-                                )).length}
+                               mainData={this.state.mainData}
                                 openModal={(device) => this.handleClickOpen(device)} asn={this.state.assetsDetails !== true ? this.state.assetsDetails?.filter((row => row?.asset_EPC)) : this.state.assetsDetails} />
                         </div>
                     </div>
