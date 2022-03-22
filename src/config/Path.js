@@ -1,5 +1,5 @@
-// const BASE_URL = "https://rubaiyat-asset.herokuapp.com";
-const BASE_URL = "https://rubaiyat-qa.herokuapp.com";
+const BASE_URL = "https://rubaiyat-asset.herokuapp.com";
+// const BASE_URL = "https://rubaiyat-qa.herokuapp.com";
 // const BASE_URL = 'http://172.16.83.107:5000';
 // const BASE_URL = 'http://localhost:5000'
 // const BASE_URL = "https://7005-103-225-51-7.ngrok.io";

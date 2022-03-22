@@ -98,32 +98,8 @@ export class CountedItems extends Component {
         mainData: []
     };
     async componentDidMount() {
-        this.setState({ loading: true })
-        const datadata = await axios.get(`${BASE_URL}/site/detail`)
-        this.setState({ mainData: datadata?.data })
-        console.log(datadata?.data, 'asdf');
-        const filters = await api.getFilters()
-        if (filters) {
-            let data = filters?.filters
-            let categoryCodeOptions = data?.category_code?.map(item => {
-                return { label: item, value: item }
-            })
-            let categoryNameOptions = data?.category_name?.map(item => {
-                return { label: item, value: item }
-            })
-            let subCategoryCodeOptions = data?.sub_category_code?.map(item => {
-                return { label: item, value: item }
-            })
-            let subCategoryNameOptions = data?.sub_category_name?.map(item => {
-                return { label: item, value: item }
-            })
-            this.setState({
-                categoryCodeOptions,
-                categoryNameOptions,
-                subCategoryCodeOptions,
-                subCategoryNameOptions,
-            })
-        }
+
+        // console.log(datadata?.data, 'asdf')
         const locations = await api.getLocations()
         let sites = locations?.result?.map((item => { return { label: item.site_name, value: item._id } }))
         if (locations) {
@@ -131,8 +107,8 @@ export class CountedItems extends Component {
             console.log(locations);
             this.setState({ loading: false, sitesOption: this.state.sitesOption.concat(sites), locations: locations.result })
         }
+
     }
-    //////////////////////////////
     site_changeHandler = (e) => {
         // console.log(e, 'values');
         this.setState({ site_Value: e })
@@ -241,23 +217,7 @@ export class CountedItems extends Component {
     };
     searchFunction = () => {
         this.setState({
-            assetsDetails:
-                FilterFunction({
-                    data: this.state.assetsDetailsNew,
-                    filters: {
-                        // site_Value: this.state.site_Value[0]?.label === 'all' ? [{ label: '' }] : this.state.site_Value,
-                        // zone_Value: this.state.zone_Value[0]?.label === 'all' ? [{ label: '' }] : this.state.zone_Value,
-                        // department_Value: this.state.department_Value[0]?.label === 'all' ? [{ label: '' }] : this.state.department_Value,
-                        // assetEPC_Value: this.state.assetEPC_Value || '',
-                        // Odoo_Tag_Value: this.state.Odoo_Tag_Value || '',
-                        // ownerName_Value: this.state.ownerName_Value || '',
-                        // description_Value: this.state.description_Value || '',
-                        // assetStatus_Value: this.state.assetStatus_Value || '',
-                        createdAt: this.state.creationDate_Value || '',
-                        updatedAt: this.state.modificationDate_Value || '',
-                        // zoneFilter: ''
-                    }
-                })
+            assetsDetails: this.dateFilter()
         });
     };
     dateCompareCreation = (sDate, eDate) => {
@@ -303,60 +263,11 @@ export class CountedItems extends Component {
     }
     runFunction = async () => {
         this.setState({ loading: true });
-        if (this.state.site_Value && this.state.zoneOption === '') {
-            return toast.error("Please Select Zite and Zone")
-        } else {
-            let sites = this.state.site_Value?.some((item => item.label === 'all'))
-            let zones = this.state.zone_Value?.some((item => item.label === 'all'))
-            let depaets = this.state.department_Value?.some((item => item.label === 'all'))
-            let category_code = this.state.categoryCode_Value?.some((item => item.label === 'all'))
-            let category_name = this.state.categoryName_Value?.some((item => item.label === 'all'))
-            let sub_category_code = this.state.subCategoryCode_Value?.some((item => item.label === 'all'))
-            let sub_category_name = this.state.subCategoryName_Value?.some((item => item.label === 'all'))
-            console.log(sites);
-            this.setState({ loading: true });
-            const assetBySOH = await api.getSohByParams({
-                siteId: sites ? null : this.state.site_Value?.map((item => item.value)),
-                zoneId: zones ? null : this.state.zone_Value?.map((item => item.value)),
-                departementId: depaets ? null : this.state.department_Value?.map((item => item.value)),
-                category_code: category_code ? null : this.state.categoryCode_Value.map((item => item.value)),
-                category_name: category_name ? null : this.state.categoryName_Value?.map((item => item.value)),
-                sub_category_code: sub_category_code ? null : this.state.subCategoryCode_Value?.map((item => item.value)),
-                sub_category_name: sub_category_name ? null : this.state.subCategoryName_Value?.map((item => item.value)),
-                description: this.state.description_Value || null,
-                ownerName: this.state.ownerName_Value || null,
-                asset_EPC: this.state.assetEPC_Value || null,
-                serialNumber: this.state.Odoo_Tag_Value || null,
-                assetValue: this.state.assetStatus_Value || null,
-                createdAt: this.state.creationDate_Value || null,
-                assetValue: this.state.assetStatus_Value || null,
-            })
-            const CountedItems = await api.getCountedItemsByParams(
-                {
-                    siteId: sites ? null : this.state.site_Value?.map((item => item.value)),
-                    zoneId: zones ? null : this.state.zone_Value?.map((item => item.value)),
-                    departementId: depaets ? null : this.state.department_Value?.map((item => item.value)),
-                    category_code: category_code ? null : this.state.categoryCode_Value.map((item => item.value)),
-                    category_name: category_name ? null : this.state.categoryName_Value?.map((item => item.value)),
-                    sub_category_code: sub_category_code ? null : this.state.subCategoryCode_Value?.map((item => item.value)),
-                    sub_category_name: sub_category_name ? null : this.state.subCategoryName_Value?.map((item => item.value)),
-                    description: this.state.description_Value || null,
-                    ownerName: this.state.ownerName_Value || null,
-                    asset_EPC: this.state.assetEPC_Value || null,
-                    serialNumber: this.state.Odoo_Tag_Value || null,
-                    // assetValu: this.state.assetStatus_Value || null,
-                    createdAt: this.state.creationDate_Value || null,
-                    assetStatus: this.state.assetStatus_Value || null,
-                }
-            );
-            // const assetBySOH = await api.getAssetsBySohWithParam(this.state.site_Value?.value, this.state.zone_Value?.value);
-            if (CountedItems && assetBySOH) {
-                let newArray = []
-                newArray = await newArray.concat(CountedItems, assetBySOH)
-                await this.setState({ assetsDetails: newArray, assetsDetailsNew: newArray })
-                this.runFunctionSearch(CountedItems, assetBySOH)
-                this.setState({ loading: false });
-            }
+        this.setState({ loading: true })
+        const datadata = await axios.get(`${BASE_URL}/site/detail`)
+        this.setState({ assetsDetails: datadata?.data, assetsDetailsNew: datadata?.data })
+        if (datadata) {
+            this.setState({ loading: false })
         }
     }
     matchedFunction = () => {
@@ -601,7 +512,7 @@ export class CountedItems extends Component {
                                 </IconButton>
                                 <PeopleIcon htmlColor="black" className="ml-4 mr-4" />
                                 <h1 className="dashboard-heading">Stock on Hand</h1>
-                                {/* <Button
+                                <Button
                                     onClick={() => this.runFunction()}
                                     type="submit"
                                     color={"secondary"}
@@ -609,7 +520,7 @@ export class CountedItems extends Component {
                                     style={{ position: "absolute", right: "10px" }}
                                 >
                                     Run
-                                </Button> */}
+                                </Button>
                                 {/* <CSVReader /> */}
                                 <IconButton style={{ position: "absolute", right: "170px", cursor: 'pointer' }}>
                                     {/* <CSVLink filename="Counted Report" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: 60 }} data={data} headers={headers}>
@@ -678,7 +589,7 @@ export class CountedItems extends Component {
                             </div>
                             {/* <CountedTable openModal={(device) => this.handleClickOpen(device)} asn={this.state.assetsDetails} /> */}
                             <StockOnHandTable
-                               mainData={this.state.mainData}
+                                mainData={this.state.assetsDetails}
                                 openModal={(device) => this.handleClickOpen(device)} asn={this.state.assetsDetails !== true ? this.state.assetsDetails?.filter((row => row?.asset_EPC)) : this.state.assetsDetails} />
                         </div>
                     </div>
