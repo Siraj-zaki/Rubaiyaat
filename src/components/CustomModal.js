@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -53,7 +53,11 @@ const DialogActions = withStyles((theme) => ({
     },
 }))(MuiDialogActions);
 
+
 export default function CustomModal({ handleClickOpen, open, handleClose, data, image, ZplDetail, permissions, ZPLData, QrCode, EpcData, mapData }) {
+    useEffect(() => {
+        console.log(data);
+    }, [data])
     return (
         <Dialog fullWidth={320} color="secondary" onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
             <DialogTitle style={{ backgroundColor: QrCode ? "gray" : '#212121' }} id="customized-dialog-title" onClose={handleClose}>
@@ -64,7 +68,7 @@ export default function CustomModal({ handleClickOpen, open, handleClose, data, 
                 {EpcData ? "EPC" : ""}
             </DialogTitle>
             <DialogContent style={{ backgroundColor: QrCode ? "gray " : '#212121', color: "whitesmoke", wordBreak: 'break-word', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', flexDirection: 'column' }} dividers>
-                {image ? data?.includes('profilePics') ? <img src={data} height={300} width={'400px'} style={{ objectFit: 'contain' }} /> : <Barcode value={data} /> : null}
+                {image ? data?.includes('https://firebase') ? <img src={data} height={300} width={'400px'} style={{ objectFit: 'contain' }} /> : <Barcode value={data} /> : null}
                 {QrCode ? <QRCode renderAs='svg' width="60%" height="60%" size={200} value={`${QrCode.userName}|${QrCode.password}|${QrCode.siteId ? QrCode.siteId._id : null}|${QrCode.server}`} /> : ""}
                 {ZplDetail ? "^XA ^LL430 ^PW431 ^XZ ^XA ^FO30,130^A0B,32,32,^FDStyle no:${Retail_Product_style}^FS ^FO80,90^A0B,32,32,^FD${Retail_Product_SKUOriginal}^FS ^FO140,180^A0B,32,32,^FDSize:${Retail_Product_Size}^FS ^FO140,140^A0B,32,32,^FDS^FS ^FO180,90^GB3,150,3^FS ^FO200,195^A0B,32,32,^FDSR.^FS ^FO200,80^A0B,32,32,^FD${Retail_Product_Price}^FS ^FO260,17^BY2,2,70,^BCB,100,Y,N,Y,A^FD${Retail_Product_item_code}^FS ^RFW,H^FD${serialNumber}^FS ^FO20,20^A0N,16,18,^FH^FD${serialNumber}^FS ^XZ " : ""}
                 {permissions ? Object.entries(permissions).map((item => {

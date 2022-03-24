@@ -12,7 +12,9 @@ import { Button, Modal } from '@material-ui/core';
 import BasicTextFields from './Input';
 import { Typography } from 'antd';
 import api from '../services/api';
+import storage from './config'
 import { toast } from 'react-toastify';
+// import { getDownloadURL } from 'firebase/storage';
 const useRowStyles = makeStyles({
     root: {
         backgroundColor: 'rgba(92, 92, 92, 1)',
@@ -157,6 +159,8 @@ export default function ItemMasterTable({ asn, openModal, edit, runFunction }) {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
+    // const mewme = `https://firebasestorage.googleapis.com/v0/b/innoasset-ebfc6.appspot.com/o/profilePics%2F000000000000000000002038.Jpeg?alt=media&token=53f08255-d8de-4a6a-9f40-0dd0c787bac2`
+    // console.log(mewme);
     useEffect(() => {
         // setData(asn)
         if (asn === true) {
@@ -164,6 +168,7 @@ export default function ItemMasterTable({ asn, openModal, edit, runFunction }) {
             setPage(0);
         } else {
             setData(asn)
+
             setPage(0);
         }
     }, [asn]);
@@ -175,6 +180,11 @@ export default function ItemMasterTable({ asn, openModal, edit, runFunction }) {
     const handleClose = () => {
         setOpen(!open)
     }
+
+    // imageFunction(row?.asset_EPC).then(result => {
+    //     /* use result here */
+    //     return console.log(result);
+    // })
 
     return (
         <>
@@ -406,7 +416,7 @@ export default function ItemMasterTable({ asn, openModal, edit, runFunction }) {
                     <div style={{ width: '100%', display: 'flex', justifyContent: 'space-evenly', minHeight: 80, marginTop: 10 }}>
                         <Button style={{ width: '70px', height: '40px' }} variant='contained' onClick={() => handleEditApi()} >Save</Button>
                         <Button style={{ width: '70px', height: '40px' }} variant='contained' onClick={() => setOpen(!open)} >Cancel</Button>
-                        <Button style={{ width: '70px', height: '40px' }} variant='contained'  onClick={() => handleDeleteApi()} >Delete</Button>
+                        <Button style={{ width: '70px', height: '40px' }} variant='contained' onClick={() => handleDeleteApi()} >Delete</Button>
                     </div>
 
                 </div>
@@ -474,8 +484,15 @@ export default function ItemMasterTable({ asn, openModal, edit, runFunction }) {
                                                         {/* <Button style={{ minWidth: 20, height: 20 }} onClick={() => openModal(row?.imageLink)} variant="contained" className="m-1" color="primary"  > */}
                                                         {
                                                             row?.imageLink ?
+                                                                // <img onClick={() => openModal(row?.imageLink)} src={row?.imageLink} height="50px" width='50px' style={{ objectFit: 'contain', cursor: 'pointer' }} />
+                                                                // :
+                                                                // <Button style={{ minWidth: 20, height: 20 }} onClick={() => openModal(row?.imageLink)} variant="contained" className="m-1" color="primary"  >No Image</Button>
                                                                 <img onClick={() => openModal(row?.imageLink)} src={row?.imageLink} height="50px" width='50px' style={{ objectFit: 'contain', cursor: 'pointer' }} />
+                                                                // <a href={imageFunction(row?.asset_EPC)}>  Image </a>
+                                                                // console.log(row?.imageLinkNew)
+                                                                // <a href={row?.imageLinkNew}>  Image </a>
                                                                 :
+                                                                // console.log(row?.imageLinkNew)
                                                                 <Button style={{ minWidth: 20, height: 20 }} onClick={() => openModal(row?.imageLink)} variant="contained" className="m-1" color="primary"  >No Image</Button>
                                                         }
                                                         {/* </Button> */}

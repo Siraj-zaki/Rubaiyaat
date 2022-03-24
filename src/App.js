@@ -71,8 +71,28 @@ import AssociatedReport from './screens/AssociatedReport';
 import ReTaggingReport from './screens/ReTaggingReport';
 import SupplyChainIBTDataDispatchCancel from './screens/SupplyChainIBTDataDispatchCancel';
 import AddSite from './screens/AddSite';
+import storage from './components/config';
+
+
 import AddZone from './screens/AddZone';
 import AddDepartment from './screens/AddDepartment';
+// const firebaseConfig = {
+//   apiKey: "AIzaSyCLkmYcYbayPOEIqPzPwCdddg3vYFVNzIw",
+//   authDomain: "innoasset-ebfc6.firebaseapp.com",
+//   projectId: "innoasset-ebfc6",
+//   storageBucket: "innoasset-ebfc6.appspot.com",
+//   messagingSenderId: "1063269039178",
+//   appId: "1:1063269039178:web:d56ba324b81e31e4313ab3",
+//   measurementId: "G-6J34HX3501"
+// };
+// // Initialize Firebase
+// const app = initializeApp(firebaseConfig);
+// const analytics = getAnalytics(app);
+// const firebaseApp = initializeApp(firebaseConfig);
+// // Get a reference to the storage service, which is used to create references in your storage bucket
+// const storage = getStorage(firebaseApp);
+// const pathReference = ref(storage, '/profilePics/000000000000000000002038.Jpeg');
+// const httpsReference = ref(storage, 'https://firebasestorage.googleapis.com/b/bucket/o/profilePics/000000000000000000002038.Jpeg');
 class App extends React.Component {
   state = {
     open: true,
@@ -90,9 +110,16 @@ class App extends React.Component {
     if (window.location.href.split('/').reverse()[0] === "MapReport") {
       this.setState({ location1: '/MapReport' })
     }
-
+    // console.log(this.imageFunction());
+    // console.log(getBlob(ref: storage));
   }
+  // getImage(image) {
+  //   storage.ref(`/profilePics/2F000000000000000000002038.Jpeg`).getDownloadURL().then((url) => {
+  //     return url
+  //   })
+  // }
 
+  
   logout = () => {
     localStorage.clear();
     this.props.userLogin({ user: {}, login: false });
@@ -107,6 +134,8 @@ class App extends React.Component {
 
       this.setState({ location1: location.pathname })
     })
+
+
     return (
       <React.Fragment>
         <ToastContainer className="toastify-custom-class" />

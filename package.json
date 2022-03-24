@@ -13,6 +13,7 @@
     "axios": "^0.21.4",
     "chart.js": "^2.6.0",
     "file-saver": "2.0.2",
+    "firebase": "^8.3.1",
     "heroku": "^7.59.0",
     "jwt-decode": "^3.1.2",
     "leaflet": "^1.7.1",
