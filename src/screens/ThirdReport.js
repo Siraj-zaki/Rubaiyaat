@@ -79,6 +79,42 @@ export class ItemMasterReport extends Component {
     subCategoryCodeOptions: [],
     subCategoryNameOptions: [],
     mainTime: 30,
+    statusOption: [
+      {
+        label: "all", value: '',
+      },
+      {
+        label: "Active", value: 'Active',
+      },
+      {
+        label: "Damaged", value: 'Damaged',
+      },
+      {
+        label: "In Transit", value: 'In Transit',
+      },
+      {
+        label: "Inactive", value: 'Inactive',
+      },
+      {
+        label: "Leased", value: 'Leased',
+      },
+      {
+        label: "Missing", value: 'Missing',
+      },
+      {
+        label: "On hold", value: 'On hold',
+      },
+      {
+        label: "Tag Damaged", value: 'Tag Damaged',
+      },
+      {
+        label: "Transfer", value: 'Transfer',
+      },
+      {
+        label: "Written Off", value: 'Written Off',
+      },
+    ],
+    status_Value: [],
 
 
   };
@@ -163,6 +199,10 @@ export class ItemMasterReport extends Component {
   zone_changeHandler = (e) => {
     console.log(e);
     this.setState({ zone_Value: e })
+  }
+  status_changeHandler = (e) => {
+    console.log(e);
+    this.setState({ status_Value: e })
   }
   categoryCode_changeHandler = (e) => {
     console.log(e);
@@ -260,6 +300,7 @@ export class ItemMasterReport extends Component {
   runFunction = async () => {
     let sites = this.state.site_Value?.some((item => item.label === 'all'))
     let zones = this.state.zone_Value?.some((item => item.label === 'all'))
+    let status = this.state.status_Value?.some((item => item.label === 'all'))
     let depaets = this.state.department_Value?.some((item => item.label === 'all'))
     console.log(sites);
     this.setState({ loading: true });
@@ -270,7 +311,7 @@ export class ItemMasterReport extends Component {
       description: this.state.description_Value || null,
       ownerName: this.state.ownerName_Value || null,
       asset_EPC: this.state.assetEPC_Value || null,
-      assetStatus: this.state.assetStatus_Value || null,
+      assetStatus: status ? null : this.state.status_Value?.map((item => item.value)),
     })
     console.log(assetRoutes, "assetsDetails");
     await this.setState({
@@ -297,124 +338,124 @@ export class ItemMasterReport extends Component {
 
     const headers = [
       {
-          label: "Photo",
-          key: "imageLink",
+        label: "Photo",
+        key: "imageLink",
       },
       {
-          label: "EPC",
-          key: "asset_EPC",
+        label: "EPC",
+        key: "asset_EPC",
       },
       {
-          label: "Asset Code - M365",
-          key: "category_code",
+        label: "Asset Code - M365",
+        key: "category_code",
       },
       {
-          label: "Area",
-          key: "category_cod",
+        label: "Area",
+        key: "category_cod",
       },
       {
-          label: "SITE",
-          key: "site",
+        label: "SITE",
+        key: "site",
       },
       {
-          label: "CATEGORY CODE",
-          key: "category_code",
+        label: "CATEGORY CODE",
+        key: "category_code",
       },
       {
-          label: "CATEGORY NAME",
-          key: "category_name",
+        label: "CATEGORY NAME",
+        key: "category_name",
       },
       {
-          label: "SUB CATEGORY CODE",
-          key: "sub_category_code",
+        label: "SUB CATEGORY CODE",
+        key: "sub_category_code",
       },
       {
-          label: "SUB CATEGORY NAME",
-          key: "sub_category_name",
+        label: "SUB CATEGORY NAME",
+        key: "sub_category_name",
       },
 
       {
-          label: "Departement",
-          key: "departement_name",
+        label: "Departement",
+        key: "departement_name",
       },
       {
-          label: "LOCATION",
-          key: "zone",
+        label: "LOCATION",
+        key: "zone",
       },
       {
-          label: "Custodian",
-          key: "ownerName",
+        label: "Custodian",
+        key: "ownerName",
       },
       {
-          label: "Description",
-          key: "description",
+        label: "Description",
+        key: "description",
       },
       {
-          label: "Serial No.",
-          key: "serialNumber",
+        label: "Serial No.",
+        key: "serialNumber",
       },
       {
-          label: "Asset Status",
-          key: "assetStatus",
+        label: "Asset Status",
+        key: "assetStatus",
       },
       {
-          label: "Acquisition Date",
-          key: "ACQUISITION_DATE",
+        label: "Acquisition Date",
+        key: "ACQUISITION_DATE",
       },
       {
-          label: "Depreciation",
-          key: "DEPRECIATION",
+        label: "Depreciation",
+        key: "DEPRECIATION",
       },
       {
-          label: "NBV",
-          key: "NBV",
+        label: "NBV",
+        key: "NBV",
       },
       {
-          label: "Creation Date",
-          key: "createdAt",
+        label: "Creation Date",
+        key: "createdAt",
       },
       {
-          label: "Modification Date",
-          key: "updatedAt",
+        label: "Modification Date",
+        key: "updatedAt",
       },
       {
-          label: "REMARKS",
-          key: "REMARKS",
+        label: "REMARKS",
+        key: "REMARKS",
       },
       {
-          label: "Maintenance",
-          key: "maintenanceDate",
+        label: "Maintenance",
+        key: "maintenanceDate",
       },
-  ];
- 
-  console.log(this.state.assetsDetails, "asdfasdf");
-  let arr = []
+    ];
+
+    console.log(this.state.assetsDetails, "asdfasdf");
+    let arr = []
 
 
-  const data = this.state.assetsDetails !== true ?
+    const data = this.state.assetsDetails !== true ?
       this.state.assetsDetails.map((item) => {
-          return {
-              asset_EPC: item?.asset_EPC || "----",
-              serialNumber: item?.serialNumber || "----",
-              site: item?.siteId?.site_name || "----",
-              category_code: item?.category_code || "----",
-              category_name: item?.category_name || "----",
-              sub_category_code: item?.sub_category_code || "----",
-              sub_category_name: item?.sub_category_name || "----",
-              departement_name: item?.departementId?.departement_name || "----",
-              zone: item?.zoneId?.zone_name || "----",
-              ownerName: item?.ownerName || "----",
-              description: item?.description || "----",
-              assetStatus: item?.assetStatus || "----",
-              ACQUISITION_DATE: item?.ACQUISITION_DATE || "----",
-              createdAt: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || '----',
-              updatedAt: new Date(item?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
-              DEPRECIATION: item?.DEPRECIATION || "----",
-              NBV: item?.NBV || "----",
-              REMARKS: item?.REMARKS || "----",
-              maintenanceDate: item?.maintenanceDate || "----",
-              imageLink: item?.imageLink || "----",
-          }
+        return {
+          asset_EPC: item?.asset_EPC || "----",
+          serialNumber: item?.serialNumber || "----",
+          site: item?.siteId?.site_name || "----",
+          category_code: item?.category_code || "----",
+          category_name: item?.category_name || "----",
+          sub_category_code: item?.sub_category_code || "----",
+          sub_category_name: item?.sub_category_name || "----",
+          departement_name: item?.departementId?.departement_name || "----",
+          zone: item?.zoneId?.zone_name || "----",
+          ownerName: item?.ownerName || "----",
+          description: item?.description || "----",
+          assetStatus: item?.assetStatus || "----",
+          ACQUISITION_DATE: item?.ACQUISITION_DATE || "----",
+          createdAt: new Date(item?.createdAt).toLocaleString('en-Us', "Asia/Muscat") || '----',
+          updatedAt: new Date(item?.updatedAt).toLocaleString('en-Us', "Asia/Muscat") || "----",
+          DEPRECIATION: item?.DEPRECIATION || "----",
+          NBV: item?.NBV || "----",
+          REMARKS: item?.REMARKS || "----",
+          maintenanceDate: item?.maintenanceDate || "----",
+          imageLink: item?.imageLink || "----",
+        }
       }) : arr
     console.log(this.state.assetsDetails, "asdfasdf");
     return (
@@ -499,6 +540,10 @@ export class ItemMasterReport extends Component {
                 style={{ width: "100%" }}
               >
                 <Filters
+                  status_Value={this.state.status_Value}
+                  statusOption={this.state.statusOption}
+                  status_changeHandler={this.status_changeHandler}
+                  statusFilter
                   site_Value={this.state.site_Value}
                   zone_Value={this.state.zone_Value}
                   department_Value={this.state.department_Value}

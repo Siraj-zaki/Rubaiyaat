@@ -57,9 +57,45 @@ export class ItemMasterReport extends Component {
         modification_date: '',
         image: '',
         sitesOption: [{ label: "all", value: '' }],
+        statusOption: [
+            {
+                label: "all", value: '',
+            },
+            {
+                label: "Active", value: 'Active',
+            },
+            {
+                label: "Damaged", value: 'Damaged',
+            },
+            {
+                label: "In Transit", value: 'In Transit',
+            },
+            {
+                label: "Inactive", value: 'Inactive',
+            },
+            {
+                label: "Leased", value: 'Leased',
+            },
+            {
+                label: "Missing", value: 'Missing',
+            },
+            {
+                label: "On hold", value: 'On hold',
+            },
+            {
+                label: "Tag Damaged", value: 'Tag Damaged',
+            },
+            {
+                label: "Transfer", value: 'Transfer',
+            },
+            {
+                label: "Written Off", value: 'Written Off',
+            },
+        ],
         zoneOption: [{ label: "all", value: '' }],
         departmentOption: [{ label: "all", value: '' }],
         site_Value: [],
+        status_Value: [],
         zone_Value: [],
         department_Value: [],
         assetEPC_Value: '',
@@ -82,7 +118,7 @@ export class ItemMasterReport extends Component {
 
     };
     async componentDidMount() {
-      
+
         const filters = await api.getFilters()
         if (filters) {
             let data = filters?.filters
@@ -159,6 +195,10 @@ export class ItemMasterReport extends Component {
     zone_changeHandler = (e) => {
         console.log(e);
         this.setState({ zone_Value: e })
+    }
+    status_changeHandler = (e) => {
+        console.log(e);
+        this.setState({ status_Value: e })
     }
     categoryCode_changeHandler = (e) => {
         console.log(e);
@@ -251,6 +291,7 @@ export class ItemMasterReport extends Component {
     runFunction = async () => {
         let sites = this.state.site_Value?.some((item => item.label === 'all'))
         let zones = this.state.zone_Value?.some((item => item.label === 'all'))
+        let status = this.state.status_Value?.some((item => item.label === 'all'))
         let depaets = this.state.department_Value?.some((item => item.label === 'all'))
         let category_code = this.state.categoryCode_Value?.some((item => item.label === 'all'))
         let category_name = this.state.categoryName_Value?.some((item => item.label === 'all'))
@@ -270,7 +311,7 @@ export class ItemMasterReport extends Component {
             ownerName: this.state.ownerName_Value || null,
             asset_EPC: this.state.assetEPC_Value || null,
             serialNumber: this.state.Odoo_Tag_Value || null,
-            assetStatus: this.state.assetStatus_Value || null,
+            assetStatus: status ? null : this.state.status_Value?.map((item => item.value)),
             // createdAt: this.state.creationDate_Value || null,
             // assetValue: this.state.assetStatus_Value || null,
         })
@@ -514,6 +555,7 @@ export class ItemMasterReport extends Component {
                             >
                                 <Filters
                                     site_Value={this.state.site_Value}
+                                    status_Value={this.state.status_Value}
                                     zone_Value={this.state.zone_Value}
                                     department_Value={this.state.department_Value}
                                     assetEPC_Value={this.state.assetEPC_Value}
@@ -524,6 +566,7 @@ export class ItemMasterReport extends Component {
                                     creationDate_Value={this.state.creationDate_Value}
                                     modificationDate_Value={this.state.modificationDate_Value}
                                     site_changeHandler={this.site_changeHandler}
+                                    status_changeHandler={this.status_changeHandler}
                                     zone_changeHandler={this.zone_changeHandler}
                                     department_changeHandler={this.department_changeHandler}
                                     assetEPC_changeHandler={this.assetEPC_changeHandler}
@@ -534,9 +577,11 @@ export class ItemMasterReport extends Component {
                                     creationDate_changeHandler={this.creationDate_changeHandler}
                                     modificationDate_changeHandler={this.modificationDate_changeHandler}
                                     sitesOption={this.state.sitesOption}
+                                    statusOption={this.state.statusOption}
                                     zoneOption={this.state.zoneOption}
                                     departmentOption={this.state.departmentOption}
                                     siteFilter
+                                    statusFilter
                                     zoneFilter
                                     departmentFilter
                                     assetEPCFilter

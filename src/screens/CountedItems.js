@@ -92,6 +92,42 @@ export class CountedItems extends Component {
         categoryNameOptions: [],
         subCategoryCodeOptions: [],
         subCategoryNameOptions: [],
+        statusOption: [
+            {
+                label: "all", value: '',
+            },
+            {
+                label: "Active", value: 'Active',
+            },
+            {
+                label: "Damaged", value: 'Damaged',
+            },
+            {
+                label: "In Transit", value: 'In Transit',
+            },
+            {
+                label: "Inactive", value: 'Inactive',
+            },
+            {
+                label: "Leased", value: 'Leased',
+            },
+            {
+                label: "Missing", value: 'Missing',
+            },
+            {
+                label: "On hold", value: 'On hold',
+            },
+            {
+                label: "Tag Damaged", value: 'Tag Damaged',
+            },
+            {
+                label: "Transfer", value: 'Transfer',
+            },
+            {
+                label: "Written Off", value: 'Written Off',
+            },
+        ],
+        status_Value: [],
     };
     async componentDidMount() {
         this.setState({ loading: true })
@@ -169,6 +205,10 @@ export class CountedItems extends Component {
     zone_changeHandler = (e) => {
         console.log(e);
         this.setState({ zone_Value: e })
+    }
+    status_changeHandler = (e) => {
+        console.log(e);
+        this.setState({ status_Value: e })
     }
     categoryCode_changeHandler = (e) => {
         console.log(e);
@@ -301,6 +341,7 @@ export class CountedItems extends Component {
         } else {
             let sites = this.state.site_Value?.some((item => item.label === 'all'))
             let zones = this.state.zone_Value?.some((item => item.label === 'all'))
+            let status = this.state.status_Value?.some((item => item.label === 'all'))
             let depaets = this.state.department_Value?.some((item => item.label === 'all'))
             let category_code = this.state.categoryCode_Value?.some((item => item.label === 'all'))
             let category_name = this.state.categoryName_Value?.some((item => item.label === 'all'))
@@ -323,6 +364,7 @@ export class CountedItems extends Component {
                 assetValue: this.state.assetStatus_Value || null,
                 createdAt: this.state.creationDate_Value || null,
                 assetValue: this.state.assetStatus_Value || null,
+                assetStatus: status ? null : this.state.status_Value?.map((item => item.value)),
             })
             const CountedItems = await api.getCountedItemsByParams(
                 {
@@ -670,6 +712,10 @@ export class CountedItems extends Component {
                                     </form>
                                 </div> */}
                                 <Filters
+                                    status_Value={this.state.status_Value}
+                                    statusOption={this.state.statusOption}
+                                    status_changeHandler={this.status_changeHandler}
+                                    statusFilter
                                     site_Value={this.state.site_Value}
                                     zone_Value={this.state.zone_Value}
                                     department_Value={this.state.department_Value}

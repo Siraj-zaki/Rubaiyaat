@@ -57,9 +57,45 @@ export class ReTaggingReport extends Component {
         image: '',
         sitesOption: [{ label: "all", value: '' }],
         zoneOption: [{ label: "all", value: '' }],
+        statusOption: [
+            {
+                label: "all", value: '',
+            },
+            {
+                label: "Active", value: 'Active',
+            },
+            {
+                label: "Damaged", value: 'Damaged',
+            },
+            {
+                label: "In Transit", value: 'In Transit',
+            },
+            {
+                label: "Inactive", value: 'Inactive',
+            },
+            {
+                label: "Leased", value: 'Leased',
+            },
+            {
+                label: "Missing", value: 'Missing',
+            },
+            {
+                label: "On hold", value: 'On hold',
+            },
+            {
+                label: "Tag Damaged", value: 'Tag Damaged',
+            },
+            {
+                label: "Transfer", value: 'Transfer',
+            },
+            {
+                label: "Written Off", value: 'Written Off',
+            },
+        ],
         departmentOption: [{ label: "all", value: '' }],
         site_Value: [],
         zone_Value: [],
+        status_Value: [],
         department_Value: [],
         assetEPC_Value: '',
         Odoo_Tag_Value: '',
@@ -158,6 +194,10 @@ export class ReTaggingReport extends Component {
         console.log(e);
         this.setState({ zone_Value: e })
     }
+    status_changeHandler = (e) => {
+        console.log(e);
+        this.setState({ status_Value: e })
+    }
     categoryCode_changeHandler = (e) => {
         console.log(e);
         this.setState({ categoryCode_Value: e })
@@ -249,6 +289,7 @@ export class ReTaggingReport extends Component {
     runFunction = async () => {
         let sites = this.state.site_Value?.some((item => item.label === 'all'))
         let zones = this.state.zone_Value?.some((item => item.label === 'all'))
+        let status = this.state.status_Value?.some((item => item.label === 'all'))
         let depaets = this.state.department_Value?.some((item => item.label === 'all'))
         let category_code = this.state.categoryCode_Value?.some((item => item.label === 'all'))
         let category_name = this.state.categoryName_Value?.some((item => item.label === 'all'))
@@ -268,6 +309,7 @@ export class ReTaggingReport extends Component {
             ownerName: this.state.ownerName_Value || null,
             asset_EPC: this.state.assetEPC_Value || null,
             serialNumber: this.state.Odoo_Tag_Value || null,
+            assetStatus: status ? null : this.state.status_Value?.map((item => item.value)),
             operation: "reTagging",
             // createdAt: this.state.creationDate_Value || null,
             // assetValue: this.state.assetStatus_Value || null,
@@ -404,7 +446,7 @@ export class ReTaggingReport extends Component {
                 key: "maintenanceDate",
             },
         ];
-       
+
         console.log(this.state.assetsDetails, "asdfasdf");
         let arr = []
 
@@ -517,6 +559,9 @@ export class ReTaggingReport extends Component {
                                 style={{ width: "100%" }}
                             >
                                 <Filters
+                                    status_Value={this.state.status_Value}
+                                    statusOption={this.state.statusOption}
+                                    statusFilter
                                     site_Value={this.state.site_Value}
                                     zone_Value={this.state.zone_Value}
                                     department_Value={this.state.department_Value}

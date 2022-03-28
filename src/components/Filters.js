@@ -5,6 +5,7 @@ import { DatePicker, Radio, Space } from 'antd';
 const { RangePicker } = DatePicker;
 export default function Filters({
     siteFilter,
+    statusFilter,
     zoneFilter,
     departmentFilter,
     assetEPCFilter,
@@ -19,9 +20,11 @@ export default function Filters({
     creationDateFilter,
     modificationDateFilter,
     sitesOption,
+    statusOption,
     zoneOption,
     departmentOption,
     site_Value,
+    status_Value,
     zone_Value,
     department_Value,
     assetEPC_Value,
@@ -32,6 +35,7 @@ export default function Filters({
     creationDate_Value,
     modificationDate_Value,
     site_changeHandler,
+    status_changeHandler,
     zone_changeHandler,
     department_changeHandler,
     assetEPC_changeHandler,
@@ -152,6 +156,18 @@ export default function Filters({
                     />
                 }
                 {
+                    statusFilter &&
+                    <Select
+                        value={status_Value}
+                        onChange={status_changeHandler}
+                        options={statusOption}
+                        isMulti={true}
+                        isSearchable={true}
+                        placeholder={"Status"}
+                        className="last-scan-select-2"
+                        styles={customStyles}
+                    />}
+                {
                     categoryCodeFilter &&
                     <Select
                         value={categoryCode_Value}
@@ -252,13 +268,14 @@ export default function Filters({
                 }
                 {
                     assetStatusFilter &&
-                    <BasicTextFields
-                        margin={10}
-                        name="Asset Status"
-                        placeholder={"Asset Status"}
-                        value={assetStatus_Value}
-                        onChangeEvent={assetStatus_changeHandler}
-                    />
+                    null
+                    // <BasicTextFields
+                    //     margin={10}
+                    //     name="Asset Status"
+                    //     placeholder={"Asset Status"}
+                    //     value={assetStatus_Value}
+                    //     onChangeEvent={assetStatus_changeHandler}
+                    // />
                 }
                 {
                     creationDateFilter &&
