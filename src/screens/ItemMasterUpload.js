@@ -169,9 +169,10 @@ export class itemMasterUpload extends Component {
                     // obj[Object.keys(obj)[0]]
                     filterd = filterd.filter(item => item[Object.keys(item)[0]] !== '')
                     this.setState({
-                        assetsDetails: filterd.map((item =>
-                            item
-                        ))
+                        assetsDetails: filterd.map(item => ({
+                            ...item,
+                            "RFID_Tag": item['Thing Serial']
+                        }))
                     })
                 },
             })
