@@ -370,10 +370,6 @@ export class ItemMasterReport extends Component {
                 key: "category_code",
             },
             {
-                label: "Area",
-                key: "category_cod",
-            },
-            {
                 label: "SITE",
                 key: "site",
             },
@@ -415,6 +411,14 @@ export class ItemMasterReport extends Component {
                 key: "serialNumber",
             },
             {
+                label: "Devision.",
+                key: "devision",
+            },
+            {
+                label: "Area.",
+                key: "area",
+            },
+            {
                 label: "Asset Status",
                 key: "assetStatus",
             },
@@ -454,6 +458,8 @@ export class ItemMasterReport extends Component {
                 site: item?.siteId?.site_name || "----",
                 category_code: item?.category_code || "----",
                 category_name: item?.category_name || "----",
+                area: item?.area || "----",
+                devision: item?.devision || "----",
                 sub_category_code: item?.sub_category_code || "----",
                 sub_category_name: item?.sub_category_name || "----",
                 departement_name: item?.departementId?.departement_name || "----",

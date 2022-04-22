@@ -535,24 +535,33 @@ body>div:nth-child(10)>div>div {
   position: absolute;
   z-index: 31239085;
 }
-.ant-checkbox-inner{
-  border: 1px solid #b4b4b4!important;
+
+.ant-checkbox-inner {
+  border: 1px solid #b4b4b4 !important;
 }
+
 .makeStyles-root-17 {
   background-color: rgb(32 32 32) !important;
 }
-.counted-class-red{
-  background-color: #6e1c1c!important;
-  border-bottom: 1px solid #6f6f6f!important;
-  
+
+.counted-class-red {
+  background-color: #6e1c1c !important;
+  border-bottom: 1px solid #6f6f6f !important;
+
 }
-.counted-class-gray{
-  background-color: 363636!important;
-  border-bottom: 1px solid #6f6f6f!important;
-  
+
+.counted-class-gray {
+  background-color: 363636 !important;
+  border-bottom: 1px solid #6f6f6f !important;
+
 }
-.counted-class-green{
-  background-color: #076004!important;
-  border-bottom: 1px solid #6f6f6f!important;
-  
+
+.counted-class-green {
+  background-color: #076004 !important;
+  border-bottom: 1px solid #6f6f6f !important;
+
+}
+
+.MuiTableContainer-root {
+  height: 400px !important;
 }
