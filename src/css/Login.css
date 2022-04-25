@@ -71,14 +71,14 @@ html {
 }
 
 .login-bg-img {
-    background-image: url('../assets/rubayaat.jpg');
+    background-image: url('../assets/bgImagr.jpg');
     margin: 0;
     padding: 0;
     min-height: 100vh;
     position: relative;
     background-repeat: no-repeat;
     background-color: rgba(0, 0, 0, 0.5);
-    background-size: cover;
+    background-size: 100% 100%;
 }
 
 /* .login-bg-img::before{
