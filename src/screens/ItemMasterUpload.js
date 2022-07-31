@@ -51,6 +51,7 @@ export class itemMasterUpload extends Component {
         creation_date: '',
         modification_date: '',
         image: '',
+        buttonUploaded: false,
     };
 
     onSubmitEvent = () => {
@@ -101,15 +102,19 @@ export class itemMasterUpload extends Component {
         );
     };
     runFunction = async () => {
+        await this.setState({ buttonUploaded: true })
         if (this.state.assetsDetails.length !== 0) {
             const uploading = await api.uploadingData(this.state.assetsDetails)
-                .then(res => {
-                    return toast.success("Uploaded")
-                }).catch(err => {
-                    return toast.error("Something went wrong")
+                .then(async res => {
+                    toast.success("Uploaded")
+                    await this.setState({ buttonUploaded: false })
+                }).catch(async err => {
+                    toast.error("Something went wrong")
+                    await this.setState({ buttonUploaded: false })
                 })
         } else {
-            return toast.error("Please enter csv file first")
+            toast.error("Please enter csv file first")
+            await this.setState({ buttonUploaded: false })
         }
 
 
@@ -302,6 +307,7 @@ export class itemMasterUpload extends Component {
                                 <PeopleIcon htmlColor="black" className="ml-4 mr-4" />
                                 <h1 className="dashboard-heading">Asset (Report)</h1>
                                 <Button
+                                    disabled={this.state.buttonUploaded}
                                     onClick={() => this.runFunction()}
                                     type="submit"
                                     color={"secondary"}

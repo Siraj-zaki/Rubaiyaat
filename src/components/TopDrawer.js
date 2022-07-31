@@ -340,7 +340,7 @@ function ScrollableTabsButtonForce(props) {
         ) : (
           ""
         )}
-        {permissions.includes("Reports") ? (
+        {/* {permissions.includes("Reports") ? ( */}
           <NavLink to="/Reports/ThirdReport">
             <button
               onClick={() => Btn9()}
@@ -351,9 +351,9 @@ function ScrollableTabsButtonForce(props) {
               Reports
             </button>
           </NavLink>
-        ) : (
+        {/* ) : (
           " "
-        )}
+        )} */}
       </div>
       <div>
         {ActiveBtn1 === 1 ? (
@@ -667,7 +667,7 @@ function ScrollableTabsButtonForce(props) {
             ) : (
               ""
             )} */}
-            {permissions.includes("Associated_Items") ? (
+            {/* {permissions.includes("Associated_Items") ? ( */}
               <NavLink
                 exact
                 to="/Reports/ItemMasterUpload"
@@ -677,9 +677,9 @@ function ScrollableTabsButtonForce(props) {
                 <DashboardIcon htmlColor="white" />
                 Item Master Upload
               </NavLink>
-            ) : (
+            {/* ) : (
               ""
-            )}
+            )} */}
             {permissions.includes("Associated_Items") ? (
               <NavLink
                 exact
