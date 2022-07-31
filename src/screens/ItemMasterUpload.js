@@ -314,7 +314,7 @@ export class itemMasterUpload extends Component {
                                     variant="contained"
                                     style={{ position: "absolute", right: "10px" }}
                                 >
-                                    Push Csv to Server
+                                    {this.state.buttonUploaded ? "Loading" : " Push Csv to Server"}
                                 </Button>
                                 {/* <CSVReader /> */}
                                 <IconButton style={{ position: "absolute", right: "190px", cursor: 'pointer' }}>

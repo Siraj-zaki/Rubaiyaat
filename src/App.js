@@ -119,7 +119,7 @@ class App extends React.Component {
   //   })
   // }
 
-  
+
   logout = () => {
     localStorage.clear();
     this.props.userLogin({ user: {}, login: false });
@@ -239,10 +239,10 @@ class App extends React.Component {
                 <PrivateRoute path={"/Reports/FourthReport"} exact component={FourthReport} />
                 : null
               }
-              {/* {permissions?.includes("Table_Report") ? */}
+              {permissions?.includes("Table_Report") ?
                 <PrivateRoute path={"/Reports/ItemMasterUpload"} exact component={itemMasterUpload} />
-                {/* : null
-              } */}
+                : null
+              }
               {permissions?.includes("Table_Report") ?
                 <PrivateRoute path={"/Reports/CountedItemReport"} exact component={CountedItems} />
                 : null
